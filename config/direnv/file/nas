@@ -1,0 +1,12 @@
+export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -F /dev/null"
+export GIT_TOKEN=$GITLAB_NAS_ACCESS_TOKEN
+export GIT_USER=$USER_GIT_NAS
+export GITLAB_HOST=$URI_GITLAB_NAS
+export GIT_AUTHOR_NAME=$USER_GIT_NAS
+export GIT_AUTHOR_EMAIL=$EMAIL_GIT_NAS
+export GIT_COMMITTER_NAME=$USER_GIT_NAS
+export GIT_COMMITTER_EMAIL=$EMAIL_GIT_NAS
+export GIT_REPO_ARGOCD=$GIT_REPO_ARGOCD_NAS
+glab config set -h $URI_GITLAB_NAS api_protocol http
+glab config set -h $URI_GITLAB_NAS token $GITLAB_NAS_ACCESS_TOKEN
+glab config set -h $URI_GITLAB_NAS git_protocol ssh

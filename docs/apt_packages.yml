@@ -1,0 +1,45 @@
+apt_packages:
+- description: A package that contains the essential tools for building software,
+    including GCC, g++, make, etc.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: build-essential
+- description: Command line tool for transferring data with URL syntax, supports various
+    protocols like HTTP, HTTPS, FTP, etc.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: curl
+- description: GNU Privacy Guard, a tool for secure communication and data storage,
+    often used for signing and encrypting data.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: gnupg
+- description: Linux Standard Base (LSB) information, provides details about the Linux
+    distribution.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: lsb-release
+- description: Common CA certificates that help in validating SSL certificates, ensuring
+    secure communication.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: ca-certificates
+- description: A package that provides various system utilities, such as `ps`, `top`,
+    `vmstat`, `kill`, etc., used for monitoring and managing processes.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: procps
+- description: A utility to determine the type of a file based on its content, often
+    used to identify binary and text files.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: file
+- description: library for configuring and customizing font access.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: fontconfig
+- description: Z Shell, an extended version of the Bourne Shell with additional features
+    and improvements, often used as an interactive shell.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: zsh

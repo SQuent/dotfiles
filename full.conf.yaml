@@ -1,0 +1,220 @@
+- defaults:
+    install-brew:
+      stdin: False
+      stderr: False
+      stdout: False
+      force_intel: False
+    tap:
+      stdin: False
+      stderr: False
+      stdout: False
+      force_intel: False
+    link:
+      relink: true
+      force: true
+
+
+- clean:
+    ~/:
+      force: true
+      recursive: true
+
+- create:
+    - ~/scripts
+    - ${XDG_CONFIG_HOME}
+    - ~/.config/nvim
+    - ~/.ssh
+    - ~/.local
+    - ~/.local/share/fonts
+    - "${XDG_CACHE_HOME}/zsh/antigen"
+    - ~/git
+    - ~/git/work
+    - ~/git/gitlab
+    - ~/git/nas
+    - ~/git/github
+    - ~/.config/direnv
+    - ~/.config/git
+    - ~/.config/ranger
+
+- link:
+    # Utility config files
+    ~/.zprofile: config/.profile
+    ${XDG_CONFIG_HOME}/.zshrc: config/zsh/.zshrc
+    ${XDG_CONFIG_HOME}/aliases.zsh: config/zsh/aliases.zsh
+    ${XDG_CONFIG_HOME}/functions.zsh: config/zsh/functions.zsh
+    ${XDG_CONFIG_HOME}/history.zsh: config/zsh/history.zsh
+    ${XDG_CONFIG_HOME}/import-plugins.zsh: config/zsh/import-plugins.zsh
+    ${XDG_CONFIG_HOME}/setup-antigen.zsh: config/zsh/setup-antigen.zsh
+    ${XDG_CONFIG_HOME}/starship.toml: config/starship.toml
+    ${XDG_CONFIG_HOME}/ranger/rc.conf: config/ranger/rc.conf
+    ${XDG_CONFIG_HOME}/nvim: config/nvim
+    ${XDG_DATA_HOME}/fonts: fonts
+    ${XDG_CONFIG_HOME}/.tmux.conf: config/.tmux.conf
+    ~/git/work/.envrc: config/direnv/file/work
+    ~/git/gitlab/.envrc: config/direnv/file/gitlab
+    ~/git/github/.envrc: config/direnv/file/github
+    ~/.envrc: config/direnv/file/gitlab
+    ~/git/nas/.envrc: config/direnv/file/nas
+    ${XDG_CONFIG_HOME}/direnv/direnv.toml: config/direnv/direnv.toml
+
+- apt:
+    - build-essential     ###### A package that contains the essential tools for building software, including GCC, g++, make, etc.
+    - curl                ###### Command line tool for transferring data with URL syntax, supports various protocols like HTTP, HTTPS, FTP, etc.
+    - gnupg               ###### GNU Privacy Guard, a tool for secure communication and data storage, often used for signing and encrypting data.
+    - lsb-release         ###### Linux Standard Base (LSB) information, provides details about the Linux distribution.
+    - ca-certificates     ###### Common CA certificates that help in validating SSL certificates, ensuring secure communication.
+    - procps              ###### A package that provides various system utilities, such as `ps`, `top`, `vmstat`, `kill`, etc., used for monitoring and managing processes.
+    - file                ###### A utility to determine the type of a file based on its content, often used to identify binary and text files.
+    - fontconfig          ###### library for configuring and customizing font access.
+    - zsh                 ###### Z Shell, an extended version of the Bourne Shell with additional features and improvements, often used as an interactive shell.
+    # - nala               ###### better than apt with history revert update etc..
+    # - vector             ###### log and metric aggregator
+
+- install-brew: true
+
+- tap:
+    - kdash-rs/kdash             # Kubernetes dashboard app
+    - jesseduffield/lazydocker   # Full Docker management app
+    - hashicorp/tap
+
+
+- brew:
+###### 
+#
+#     CORE
+#
+######
+    - wget                ###### Network downloader
+    - watch               ###### Execute a program periodically, showing output fullscreen
+    - yq                  ###### YAML processor (like jq for YAML)
+    - jq                  ###### Command-line JSON processor
+    - trash-cli           ###### Command line interface to the freedesktop.org trashcan
+    - btop                ###### Better than htop
+    - direnv              ###### Load/unload environment variables based on $PWD
+    # - xterm               ###### X terminal emulator
+    - bitwarden-cli       ###### Bitwarden command-line interface
+    - scc                 ###### For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.
+    - duf                 ###### Get info on mounted disks (better df)
+    - sd                  ###### RegEx find and replace (better sed)
+    - asdf                ###### Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more
+    - tmux                ###### Terminal multiplexer
+    - fd                  ###### Simple, fast and user-friendly alternative to 'find'
+    - pre-commit          ###### Allow script to run on every commit
+    # - procs               ###### Advanced process viewer (better ps)
+###### 
+#
+#     Vizu Core
+#
+######
+    - starship            ###### Minimal, blazing-fast, and infinitely customizable prompt for any shell
+    - eza                 ###### Listing files with info (better ls)
+    - bat                 ###### Output highlighting (better cat)
+    - neovim              ###### Hyperextensible Vim-based text editor
+    - thefuck             ###### App which corrects your previous console command.
+    - neofetch            ###### Show system data and distro info
+    - tree                ###### Display directories as trees
+###### 
+#
+#     Dev tool
+#
+######
+    - poetry              ###### Python dependency management and packaging made easy
+    - node                ###### JavaScript runtime built on Chrome's V8 JavaScript engine
+    - libyaml             ###### YAML Parser
+    - gitleaks            ###### secret detector
+    - gomplate            ###### A template renderer that can be used to generate README
+###### 
+#
+#     Containers
+#
+######
+    - docker              ###### Platform to build, run, and share containerized applications
+    - docker-compose      ###### Define and run multi-container applications with Docker
+    - kubernetes-cli      ###### Kubernetes command-line interface
+    - podman              ###### Tool for managing OCI containers and pods
+    - kubectx             ###### Switch faster between clusters and namespaces in kubectl
+    - minikube            ###### Run Kubernetes locally
+    - kubectl             ###### Kubernetes command-line tool
+    - kustomize           ###### Kubernetes native configuration management
+    - kdash               ###### Kubernetes dashboard app
+    - lazydocker          ###### Full Docker management app
+    - helm-docs           ###### Autogenerate doc for Helm charts
+    - kubernetes-helm     ###### The Kubernetes package manager
+    - krew                ###### plugin manager for kubectl command-line tool.
+    - derailed/k9s/k9s    ###### Kubernetes CLI to manage your clusters in style!
+    - ctop                ###### Container metrics and monitoring
+    - docker-completion   ###### Bash, Zsh and Fish completion for Docker
+    # - docker-compose-completion ###### Docker-compose completion script FAIL
+    # - skaffold           ###### Local dev Kubernetes
+###### 
+#
+#     Cloud
+#
+######
+    - awscli              ###### Official Amazon AWS command-line interface
+    - hashicorp/tap/terraform ###### Infrastructure as code software tool
+    - terragrunt          ###### Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules
+    - minio-mc            ###### MinIO Client for object storage and filesystems
+    - tflint              ###### Terrafrom Linter
+    # - s3cmd               ###### CLI for S3 bucket
+    # - azure-cli           ###### Official Azure CLI
+###### 
+#
+#     CICD & Devops
+#
+######
+    - gitlab-ci-local     ###### Build all pipeline or specific job locally
+    - act                 ###### Build and test GitHub pipelines on local stack 
+    - glab                ###### CLI for GitLab
+    # - vault               ###### Tool for managing secrets
+    # - pgcli               ###### CLI for Postgres with auto-completion and syntax highlighting 
+    # - git-crypt           ###### Enable transparent encryption/decryption of files in a git repo
+    # - ngrok               ###### Secure introspectable tunnels to localhost
+###### 
+#
+#     Homelab
+#
+######
+    - packer              ###### Tool for creating identical machine images for multiple platforms
+    - k3sup               ###### Bootstrap Kubernetes with k3s over SSH < 1 min
+    - argocd-autopilot    ###### Bootstrap ArgoCD Autopilot
+###### 
+#
+#     Utilities
+#
+######
+    - pwgen               ###### Password generator
+    - fdupes              ###### Duplicate file finder
+    - gping               ###### Interactive ping tool, with graph
+    - httpie              ###### HTTP / API testing client
+    - entr                ###### Run command when files change (for testing when you change code directly launch program)
+    - ttygif              ###### Make gif from terminal
+    - tldr                ###### Simplified and community-driven man pages
+    - librsvg             ###### To use rsvg-convert docker-compose.svg > docker-compose.png
+    # - ranger              ###### Directory browser
+    # - navi                ###### Interactive cheatsheet tool for the command-line.
+    # - fzf                 ###### Command-line fuzzy finder
+    # - nmap                ###### Port scanning utility for large networks
+    # - tailspin            ###### Log highlighter
+###### 
+#
+#     Fun
+#
+######
+    - asciiquarium        ###### Fish tank animation in your terminal
+    - cmatrix             ###### Console Matrix
+    - figlet              ###### Banner-like program prints strings as ASCII art
+    - cbonsai             ###### terminal bonzai in ASCII
+    # - browsh              ###### Text-based browser
+    # - elinks              ###### Text mode web browser
+
+- npm:
+    - commander
+
+- shell:
+  - description: Set ZSH as default shell
+    command: sudo chsh -s $(which zsh) $USER
+  - description: install fonts
+    command: fc-cache -f -v
+  - description: switch dotfile repo to ssh connexion for git
+    command: git remote set-url origin git@github.com:SQuent/dotfiles.git

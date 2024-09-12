@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.0
+    hooks:
+      - id: gitleaks
+  - repo: local
+    hooks:
+      - id: python_export
+        name: python export packages to doc
+        entry:  python docs/extract_packages.py  --verbose
+        always_run: true
+        language: system
+        types: [python]
+      - id: gomplate
+        name: gomplate render README.md
+        entry:  gomplate -f docs/README.tpl -d apt_packages=./docs/apt_packages.yml -d brew_packages=./docs/brew_packages.yml -d full_conf=full.conf.yaml -o README.md 
+        language: system
+        verbose: true
+        always_run: true
+        pass_filenames: false

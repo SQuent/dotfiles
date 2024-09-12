@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Configuration de base
+CONFIG="full.conf.yaml"
+DOTBOT_DIR="dotbot/dotbot"
+START_TIME=$(date +%s) # Start timer
+DOTBOT_BIN="bin/dotbot"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOGFILE="./install.log"
+
+log() {
+    echo "$1" | tee -a "$LOGFILE"
+}
+
+# Initialize variables to track the selected installation type
+FULL_INSTALLATION=true
+LIGHT_INSTALLATION=false
+NO_INSTALL_OPTION=true
+
+
+# Loop through all the arguments
+for arg in "$@"; do
+    case "$arg" in
+        -f|--full)
+            log Full installation will be proceed.
+            NO_INSTALL_OPTION=false 
+            ;;
+        -l|--light)
+            LIGHT_INSTALLATION=true
+            FULL_INSTALLATION=false
+            NO_INSTALL_OPTION=false
+            CONFIG="light.conf.yaml"
+            log Light installation will be proceed.
+
+            ;;
+        *)
+    esac
+done
+
+if $NO_INSTALL_OPTION; then
+    log No type of installation specified, Full installation will be proceed.
+fi
+# Check for conflicting options
+if $FULL_INSTALLATION && $LIGHT_INSTALLATION; then
+    log "Error: You cannot specify both -f|--full and -l|--light"
+    log "Usage: $0 [-f|--full] [-l|--light]"
+    exit 1
+fi
+
+
+# Démarrer le script
+log "Starting script at $(date)"
+
+
+
+# Mettre à jour les paquets
+log "Updating package lists..."
+sudo apt-get update |& tee -a "$LOGFILE"
+sudo apt-get upgrade --yes |& tee -a "$LOGFILE"
+
+# Vérifier et installer curl si nécessaire
+log "Checking for curl..."
+if ! command -v curl &> /dev/null; then
+    log "curl n'est pas installé. Installation de curl..."
+    sudo apt-get --yes install curl apt-transport-https |& tee -a "$LOGFILE"
+else
+    log "Curl est déjà installé. Skipping..."
+fi
+
+# Vérifier et installer Python 3 si nécessaire
+log "Checking for Python 3..."
+if ! command -v python3 &> /dev/null; then
+    log "Python 3 n'est pas installé. Installation de Python 3..."
+    sudo apt-get --yes install python3 |& tee -a "$LOGFILE"
+else
+    log "Python 3 est déjà installé. Skipping..."
+fi
+
+# Vérifier et installer python3-dev si nécessaire
+log "Checking for python3-dev..."
+if ! dpkg -s python3-dev &> /dev/null; then
+    log "python3-dev n'est pas installé. Installation de python3-dev..."
+    sudo apt-get --yes install python3-dev |& tee -a "$LOGFILE"
+else
+    log "python3-dev est déjà installé. Skipping..."
+fi
+
+# Vérifier et installer git si nécessaire
+log "Checking for git..."
+if ! command -v git &> /dev/null; then
+    log "Git n'est pas installé. Installation de Git..."
+    sudo apt-get --yes install git |& tee -a "$LOGFILE"
+else
+    log "Git est déjà installé. Skipping..."
+fi
+
+# Se déplacer dans le répertoire de base
+log "Changing to base directory: ${BASEDIR}"
+cd "${BASEDIR}"
+
+# Source le fichier de configuration si nécessaire
+log "Sourcing config/.profile if it exists..."
+if [ -f config/.profile ]; then
+    source config/.profile
+    log "Sourced config/.profile"
+fi
+
+# Ajouter Linuxbrew au PATH
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+
+# Synchroniser et mettre à jour les sous-modules git
+log "Synchronizing git submodules..."
+git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive |& tee -a "$LOGFILE"
+git submodule update --init --recursive |& tee -a "$LOGFILE"
+
+# Exécuter Dotbot avec les plugins et les configurations spécifiées
+log "Running Dotbot for apt..."
+sudo "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbot/dotbot-apt  --only apt -v -c "${CONFIG}" |& tee -a "$LOGFILE"
+log "Dotbot (apt) done."
+
+log "Running Dotbot"
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbot/dotbot-apt --plugin-dir dotbot/dotbot-brew  --plugin-dir dotbot/dotbot-npm --except apt -v -c "${CONFIG}" |& tee -a "$LOGFILE"
+log "Dotbot done."
+
+# Calculer le temps écoulé
+total_time=$(( $(date +%s) - START_TIME ))
+if [[ $total_time -gt 60 ]]; then
+    total_time="$(( total_time / 60 )) minutes"
+else
+    total_time="${total_time} seconds"
+fi
+
+log "Script completed in $total_time"

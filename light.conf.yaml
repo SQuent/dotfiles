@@ -1,0 +1,127 @@
+- defaults:
+    install-brew:
+      stdin: False
+      stderr: False
+      stdout: False
+      force_intel: False
+    tap:
+      stdin: False
+      stderr: False
+      stdout: False
+      force_intel: False
+    link:
+      relink: true
+      force: true
+
+
+- clean:
+    ~/:
+      force: true
+      recursive: true
+      
+
+- create:
+    - ~/scripts
+    - ${XDG_CONFIG_HOME}
+    - ~/.config/nvim
+    - ~/.ssh
+    - ~/.local
+    - ~/.local/share/fonts
+    - "${XDG_CACHE_HOME}/zsh/antigen"
+    - ~/git
+    - ~/git/work
+    - ~/git/gitlab
+    - ~/git/nas
+    - ~/git/github
+    - ~/.config/direnv
+    - ~/.config/git
+    - ~/.config/ranger
+
+- link:
+    # Utility config files
+    ~/.zprofile: config/.profile
+    ${XDG_CONFIG_HOME}/.zshrc: config/zsh/.zshrc
+    ${XDG_CONFIG_HOME}/aliases.zsh: config/zsh/aliases.zsh
+    ${XDG_CONFIG_HOME}/functions.zsh: config/zsh/functions.zsh
+    ${XDG_CONFIG_HOME}/history.zsh: config/zsh/history.zsh
+    ${XDG_CONFIG_HOME}/import-plugins.zsh: config/zsh/import-plugins.zsh
+    ${XDG_CONFIG_HOME}/setup-antigen.zsh: config/zsh/setup-antigen.zsh
+    ${XDG_CONFIG_HOME}/starship.toml: config/starship.toml
+    ${XDG_CONFIG_HOME}/ranger/rc.conf: config/ranger/rc.conf
+    ${XDG_CONFIG_HOME}/nvim: config/nvim
+    ${XDG_DATA_HOME}/fonts: fonts
+    ${XDG_CONFIG_HOME}/.tmux.conf: config/.tmux.conf
+    ~/git/work/.envrc: config/direnv/file/work
+    ~/git/gitlab/.envrc: config/direnv/file/gitlab
+    ~/git/github/.envrc: config/direnv/file/github
+    ~/.envrc: config/direnv/file/gitlab
+    ~/git/nas/.envrc: config/direnv/file/nas
+    ${XDG_CONFIG_HOME}/direnv/direnv.toml: config/direnv/direnv.toml
+
+- apt:
+    - build-essential
+    - curl                ###### Command line tool for transferring data with URL syntax
+    - gnupg
+    - lsb-release
+    - ca-certificates
+    - procps 
+    - file
+    - zsh
+    - fontconfig
+    # - nala # better than apt with history revert update etc..
+    #- vector # log and metric aggregator
+
+- install-brew: true
+
+- tap:
+    - kdash-rs/kdash             # Kubernetes dashboard app
+    - jesseduffield/lazydocker   # Full Docker management app
+
+- brew:
+###### 
+#
+#     CORE
+#
+######
+    - wget                ###### Network downloader
+    - watch               ###### Execute a program periodically, showing output fullscreen
+    - yq                  ###### YAML processor (like jq for YAML)
+    - jq                  ###### Command-line JSON processor
+    - trash-cli           ###### Command line interface to the freedesktop.org trashcan
+    - btop                ###### Better than htop
+    - direnv              ###### Load/unload environment variables based on $PWD
+    # - xterm               ###### X terminal emulator
+    - bitwarden-cli       ###### Bitwarden command-line interface
+    - scc                 ###### For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.
+    - duf                 ###### Get info on mounted disks (better df)
+    - sd                  ###### RegEx find and replace (better sed)
+    - asdf                ###### Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more
+    - tmux                ###### Terminal multiplexer
+    - fd                  ###### Simple, fast and user-friendly alternative to 'find'
+    # - procs               ###### Advanced process viewer (better ps)
+###### 
+#
+#     Vizu Core
+#
+######
+    - starship            ###### Minimal, blazing-fast, and infinitely customizable prompt for any shell
+    - eza                 ###### Listing files with info (better ls)
+    - bat                 ###### Output highlighting (better cat)
+    - neovim              ###### Hyperextensible Vim-based text editor
+    - thefuck             ###### App which corrects your previous console command.
+    - neofetch            ###### Show system data and distro info
+    - tree                ###### Display directories as trees
+###### 
+#
+#     Homelab
+#
+######
+    - packer              ###### Tool for creating identical machine images for multiple platforms
+
+- shell:
+  - description: Set ZSH as default shell
+    command: sudo chsh -s $(which zsh) $USER
+  - description: install fonts
+    command: fc-cache -f -v
+  - description: switch to ssh
+    command: git remote set-url origin git@github.com:SQuent/dotfiles.git

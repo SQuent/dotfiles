@@ -1,0 +1,269 @@
+brew_packages:
+- description: Network downloader
+  in_full: 'yes'
+  in_light: 'yes'
+  name: wget
+- description: Execute a program periodically, showing output fullscreen
+  in_full: 'yes'
+  in_light: 'yes'
+  name: watch
+- description: YAML processor (like jq for YAML)
+  in_full: 'yes'
+  in_light: 'yes'
+  name: yq
+- description: Command-line JSON processor
+  in_full: 'yes'
+  in_light: 'yes'
+  name: jq
+- description: Command line interface to the freedesktop.org trashcan
+  in_full: 'yes'
+  in_light: 'yes'
+  name: trash-cli
+- description: Better than htop
+  in_full: 'yes'
+  in_light: 'yes'
+  name: btop
+- description: Load/unload environment variables based on $PWD
+  in_full: 'yes'
+  in_light: 'yes'
+  name: direnv
+- description: Bitwarden command-line interface
+  in_full: 'yes'
+  in_light: 'yes'
+  name: bitwarden-cli
+- description: For counting the lines of code, blank lines, comment lines, and physical
+    lines of source code in many programming languages.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: scc
+- description: Get info on mounted disks (better df)
+  in_full: 'yes'
+  in_light: 'yes'
+  name: duf
+- description: RegEx find and replace (better sed)
+  in_full: 'yes'
+  in_light: 'yes'
+  name: sd
+- description: Extendable version manager with support for Ruby, Node.js, Elixir,
+    Erlang & more
+  in_full: 'yes'
+  in_light: 'yes'
+  name: asdf
+- description: Terminal multiplexer
+  in_full: 'yes'
+  in_light: 'yes'
+  name: tmux
+- description: Simple, fast and user-friendly alternative to 'find'
+  in_full: 'yes'
+  in_light: 'yes'
+  name: fd
+- description: Allow script to run on every commit
+  in_full: 'yes'
+  in_light: 'no'
+  name: pre-commit
+- description: Minimal, blazing-fast, and infinitely customizable prompt for any shell
+  in_full: 'yes'
+  in_light: 'yes'
+  name: starship
+- description: Listing files with info (better ls)
+  in_full: 'yes'
+  in_light: 'yes'
+  name: eza
+- description: Output highlighting (better cat)
+  in_full: 'yes'
+  in_light: 'yes'
+  name: bat
+- description: Hyperextensible Vim-based text editor
+  in_full: 'yes'
+  in_light: 'yes'
+  name: neovim
+- description: App which corrects your previous console command.
+  in_full: 'yes'
+  in_light: 'yes'
+  name: thefuck
+- description: Show system data and distro info
+  in_full: 'yes'
+  in_light: 'yes'
+  name: neofetch
+- description: Display directories as trees
+  in_full: 'yes'
+  in_light: 'yes'
+  name: tree
+- description: Python dependency management and packaging made easy
+  in_full: 'yes'
+  in_light: 'no'
+  name: poetry
+- description: JavaScript runtime built on Chrome's V8 JavaScript engine
+  in_full: 'yes'
+  in_light: 'no'
+  name: node
+- description: YAML Parser
+  in_full: 'yes'
+  in_light: 'no'
+  name: libyaml
+- description: secret detector
+  in_full: 'yes'
+  in_light: 'no'
+  name: gitleaks
+- description: A template renderer that can be used to generate README
+  in_full: 'yes'
+  in_light: 'no'
+  name: gomplate
+- description: Platform to build, run, and share containerized applications
+  in_full: 'yes'
+  in_light: 'no'
+  name: docker
+- description: Define and run multi-container applications with Docker
+  in_full: 'yes'
+  in_light: 'no'
+  name: docker-compose
+- description: Kubernetes command-line interface
+  in_full: 'yes'
+  in_light: 'no'
+  name: kubernetes-cli
+- description: Tool for managing OCI containers and pods
+  in_full: 'yes'
+  in_light: 'no'
+  name: podman
+- description: Switch faster between clusters and namespaces in kubectl
+  in_full: 'yes'
+  in_light: 'no'
+  name: kubectx
+- description: Run Kubernetes locally
+  in_full: 'yes'
+  in_light: 'no'
+  name: minikube
+- description: Kubernetes command-line tool
+  in_full: 'yes'
+  in_light: 'no'
+  name: kubectl
+- description: Kubernetes native configuration management
+  in_full: 'yes'
+  in_light: 'no'
+  name: kustomize
+- description: Kubernetes dashboard app
+  in_full: 'yes'
+  in_light: 'no'
+  name: kdash
+- description: Full Docker management app
+  in_full: 'yes'
+  in_light: 'no'
+  name: lazydocker
+- description: Autogenerate doc for Helm charts
+  in_full: 'yes'
+  in_light: 'no'
+  name: helm-docs
+- description: The Kubernetes package manager
+  in_full: 'yes'
+  in_light: 'no'
+  name: kubernetes-helm
+- description: plugin manager for kubectl command-line tool.
+  in_full: 'yes'
+  in_light: 'no'
+  name: krew
+- description: Kubernetes CLI to manage your clusters in style!
+  in_full: 'yes'
+  in_light: 'no'
+  name: derailed/k9s/k9s
+- description: Container metrics and monitoring
+  in_full: 'yes'
+  in_light: 'no'
+  name: ctop
+- description: Bash, Zsh and Fish completion for Docker
+  in_full: 'yes'
+  in_light: 'no'
+  name: docker-completion
+- description: Official Amazon AWS command-line interface
+  in_full: 'yes'
+  in_light: 'no'
+  name: awscli
+- description: Infrastructure as code software tool
+  in_full: 'yes'
+  in_light: 'no'
+  name: hashicorp/tap/terraform
+- description: Thin wrapper for Terraform that provides extra tools for working with
+    multiple Terraform modules
+  in_full: 'yes'
+  in_light: 'no'
+  name: terragrunt
+- description: MinIO Client for object storage and filesystems
+  in_full: 'yes'
+  in_light: 'no'
+  name: minio-mc
+- description: Terrafrom Linter
+  in_full: 'yes'
+  in_light: 'no'
+  name: tflint
+- description: Build all pipeline or specific job locally
+  in_full: 'yes'
+  in_light: 'no'
+  name: gitlab-ci-local
+- description: Build and test GitHub pipelines on local stack
+  in_full: 'yes'
+  in_light: 'no'
+  name: act
+- description: CLI for GitLab
+  in_full: 'yes'
+  in_light: 'no'
+  name: glab
+- description: Tool for creating identical machine images for multiple platforms
+  in_full: 'yes'
+  in_light: 'yes'
+  name: packer
+- description: Bootstrap Kubernetes with k3s over SSH < 1 min
+  in_full: 'yes'
+  in_light: 'no'
+  name: k3sup
+- description: Bootstrap ArgoCD Autopilot
+  in_full: 'yes'
+  in_light: 'no'
+  name: argocd-autopilot
+- description: Password generator
+  in_full: 'yes'
+  in_light: 'no'
+  name: pwgen
+- description: Duplicate file finder
+  in_full: 'yes'
+  in_light: 'no'
+  name: fdupes
+- description: Interactive ping tool, with graph
+  in_full: 'yes'
+  in_light: 'no'
+  name: gping
+- description: HTTP / API testing client
+  in_full: 'yes'
+  in_light: 'no'
+  name: httpie
+- description: Run command when files change (for testing when you change code directly
+    launch program)
+  in_full: 'yes'
+  in_light: 'no'
+  name: entr
+- description: Make gif from terminal
+  in_full: 'yes'
+  in_light: 'no'
+  name: ttygif
+- description: Simplified and community-driven man pages
+  in_full: 'yes'
+  in_light: 'no'
+  name: tldr
+- description: To use rsvg-convert docker-compose.svg > docker-compose.png
+  in_full: 'yes'
+  in_light: 'no'
+  name: librsvg
+- description: Fish tank animation in your terminal
+  in_full: 'yes'
+  in_light: 'no'
+  name: asciiquarium
+- description: Console Matrix
+  in_full: 'yes'
+  in_light: 'no'
+  name: cmatrix
+- description: Banner-like program prints strings as ASCII art
+  in_full: 'yes'
+  in_light: 'no'
+  name: figlet
+- description: terminal bonzai in ASCII
+  in_full: 'yes'
+  in_light: 'no'
+  name: cbonsai
