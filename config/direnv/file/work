@@ -3,3 +3,6 @@ export GIT_AUTHOR_NAME=$USER_GIT_PRO
 export GIT_AUTHOR_EMAIL=$EMAIL_GIT_PRO
 export GIT_COMMITTER_NAME=$USER_GIT_PRO
 export GIT_COMMITTER_EMAIL=$EMAIL_GIT_PRO
+export GITLAB_TOKEN=$GITLAB_PRO_ACCESS_TOKEN
+glab config set -h gitlab.com api_protocol https
+glab config set -h gitlab.com git_protocol ssh

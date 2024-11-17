@@ -174,7 +174,7 @@ alias pc='pre-commit run --all-files'
 ######################################################################
 
 # AWS
-alias sso="aws sso login --sso-session sso --profile"
+alias sso="aws sso login --profile"
 alias unsetaws=" unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY"
 
 # Terragrunt

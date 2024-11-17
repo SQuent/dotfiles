@@ -7,6 +7,7 @@ export GIT_AUTHOR_EMAIL=$EMAIL_GIT_NAS
 export GIT_COMMITTER_NAME=$USER_GIT_NAS
 export GIT_COMMITTER_EMAIL=$EMAIL_GIT_NAS
 export GIT_REPO_ARGOCD=$GIT_REPO_ARGOCD_NAS
+export GIT_LIST_PROJECTS_ID="2 3 4 8"
 glab config set -h $URI_GITLAB_NAS api_protocol http
 glab config set -h $URI_GITLAB_NAS token $GITLAB_NAS_ACCESS_TOKEN
 glab config set -h $URI_GITLAB_NAS git_protocol ssh
