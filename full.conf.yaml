@@ -53,7 +53,7 @@
     ~/git/work/.envrc: config/direnv/file/work
     ~/git/gitlab/.envrc: config/direnv/file/gitlab
     ~/git/github/.envrc: config/direnv/file/github
-    ~/.envrc: config/direnv/file/gitlab
+    ~/.envrc: config/direnv/file/github
     ~/git/nas/.envrc: config/direnv/file/nas
     ${XDG_CONFIG_HOME}/direnv/direnv.toml: config/direnv/direnv.toml
 
