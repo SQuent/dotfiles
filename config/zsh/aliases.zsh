@@ -174,8 +174,11 @@ alias pc='pre-commit run --all-files'
 ######################################################################
 
 # AWS
-alias sso="aws sso login --profile"
-alias unsetaws=" unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY"
+alias awslogin='aws configure list-profiles | fzf --height=20 | xargs -I {} sh -c "\
+aws sso login --profile {}; \
+aws eks update-kubeconfig --name=main --profile {} && \
+current_context=$(kubectl config current-context); \
+kubectl config rename-context \$current_context {}"'
 
 # Terragrunt
 alias tg='terragrunt'
