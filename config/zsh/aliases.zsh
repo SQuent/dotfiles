@@ -80,7 +80,7 @@ fi
 
 # Resotre Date
 alias rsdate="sudo date -s \"\$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z\""
-alias cls='clear;ls' # Clear and ls
+alias cl='clear;ls' # Clear and ls
 alias plz="fc -l -1 | cut -d' ' -f2- | xargs sudo" # Re-run last cmd as root
 alias wip='git add .; git commit -m "wip"; git push'
 if command_exists docker ; then
@@ -195,6 +195,3 @@ alias tfp='terraform plan'
 alias tfa='terraform apply'
 alias tfd='terraform destroy'
 alias tffmt='terraform destroy'
-
-# Kubernetes
-alias reloadkc='export KUBECONFIG=~/.kube/config:$(find ~/.kube/kubeconfig -type f | tr "\n" ":") && kubectl config view --flatten > ~/.kube/config && export KUBECONFIG='
