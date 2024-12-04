@@ -145,36 +145,6 @@ function note {
   echo "$@" >>  $HOME/notes/draft.txt
   echo "" >> $HOME/notes/draft.txt
 }
-
-function reloadkc {
-  # Check if kubectl is installed
-  if ! command -v kubectl &> /dev/null; then
-    echo "Error: 'kubectl' command is not installed. Please install it to proceed."
-    return 1
-  fi
-
-  # Check if the ~/.kube/kubeconfig directory exists
-  if [ ! -d "$HOME/.kube/kubeconfig" ]; then
-    echo "Error: The directory ~/.kube/kubeconfig does not exist."
-    return 1
-  fi
-
-  # Check if there are any files in ~/.kube/kubeconfig
-  kube_files=$(find "$HOME/.kube/kubeconfig" -type f)
-  if [ -z "$kube_files" ]; then
-    echo "Error: No files found in ~/.kube/kubeconfig."
-    return 1
-  fi
-
-  # If everything is OK, execute the export and configuration commands
-  export KUBECONFIG="$HOME/.kube/config:$(echo "$kube_files" | tr '\n' ':')"
-  kubectl config view --flatten > "$HOME/.kube/config"
-
-  # Reset the KUBECONFIG variable
-  export KUBECONFIG=""
-  echo "KUBECONFIG has been successfully reloaded."
-}
-
 # Extract archives - use: extract <file>
 # Based on http://dotfiles.org/~pseup/.bashrc
 function extract() {

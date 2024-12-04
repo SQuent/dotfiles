@@ -161,7 +161,6 @@ Secrets are stored in a Bitwarden note (referenced by `BW_SECRET_NOTE_ID`). Func
 SSH key files and ssh config file are stored in a Bitwarden folder and managed using the `load_ssh_keys` function to populate the `~/.ssh` folder.
 
 #### Kubeconfig Management
-Kubeconfig files are stored in `~/.kube/kubeconfig/` and merged into one file `~/.kube/config` using the `reloadkc` function.
 
 ---
 
