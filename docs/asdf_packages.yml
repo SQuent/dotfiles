@@ -1,0 +1,66 @@
+asdf_packages:
+- description: Python programming language
+  in_full: 'yes'
+  in_light: 'no'
+  name: python
+- description: JavaScript runtime built on Chrome's V8 JavaScript engine
+  in_full: 'yes'
+  in_light: 'no'
+  name: nodejs
+- description: Go programming language
+  in_full: 'yes'
+  in_light: 'no'
+  name: golang
+- description: Infrastructure as code software tool
+  in_full: 'yes'
+  in_light: 'no'
+  name: terraform
+- description: Thin wrapper for Terraform that provides extra tools for working with
+    multiple Terraform modules
+  in_full: 'yes'
+  in_light: 'no'
+  name: terragrunt
+- description: Kubernetes command-line tool
+  in_full: 'yes'
+  in_light: 'no'
+  name: kubectl
+- description: The Kubernetes package manager
+  in_full: 'yes'
+  in_light: 'no'
+  name: helm
+- description: Run Kubernetes locally
+  in_full: 'yes'
+  in_light: 'no'
+  name: minikube
+- description: Official Amazon AWS command-line interface
+  in_full: 'yes'
+  in_light: 'no'
+  name: awscli
+- description: Tool for creating identical machine images for multiple platforms
+  in_full: 'yes'
+  in_light: 'yes'
+  name: packer
+- description: Python dependency management and packaging made easy
+  in_full: 'yes'
+  in_light: 'no'
+  name: poetry
+- description: Allow script to run on every commit
+  in_full: 'yes'
+  in_light: 'no'
+  name: pre-commit
+- description: Terraform Linter
+  in_full: 'yes'
+  in_light: 'no'
+  name: tflint
+- description: Build and test GitHub pipelines on local stack
+  in_full: 'yes'
+  in_light: 'no'
+  name: act
+- description: CLI for GitLab
+  in_full: 'yes'
+  in_light: 'no'
+  name: glab
+- description: A template renderer that can be used to generate README
+  in_full: 'yes'
+  in_light: 'no'
+  name: gomplate

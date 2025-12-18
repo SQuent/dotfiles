@@ -40,6 +40,8 @@
 - link:
     # Utility config files
     ~/.zprofile: config/.profile
+    ~/.tool-versions: config/.tool-versions
+    ~/.asdfrc: config/.asdfrc
     ${XDG_CONFIG_HOME}/.zshrc: config/zsh/.zshrc
     ${XDG_CONFIG_HOME}/aliases.zsh: config/zsh/aliases.zsh
     ${XDG_CONFIG_HOME}/functions.zsh: config/zsh/functions.zsh
@@ -77,6 +79,10 @@
     - kdash-rs/kdash             # Kubernetes dashboard app
     - jesseduffield/lazydocker   # Full Docker management app
 
+
+
+
+
 - brew:
 ###### 
 #
@@ -111,12 +117,6 @@
     - thefuck             ###### App which corrects your previous console command.
     - neofetch            ###### Show system data and distro info
     - tree                ###### Display directories as trees
-###### 
-#
-#     Homelab
-#
-######
-    - packer              ###### Tool for creating identical machine images for multiple platforms
 
 - shell:
   - description: "Add current user to sudoers without password"
@@ -127,6 +127,11 @@
         echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "$SUDOERS_FILE" >/dev/null
         sudo chmod 440 "$SUDOERS_FILE"
       fi
+
+  - description: "Install asdf plugins (without versions)"
+    command: |
+      # Install asdf plugins only (versions managed by .tool-versions)
+      asdf plugin add packer || true      ###### Tool for creating identical machine images for multiple platforms
   - description: Set ZSH as default shell
     command: sudo chsh -s $(which zsh) $USER
   - description: install fonts

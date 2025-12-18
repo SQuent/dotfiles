@@ -62,10 +62,30 @@ else
   echo "Direnv is not installed."
 fi
 
+# Check if asdf is installed, then initialize asdf
+if command_exists asdf; then
+  source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
+  
+  # Function to auto-install missing versions from .tool-versions
+  asdf_auto_install() {
+    if [[ -f .tool-versions ]]; then
+      asdf install 2>/dev/null || true
+    fi
+  }
+  
+  # Run on shell startup
+  asdf_auto_install
+  
+  # Hook to run when changing directory
+  autoload -U add-zsh-hook
+  add-zsh-hook chpwd asdf_auto_install
+else
+  echo "Asdf is not installed."
+fi
+
 # to restore binkey ctrl a e r 
 bindkey -e
 
-# Check if direnv is installed, then hook direnv
 if command_exists tmux; then
   tmux source-file ${XDG_CONFIG_HOME}/.tmux.conf
 else

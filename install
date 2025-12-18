@@ -121,7 +121,7 @@ sudo "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbo
 log "Dotbot (apt) done."
 
 log "Running Dotbot"
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbot/dotbot-apt --plugin-dir dotbot/dotbot-brew  --plugin-dir dotbot/dotbot-npm --except apt -v -c "${CONFIG}" |& tee -a "$LOGFILE"
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbot/dotbot-apt --plugin-dir dotbot/dotbot-brew --plugin-dir dotbot/dotbot-npm --except apt -v -c "${CONFIG}" |& tee -a "$LOGFILE"
 log "Dotbot done."
 
 # Calculer le temps écoulé

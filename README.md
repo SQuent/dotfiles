@@ -191,6 +191,22 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 ````
 ---
 
+### Version Management with ASDF
+
+[**ASDF**](https://asdf-vm.com/) manages multiple language runtime versions per project. Instead of using separate tools like `nvm`, `pyenv`, etc., ASDF handles everything with automatic version switching.
+
+#### Automatic Version Management
+
+- **Auto-Discovery:** Detects `.tool-versions` files in project directories
+- **Auto-Installation:** Installs missing versions when entering a directory
+- **Global Defaults:** Uses global `.tool-versions` for consistent defaults across projects
+
+When you `cd` into a project with a `.tool-versions` file, ASDF automatically installs and activates the specified versions.
+
+ASDF is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew for stability.
+
+---
+
 ### Quick save file
 #### Dropbox Management
 
@@ -299,7 +315,6 @@ Dotfiles for VsCode are:
 | asdf       | Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more                | ✔️ | ✔️ |
 | tmux       | Terminal multiplexer                | ✔️ | ✔️ |
 | fd       | Simple, fast and user-friendly alternative to 'find'                | ✔️ | ✔️ |
-| pre-commit       | Allow script to run on every commit                | ✔️ | ❌ |
 | starship       | Minimal, blazing-fast, and infinitely customizable prompt for any shell                | ✔️ | ✔️ |
 | eza       | Listing files with info (better ls)                | ✔️ | ✔️ |
 | bat       | Output highlighting (better cat)                | ✔️ | ✔️ |
@@ -307,36 +322,22 @@ Dotfiles for VsCode are:
 | thefuck       | App which corrects your previous console command.                | ✔️ | ✔️ |
 | neofetch       | Show system data and distro info                | ✔️ | ✔️ |
 | tree       | Display directories as trees                | ✔️ | ✔️ |
-| poetry       | Python dependency management and packaging made easy                | ✔️ | ❌ |
-| node       | JavaScript runtime built on Chrome's V8 JavaScript engine                | ✔️ | ❌ |
 | libyaml       | YAML Parser                | ✔️ | ❌ |
-| gitleaks       | secret detector                | ✔️ | ❌ |
-| gomplate       | A template renderer that can be used to generate README                | ✔️ | ❌ |
 | docker       | Platform to build, run, and share containerized applications                | ✔️ | ❌ |
 | docker-compose       | Define and run multi-container applications with Docker                | ✔️ | ❌ |
 | kubernetes-cli       | Kubernetes command-line interface                | ✔️ | ❌ |
 | podman       | Tool for managing OCI containers and pods                | ✔️ | ❌ |
 | kubectx       | Switch faster between clusters and namespaces in kubectl                | ✔️ | ❌ |
-| minikube       | Run Kubernetes locally                | ✔️ | ❌ |
-| kubectl       | Kubernetes command-line tool                | ✔️ | ❌ |
 | kustomize       | Kubernetes native configuration management                | ✔️ | ❌ |
 | kdash       | Kubernetes dashboard app                | ✔️ | ❌ |
 | lazydocker       | Full Docker management app                | ✔️ | ❌ |
 | helm-docs       | Autogenerate doc for Helm charts                | ✔️ | ❌ |
-| kubernetes-helm       | The Kubernetes package manager                | ✔️ | ❌ |
 | krew       | plugin manager for kubectl command-line tool.                | ✔️ | ❌ |
 | derailed/k9s/k9s       | Kubernetes CLI to manage your clusters in style!                | ✔️ | ❌ |
 | ctop       | Container metrics and monitoring                | ✔️ | ❌ |
 | docker-completion       | Bash, Zsh and Fish completion for Docker                | ✔️ | ❌ |
-| awscli       | Official Amazon AWS command-line interface                | ✔️ | ❌ |
-| hashicorp/tap/terraform       | Infrastructure as code software tool                | ✔️ | ❌ |
-| terragrunt       | Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules                | ✔️ | ❌ |
 | minio-mc       | MinIO Client for object storage and filesystems                | ✔️ | ❌ |
-| tflint       | Terrafrom Linter                | ✔️ | ❌ |
 | gitlab-ci-local       | Build all pipeline or specific job locally                | ✔️ | ❌ |
-| act       | Build and test GitHub pipelines on local stack                | ✔️ | ❌ |
-| glab       | CLI for GitLab                | ✔️ | ❌ |
-| packer       | Tool for creating identical machine images for multiple platforms                | ✔️ | ✔️ |
 | k3sup       | Bootstrap Kubernetes with k3s over SSH < 1 min                | ✔️ | ❌ |
 | argocd-autopilot       | Bootstrap ArgoCD Autopilot                | ✔️ | ❌ |
 | pwgen       | Password generator                | ✔️ | ❌ |
@@ -351,5 +352,28 @@ Dotfiles for VsCode are:
 | cmatrix       | Console Matrix                | ✔️ | ❌ |
 | figlet       | Banner-like program prints strings as ASCII art                | ✔️ | ❌ |
 | cbonsai       | terminal bonzai in ASCII                | ✔️ | ❌ |
+
+---
+
+### ASDF Packages
+
+| Package Name      | Description                                                  | In Full | In Light |
+|-------------------|--------------------------------------------------------------|---------|----------|
+| python       | Python programming language                | ✔️ | ❌ |
+| nodejs       | JavaScript runtime built on Chrome's V8 JavaScript engine                | ✔️ | ❌ |
+| golang       | Go programming language                | ✔️ | ❌ |
+| terraform       | Infrastructure as code software tool                | ✔️ | ❌ |
+| terragrunt       | Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules                | ✔️ | ❌ |
+| kubectl       | Kubernetes command-line tool                | ✔️ | ❌ |
+| helm       | The Kubernetes package manager                | ✔️ | ❌ |
+| minikube       | Run Kubernetes locally                | ✔️ | ❌ |
+| awscli       | Official Amazon AWS command-line interface                | ✔️ | ❌ |
+| packer       | Tool for creating identical machine images for multiple platforms                | ✔️ | ✔️ |
+| poetry       | Python dependency management and packaging made easy                | ✔️ | ❌ |
+| pre-commit       | Allow script to run on every commit                | ✔️ | ❌ |
+| tflint       | Terraform Linter                | ✔️ | ❌ |
+| act       | Build and test GitHub pipelines on local stack                | ✔️ | ❌ |
+| glab       | CLI for GitLab                | ✔️ | ❌ |
+| gomplate       | A template renderer that can be used to generate README                | ✔️ | ❌ |
 
 ---

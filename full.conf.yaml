@@ -39,6 +39,8 @@
 - link:
     # Utility config files
     ~/.zprofile: config/.profile
+    ~/.tool-versions: config/.tool-versions
+    ~/.asdfrc: config/.asdfrc
     ${XDG_CONFIG_HOME}/.zshrc: config/zsh/.zshrc
     ${XDG_CONFIG_HOME}/aliases.zsh: config/zsh/aliases.zsh
     ${XDG_CONFIG_HOME}/functions.zsh: config/zsh/functions.zsh
@@ -46,7 +48,6 @@
     ${XDG_CONFIG_HOME}/import-plugins.zsh: config/zsh/import-plugins.zsh
     ${XDG_CONFIG_HOME}/setup-antigen.zsh: config/zsh/setup-antigen.zsh
     ${XDG_CONFIG_HOME}/starship.toml: config/starship.toml
-    ${XDG_CONFIG_HOME}/ranger/rc.conf: config/ranger/rc.conf
     ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_DATA_HOME}/fonts: fonts
     ${XDG_CONFIG_HOME}/.tmux.conf: config/.tmux.conf
@@ -78,6 +79,8 @@
     - hashicorp/tap
 
 
+
+
 - brew:
 ###### 
 #
@@ -99,7 +102,6 @@
     - asdf                ###### Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more
     - tmux                ###### Terminal multiplexer
     - fd                  ###### Simple, fast and user-friendly alternative to 'find'
-    - pre-commit          ###### Allow script to run on every commit
     # - procs               ###### Advanced process viewer (better ps)
 ###### 
 #
@@ -118,11 +120,7 @@
 #     Dev tool
 #
 ######
-    - poetry              ###### Python dependency management and packaging made easy
-    - node                ###### JavaScript runtime built on Chrome's V8 JavaScript engine
     - libyaml             ###### YAML Parser
-    - gitleaks            ###### secret detector
-    - gomplate            ###### A template renderer that can be used to generate README
 ###### 
 #
 #     Containers
@@ -133,13 +131,10 @@
     - kubernetes-cli      ###### Kubernetes command-line interface
     - podman              ###### Tool for managing OCI containers and pods
     - kubectx             ###### Switch faster between clusters and namespaces in kubectl
-    - minikube            ###### Run Kubernetes locally
-    - kubectl             ###### Kubernetes command-line tool
     - kustomize           ###### Kubernetes native configuration management
     - kdash               ###### Kubernetes dashboard app
     - lazydocker          ###### Full Docker management app
     - helm-docs           ###### Autogenerate doc for Helm charts
-    - kubernetes-helm     ###### The Kubernetes package manager
     - krew                ###### plugin manager for kubectl command-line tool.
     - derailed/k9s/k9s    ###### Kubernetes CLI to manage your clusters in style!
     - ctop                ###### Container metrics and monitoring
@@ -151,11 +146,7 @@
 #     Cloud
 #
 ######
-    - awscli              ###### Official Amazon AWS command-line interface
-    - hashicorp/tap/terraform ###### Infrastructure as code software tool
-    - terragrunt          ###### Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules
     - minio-mc            ###### MinIO Client for object storage and filesystems
-    - tflint              ###### Terrafrom Linter
     # - s3cmd               ###### CLI for S3 bucket
     # - azure-cli           ###### Official Azure CLI
 ###### 
@@ -164,8 +155,6 @@
 #
 ######
     - gitlab-ci-local     ###### Build all pipeline or specific job locally
-    - act                 ###### Build and test GitHub pipelines on local stack 
-    - glab                ###### CLI for GitLab
     # - vault               ###### Tool for managing secrets
     # - pgcli               ###### CLI for Postgres with auto-completion and syntax highlighting 
     # - git-crypt           ###### Enable transparent encryption/decryption of files in a git repo
@@ -175,7 +164,6 @@
 #     Homelab
 #
 ######
-    - packer              ###### Tool for creating identical machine images for multiple platforms
     - k3sup               ###### Bootstrap Kubernetes with k3s over SSH < 1 min
     - argocd-autopilot    ###### Bootstrap ArgoCD Autopilot
 ###### 
@@ -211,6 +199,10 @@
 - npm:
     - commander
 
+
+
+
+
 - shell:
   - description: "Add current user to sudoers without password"
     command: |
@@ -220,6 +212,26 @@
         echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "$SUDOERS_FILE" >/dev/null
         sudo chmod 440 "$SUDOERS_FILE"
       fi
+
+  - description: "Install asdf plugins (without versions)"
+    command: |
+      # Install asdf plugins only (versions managed by .tool-versions)
+      asdf plugin add python || true      ###### Python programming language
+      asdf plugin add nodejs || true      ###### JavaScript runtime built on Chrome's V8 JavaScript engine
+      asdf plugin add golang || true      ###### Go programming language
+      asdf plugin add terraform || true   ###### Infrastructure as code software tool
+      asdf plugin add terragrunt || true  ###### Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules
+      asdf plugin add kubectl || true     ###### Kubernetes command-line tool
+      asdf plugin add helm || true        ###### The Kubernetes package manager
+      asdf plugin add minikube || true    ###### Run Kubernetes locally
+      asdf plugin add awscli || true      ###### Official Amazon AWS command-line interface
+      asdf plugin add packer || true      ###### Tool for creating identical machine images for multiple platforms
+      asdf plugin add poetry || true      ###### Python dependency management and packaging made easy
+      asdf plugin add pre-commit || true  ###### Allow script to run on every commit
+      asdf plugin add tflint || true      ###### Terraform Linter
+      asdf plugin add act || true         ###### Build and test GitHub pipelines on local stack
+      asdf plugin add glab || true        ###### CLI for GitLab
+      asdf plugin add gomplate || true    ###### A template renderer that can be used to generate README
   - description: Set ZSH as default shell
     command: sudo chsh -s $(which zsh) $USER
   - description: install fonts

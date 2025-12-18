@@ -191,6 +191,22 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 ````
 ---
 
+### Version Management with ASDF
+
+[**ASDF**](https://asdf-vm.com/) manages multiple language runtime versions per project.
+
+#### Automatic Version Management
+
+- **Auto-Discovery:** Detects `.tool-versions` files in project directories
+- **Auto-Installation:** Installs missing versions when entering a directory
+- **Global Defaults:** Uses global `.tool-versions` for consistent defaults across projects
+
+When you `cd` into a project with a `.tool-versions` file, ASDF automatically installs and activates the specified versions.
+
+ASDF is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
+
+---
+
 ### Quick save file
 #### Dropbox Management
 
@@ -280,6 +296,16 @@ Dotfiles for VsCode are:
 | Package Name      | Description                                                  | In Full | In Light |
 |-------------------|--------------------------------------------------------------|---------|----------|
 {{- range (datasource "brew_packages").brew_packages }}
+| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_full "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_light "yes" }}✔️{{ else }}❌{{ end }} |
+{{- end }}
+
+---
+
+### ASDF Packages
+
+| Package Name      | Description                                                  | In Full | In Light |
+|-------------------|--------------------------------------------------------------|---------|----------|
+{{- range (datasource "asdf_packages").asdf_packages }}
 | {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_full "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_light "yes" }}✔️{{ else }}❌{{ end }} |
 {{- end }}
 
