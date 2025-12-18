@@ -16,3 +16,5 @@ tflint 0.49.0
 act 0.2.54
 glab 1.36.0
 gomplate 3.11.6
+
+bitwarden-secrets-manager 1.0.0

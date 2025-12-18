@@ -46,19 +46,19 @@ git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install -l
 ### Testing in Docker
 You can build an image for both: 
 
-**Personnal Machine:**
-````bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:light -f Dockerfile.light --progress=plain 
-docker run -it dotfiles:light
-
-````
-
-**Server:**
+**Personal Machine (Full):**
 ````bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
 docker build . -t dotfiles:full -f Dockerfile --progress=plain 
 docker run -it dotfiles:full
+
+````
+
+**Server (Light):**
+````bash
+git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
+docker build . -t dotfiles:light -f Dockerfile.light --progress=plain 
+docker run -it dotfiles:light
 
 ````
 
@@ -193,7 +193,7 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 
 ### Version Management with ASDF
 
-[**ASDF**](https://asdf-vm.com/) manages multiple language runtime versions per project. Instead of using separate tools like `nvm`, `pyenv`, etc., ASDF handles everything with automatic version switching.
+[**ASDF**](https://asdf-vm.com/) manages multiple language runtime versions per project.
 
 #### Automatic Version Management
 
@@ -203,7 +203,7 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 
 When you `cd` into a project with a `.tool-versions` file, ASDF automatically installs and activates the specified versions.
 
-ASDF is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew for stability.
+ASDF is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
 
 ---
 
@@ -375,5 +375,6 @@ Dotfiles for VsCode are:
 | act       | Build and test GitHub pipelines on local stack                | ✔️ | ❌ |
 | glab       | CLI for GitLab                | ✔️ | ❌ |
 | gomplate       | A template renderer that can be used to generate README                | ✔️ | ❌ |
+| bitwarden-secrets-manager       | Secrets Manager command-line interface                | ✔️ | ❌ |
 
 ---

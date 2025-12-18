@@ -46,19 +46,19 @@ git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install -l
 ### Testing in Docker
 You can build an image for both: 
 
-**Personnal Machine:**
-````bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:light -f Dockerfile.light --progress=plain 
-docker run -it dotfiles:light
-
-````
-
-**Server:**
+**Personal Machine (Full):**
 ````bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
 docker build . -t dotfiles:full -f Dockerfile --progress=plain 
 docker run -it dotfiles:full
+
+````
+
+**Server (Light):**
+````bash
+git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
+docker build . -t dotfiles:light -f Dockerfile.light --progress=plain 
+docker run -it dotfiles:light
 
 ````
 

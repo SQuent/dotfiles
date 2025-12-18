@@ -199,10 +199,6 @@
 - npm:
     - commander
 
-
-
-
-
 - shell:
   - description: "Add current user to sudoers without password"
     command: |
@@ -216,22 +212,23 @@
   - description: "Install asdf plugins (without versions)"
     command: |
       # Install asdf plugins only (versions managed by .tool-versions)
-      asdf plugin add python || true      ###### Python programming language
-      asdf plugin add nodejs || true      ###### JavaScript runtime built on Chrome's V8 JavaScript engine
-      asdf plugin add golang || true      ###### Go programming language
-      asdf plugin add terraform || true   ###### Infrastructure as code software tool
-      asdf plugin add terragrunt || true  ###### Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules
-      asdf plugin add kubectl || true     ###### Kubernetes command-line tool
-      asdf plugin add helm || true        ###### The Kubernetes package manager
-      asdf plugin add minikube || true    ###### Run Kubernetes locally
-      asdf plugin add awscli || true      ###### Official Amazon AWS command-line interface
-      asdf plugin add packer || true      ###### Tool for creating identical machine images for multiple platforms
-      asdf plugin add poetry || true      ###### Python dependency management and packaging made easy
-      asdf plugin add pre-commit || true  ###### Allow script to run on every commit
-      asdf plugin add tflint || true      ###### Terraform Linter
-      asdf plugin add act || true         ###### Build and test GitHub pipelines on local stack
-      asdf plugin add glab || true        ###### CLI for GitLab
-      asdf plugin add gomplate || true    ###### A template renderer that can be used to generate README
+      asdf plugin add python || true                      ###### Python programming language
+      asdf plugin add nodejs || true                      ###### JavaScript runtime built on Chrome's V8 JavaScript engine
+      asdf plugin add golang || true                      ###### Go programming language
+      asdf plugin add terraform || true                   ###### Infrastructure as code software tool
+      asdf plugin add terragrunt || true                  ###### Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules
+      asdf plugin add kubectl || true                     ###### Kubernetes command-line tool
+      asdf plugin add helm || true                        ###### The Kubernetes package manager
+      asdf plugin add minikube || true                    ###### Run Kubernetes locally
+      asdf plugin add awscli || true                      ###### Official Amazon AWS command-line interface
+      asdf plugin add packer || true                      ###### Tool for creating identical machine images for multiple platforms
+      asdf plugin add poetry || true                      ###### Python dependency management and packaging made easy
+      asdf plugin add pre-commit || true                  ###### Allow script to run on every commit
+      asdf plugin add tflint || true                      ###### Terraform Linter
+      asdf plugin add act || true                         ###### Build and test GitHub pipelines on local stack
+      asdf plugin add glab || true                        ###### CLI for GitLab
+      asdf plugin add gomplate || true                    ###### A template renderer that can be used to generate README
+      asdf plugin add bitwarden-secrets-manager || true   ######  Secrets Manager command-line interface
   - description: Set ZSH as default shell
     command: sudo chsh -s $(which zsh) $USER
   - description: install fonts
