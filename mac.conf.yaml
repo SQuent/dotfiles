@@ -28,8 +28,6 @@
 
 - brew:
     - trash       ###### CLI to move files to the macOS Trash (replaces Linux trash-cli)
-    - gnupg       ###### GNU Privacy Guard (installed via apt on Linux, needs brew on macOS)
-    - fontconfig  ###### Library for configuring and customizing font access (installed via apt on Linux)
 
 - cask:
     - font-jetbrains-mono-nerd-font  ###### JetBrains Mono Nerd Font (patched with icons)

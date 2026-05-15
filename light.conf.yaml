@@ -63,13 +63,11 @@
 - apt:
     - build-essential
     - curl                ###### Command line tool for transferring data with URL syntax
-    - gnupg
     - lsb-release
     - ca-certificates
     - procps 
     - file
     - zsh
-    - fontconfig
     # - nala # better than apt with history revert update etc..
     #- vector # log and metric aggregator
 

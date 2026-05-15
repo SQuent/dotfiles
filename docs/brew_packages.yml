@@ -1,4 +1,12 @@
 brew_packages:
+- description: GNU Privacy Guard
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: gnupg
+- description: Library for configuring and customizing font access
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fontconfig
 - description: Network downloader
   in_linux: 'yes'
   in_mac: 'yes'

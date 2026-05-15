@@ -7,10 +7,6 @@ apt_packages:
   in_linux: 'yes'
   in_mac: 'no'
   name: curl
-- description: "GNU Privacy Guard \u2014 signing and encrypting data"
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: gnupg
 - description: Linux Standard Base distribution information
   in_linux: 'yes'
   in_mac: 'no'
@@ -27,10 +23,6 @@ apt_packages:
   in_linux: 'yes'
   in_mac: 'no'
   name: file
-- description: Library for configuring and customizing font access
-  in_linux: 'yes'
-  in_mac: 'no'
-  name: fontconfig
 - description: Z Shell
   in_linux: 'yes'
   in_mac: 'no'

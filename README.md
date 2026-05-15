@@ -23,43 +23,24 @@ I use [Dotbot](https://github.com/anishathalye/dotbot) to manage these dotfiles.
 ---
 
 ### Installation Modes
-- **Personal Machines:** Full setup including all configurations and packages.
-- **Servers:** Minimal setup with terminal configurations and fewer packages.
+- **Linux:** Full setup via apt bootstrap + Homebrew + common configuration.
+- **macOS:** Setup via Homebrew only — no apt, font handling via `~/Library/Fonts`.
 
 ---
 
 ## Getting Started
 
-### Personal Machine Installation:
+### Installation
 ```bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install
 ```
-[Clone the repository] and run the installation script.
+The script auto-detects the OS (`Darwin` or `Linux`) and runs the appropriate steps.
 
-
-### Server Installation:
-```bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install -l
-```
-[Clone the repository] and run the server installation script with the `-l` option.
-
-### Testing in Docker
-You can build an image for both: 
-
-**Personal Machine (Full):**
+### Testing in Docker (Linux)
 ````bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:full -f Dockerfile --progress=plain 
-docker run -it dotfiles:full
-
-````
-
-**Server (Light):**
-````bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:light -f Dockerfile.light --progress=plain 
-docker run -it dotfiles:light
-
+docker build . -t dotfiles:linux -f Dockerfile --progress=plain
+docker run -it dotfiles:linux
 ````
 
 ---
@@ -68,23 +49,26 @@ docker run -it dotfiles:light
 
 ### Installation Script
 The installation script is a wrapper around [Dotbot](https://github.com/anishathalye/dotbot) with the following features:
-- Manages both personal and server deployments.
+- Auto-detects the OS (`uname -s`) — no flags required.
 - Logs actions to `install.log`.
-- Checks and installs prerequisites (e.g., `apt update`, `python3`, `git`, `curl`).
+- Checks and installs prerequisites before running Dotbot.
 - Syncs and updates Dotbot plugins via git submodules.
-- Executes Dotbot with apt packages installation to get prerequisites for other actions.
-- Executes all Dotbot steps except apt packages installation.
+- Splits configuration across three files: `common.conf.yaml`, `linux.conf.yaml`, `mac.conf.yaml`.
 
 ---
 
 ### Dotbot Steps
-1. Clean the `~/` directory.
-2. Create necessary folders.
-3. Link configuration files with symlinks.
-4. Install APT packages.
-5. Install Homebrew and packages if not already installed.
-6. Install npm packages.
-7. Configure the shell environment.
+
+**Linux (3 passes):**
+1. Bootstrap: `apt-get update/upgrade`, install `curl`, `python3`, `git`, `python3-dev`.
+2. Pass 1 — `linux.conf.yaml` (`--only apt`): install APT packages.
+3. Pass 2 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
+4. Pass 3 — `linux.conf.yaml` (`--except apt`): Linux-specific brew (`trash-cli`), sudoers, default shell, font cache.
+
+**macOS (2 passes):**
+1. Check Xcode Command Line Tools, set Homebrew PATH.
+2. Pass 1 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
+3. Pass 2 — `mac.conf.yaml`: macOS-specific brew (`trash`, `gnupg`), `~/Library/Fonts` symlink.
 
 ---
 
@@ -256,8 +240,11 @@ My Tmux configuration, stored in [`config/.tmux.conf`](config/.tmux.conf), inclu
 
 ### Garbage Management with Trash
 
-To avoid accidentally deleting files permanently, I use [trash-cli](https://github.com/andreafrancia/trash-cli). i replace rm by this. This tool moves files to the trash, allowing for easy recovery if needed. 
-Aliases are set for trash management.
+To avoid accidentally deleting files permanently, I replace `rm` with a trash tool:
+- **Linux:** [`trash-cli`](https://github.com/andreafrancia/trash-cli) — follows the freedesktop.org trash spec.
+- **macOS:** [`trash`](https://github.com/ali-rantakari/trash) — moves files to the macOS Trash.
+
+Aliases are set for trash management in both cases.
 
 ---
 
@@ -281,31 +268,30 @@ Dotfiles for VsCode are:
 
 ## Installed Packages
 
-### APT Packages
+### APT Packages (Linux only)
 
-| Package Name      | Description                                                  | In Full | In Light |
-|-------------------|--------------------------------------------------------------|---------|----------|
-| build-essential       | A package that contains the essential tools for building software, including GCC, g++, make, etc.                | ✔️ | ✔️ |
-| curl       | Command line tool for transferring data with URL syntax, supports various protocols like HTTP, HTTPS, FTP, etc.                | ✔️ | ✔️ |
-| gnupg       | GNU Privacy Guard, a tool for secure communication and data storage, often used for signing and encrypting data.                | ✔️ | ✔️ |
-| lsb-release       | Linux Standard Base (LSB) information, provides details about the Linux distribution.                | ✔️ | ✔️ |
-| ca-certificates       | Common CA certificates that help in validating SSL certificates, ensuring secure communication.                | ✔️ | ✔️ |
-| procps       | A package that provides various system utilities, such as `ps`, `top`, `vmstat`, `kill`, etc., used for monitoring and managing processes.                | ✔️ | ✔️ |
-| file       | A utility to determine the type of a file based on its content, often used to identify binary and text files.                | ✔️ | ✔️ |
-| fontconfig       | library for configuring and customizing font access.                | ✔️ | ✔️ |
-| zsh       | Z Shell, an extended version of the Bourne Shell with additional features and improvements, often used as an interactive shell.                | ✔️ | ✔️ |
+| Package Name      | Description                                                  | Linux |
+|-------------------|--------------------------------------------------------------|-------|
+| build-essential       | Essential tools for building software (GCC, g++, make…)                | ✔️ |
+| curl       | Command line tool for transferring data with URL syntax                | ✔️ |
+| lsb-release       | Linux Standard Base distribution information                | ✔️ |
+| ca-certificates       | Common CA certificates for SSL validation                | ✔️ |
+| procps       | System utilities: ps, top, vmstat, kill…                | ✔️ |
+| file       | Determine file type from content                | ✔️ |
+| zsh       | Z Shell                | ✔️ |
 
 ---
 
 ### Brew Packages
 
-| Package Name      | Description                                                  | In Full | In Light |
-|-------------------|--------------------------------------------------------------|---------|----------|
+| Package Name      | Description                                                  | Linux | macOS |
+|-------------------|--------------------------------------------------------------|-------|-------|
+| gnupg       | GNU Privacy Guard                | ✔️ | ✔️ |
+| fontconfig       | Library for configuring and customizing font access                | ✔️ | ✔️ |
 | wget       | Network downloader                | ✔️ | ✔️ |
 | watch       | Execute a program periodically, showing output fullscreen                | ✔️ | ✔️ |
 | yq       | YAML processor (like jq for YAML)                | ✔️ | ✔️ |
 | jq       | Command-line JSON processor                | ✔️ | ✔️ |
-| trash-cli       | Command line interface to the freedesktop.org trashcan                | ✔️ | ✔️ |
 | btop       | Better than htop                | ✔️ | ✔️ |
 | direnv       | Load/unload environment variables based on $PWD                | ✔️ | ✔️ |
 | bitwarden-cli       | Bitwarden command-line interface                | ✔️ | ✔️ |
@@ -320,61 +306,63 @@ Dotfiles for VsCode are:
 | bat       | Output highlighting (better cat)                | ✔️ | ✔️ |
 | neovim       | Hyperextensible Vim-based text editor                | ✔️ | ✔️ |
 | thefuck       | App which corrects your previous console command.                | ✔️ | ✔️ |
-| neofetch       | Show system data and distro info                | ✔️ | ✔️ |
+| fastfetch       | Show system data and distro info (replaces neofetch)                | ✔️ | ✔️ |
 | tree       | Display directories as trees                | ✔️ | ✔️ |
-| libyaml       | YAML Parser                | ✔️ | ❌ |
-| docker       | Platform to build, run, and share containerized applications                | ✔️ | ❌ |
-| docker-compose       | Define and run multi-container applications with Docker                | ✔️ | ❌ |
-| kubernetes-cli       | Kubernetes command-line interface                | ✔️ | ❌ |
-| podman       | Tool for managing OCI containers and pods                | ✔️ | ❌ |
-| kubectx       | Switch faster between clusters and namespaces in kubectl                | ✔️ | ❌ |
-| kustomize       | Kubernetes native configuration management                | ✔️ | ❌ |
-| kdash       | Kubernetes dashboard app                | ✔️ | ❌ |
-| lazydocker       | Full Docker management app                | ✔️ | ❌ |
-| helm-docs       | Autogenerate doc for Helm charts                | ✔️ | ❌ |
-| krew       | plugin manager for kubectl command-line tool.                | ✔️ | ❌ |
-| derailed/k9s/k9s       | Kubernetes CLI to manage your clusters in style!                | ✔️ | ❌ |
-| ctop       | Container metrics and monitoring                | ✔️ | ❌ |
-| docker-completion       | Bash, Zsh and Fish completion for Docker                | ✔️ | ❌ |
-| minio-mc       | MinIO Client for object storage and filesystems                | ✔️ | ❌ |
-| gitlab-ci-local       | Build all pipeline or specific job locally                | ✔️ | ❌ |
-| k3sup       | Bootstrap Kubernetes with k3s over SSH < 1 min                | ✔️ | ❌ |
-| argocd-autopilot       | Bootstrap ArgoCD Autopilot                | ✔️ | ❌ |
-| pwgen       | Password generator                | ✔️ | ❌ |
-| fdupes       | Duplicate file finder                | ✔️ | ❌ |
-| gping       | Interactive ping tool, with graph                | ✔️ | ❌ |
-| httpie       | HTTP / API testing client                | ✔️ | ❌ |
-| entr       | Run command when files change (for testing when you change code directly launch program)                | ✔️ | ❌ |
-| ttygif       | Make gif from terminal                | ✔️ | ❌ |
-| tldr       | Simplified and community-driven man pages                | ✔️ | ❌ |
-| librsvg       | To use rsvg-convert docker-compose.svg > docker-compose.png                | ✔️ | ❌ |
-| asciiquarium       | Fish tank animation in your terminal                | ✔️ | ❌ |
-| cmatrix       | Console Matrix                | ✔️ | ❌ |
-| figlet       | Banner-like program prints strings as ASCII art                | ✔️ | ❌ |
-| cbonsai       | terminal bonzai in ASCII                | ✔️ | ❌ |
+| libyaml       | YAML Parser                | ✔️ | ✔️ |
+| docker       | Platform to build, run, and share containerized applications                | ✔️ | ✔️ |
+| docker-compose       | Define and run multi-container applications with Docker                | ✔️ | ✔️ |
+| kubernetes-cli       | Kubernetes command-line interface                | ✔️ | ✔️ |
+| podman       | Tool for managing OCI containers and pods                | ✔️ | ✔️ |
+| kubectx       | Switch faster between clusters and namespaces in kubectl                | ✔️ | ✔️ |
+| kustomize       | Kubernetes native configuration management                | ✔️ | ✔️ |
+| kdash       | Kubernetes dashboard app                | ✔️ | ✔️ |
+| lazydocker       | Full Docker management app                | ✔️ | ✔️ |
+| helm-docs       | Autogenerate doc for Helm charts                | ✔️ | ✔️ |
+| krew       | plugin manager for kubectl command-line tool.                | ✔️ | ✔️ |
+| derailed/k9s/k9s       | Kubernetes CLI to manage your clusters in style!                | ✔️ | ✔️ |
+| ctop       | Container metrics and monitoring                | ✔️ | ✔️ |
+| docker-completion       | Bash, Zsh and Fish completion for Docker                | ✔️ | ✔️ |
+| gitlab-ci-local       | Build all pipeline or specific job locally                | ✔️ | ✔️ |
+| k3sup       | Bootstrap Kubernetes with k3s over SSH < 1 min                | ✔️ | ✔️ |
+| argocd-autopilot       | Bootstrap ArgoCD Autopilot                | ✔️ | ✔️ |
+| pwgen       | Password generator                | ✔️ | ✔️ |
+| fdupes       | Duplicate file finder                | ✔️ | ✔️ |
+| gping       | Interactive ping tool, with graph                | ✔️ | ✔️ |
+| httpie       | HTTP / API testing client                | ✔️ | ✔️ |
+| entr       | Run command when files change (for testing when you change code directly launch program)                | ✔️ | ✔️ |
+| ttygif       | Make gif from terminal                | ✔️ | ✔️ |
+| tldr       | Simplified and community-driven man pages                | ✔️ | ✔️ |
+| librsvg       | To use rsvg-convert docker-compose.svg > docker-compose.png                | ✔️ | ✔️ |
+| asciiquarium       | Fish tank animation in your terminal                | ✔️ | ✔️ |
+| cmatrix       | Console Matrix                | ✔️ | ✔️ |
+| figlet       | Banner-like program prints strings as ASCII art                | ✔️ | ✔️ |
+| cbonsai       | terminal bonzai in ASCII                | ✔️ | ✔️ |
+| trash-cli       | CLI for the freedesktop.org trashcan (Linux)                | ✔️ | ❌ |
+| trash       | CLI to move files to the macOS Trash (replaces Linux trash-cli)                | ❌ | ✔️ |
 
 ---
 
 ### ASDF Packages
 
-| Package Name      | Description                                                  | In Full | In Light |
-|-------------------|--------------------------------------------------------------|---------|----------|
-| python       | Python programming language                | ✔️ | ❌ |
-| nodejs       | JavaScript runtime built on Chrome's V8 JavaScript engine                | ✔️ | ❌ |
-| golang       | Go programming language                | ✔️ | ❌ |
-| terraform       | Infrastructure as code software tool                | ✔️ | ❌ |
-| terragrunt       | Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules                | ✔️ | ❌ |
-| kubectl       | Kubernetes command-line tool                | ✔️ | ❌ |
-| helm       | The Kubernetes package manager                | ✔️ | ❌ |
-| minikube       | Run Kubernetes locally                | ✔️ | ❌ |
-| awscli       | Official Amazon AWS command-line interface                | ✔️ | ❌ |
+| Package Name      | Description                                                  | Linux | macOS |
+|-------------------|--------------------------------------------------------------|-------|-------|
+| python       | Python programming language                | ✔️ | ✔️ |
+| nodejs       | JavaScript runtime built on Chrome's V8 JavaScript engine                | ✔️ | ✔️ |
+| golang       | Go programming language                | ✔️ | ✔️ |
+| terraform       | Infrastructure as code software tool                | ✔️ | ✔️ |
+| opentofu       | Open source version of Terraform                | ✔️ | ✔️ |
+| terragrunt       | Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules                | ✔️ | ✔️ |
+| kubectl       | Kubernetes command-line tool                | ✔️ | ✔️ |
+| helm       | The Kubernetes package manager                | ✔️ | ✔️ |
+| minikube       | Run Kubernetes locally                | ✔️ | ✔️ |
+| awscli       | Official Amazon AWS command-line interface                | ✔️ | ✔️ |
 | packer       | Tool for creating identical machine images for multiple platforms                | ✔️ | ✔️ |
-| poetry       | Python dependency management and packaging made easy                | ✔️ | ❌ |
-| pre-commit       | Allow script to run on every commit                | ✔️ | ❌ |
-| tflint       | Terraform Linter                | ✔️ | ❌ |
-| act       | Build and test GitHub pipelines on local stack                | ✔️ | ❌ |
-| glab       | CLI for GitLab                | ✔️ | ❌ |
-| gomplate       | A template renderer that can be used to generate README                | ✔️ | ❌ |
-| bitwarden-secrets-manager       | Secrets Manager command-line interface                | ✔️ | ❌ |
+| poetry       | Python dependency management and packaging made easy                | ✔️ | ✔️ |
+| pre-commit       | Allow script to run on every commit                | ✔️ | ✔️ |
+| tflint       | Terraform Linter                | ✔️ | ✔️ |
+| act       | Build and test GitHub pipelines on local stack                | ✔️ | ✔️ |
+| glab       | CLI for GitLab                | ✔️ | ✔️ |
+| gomplate       | A template renderer that can be used to generate README                | ✔️ | ✔️ |
+| bitwarden-secrets-manager       | Secrets Manager command-line interface                | ✔️ | ✔️ |
 
 ---

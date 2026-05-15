@@ -66,6 +66,8 @@
 #     CORE
 #
 ######
+    - gnupg               ###### GNU Privacy Guard
+    - fontconfig          ###### Library for configuring and customizing font access
     - wget                ###### Network downloader
     - watch               ###### Execute a program periodically, showing output fullscreen
     - yq                  ###### YAML processor (like jq for YAML)
