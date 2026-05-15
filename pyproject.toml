@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Personal dotfiles management and documentation generation"
 authors = ["SQuent <q.sallio@gmail.com>"]
 readme = "README.md"
-package-mode = false
+packages = []
 
 [tool.poetry.dependencies]
 python = "^3.13"
