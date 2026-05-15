@@ -1,45 +1,37 @@
 apt_packages:
-- description: A package that contains the essential tools for building software,
-    including GCC, g++, make, etc.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: "Essential tools for building software (GCC, g++, make\u2026)"
+  in_linux: 'yes'
+  in_mac: 'no'
   name: build-essential
-- description: Command line tool for transferring data with URL syntax, supports various
-    protocols like HTTP, HTTPS, FTP, etc.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: Command line tool for transferring data with URL syntax
+  in_linux: 'yes'
+  in_mac: 'no'
   name: curl
-- description: GNU Privacy Guard, a tool for secure communication and data storage,
-    often used for signing and encrypting data.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: "GNU Privacy Guard \u2014 signing and encrypting data"
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: gnupg
-- description: Linux Standard Base (LSB) information, provides details about the Linux
-    distribution.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: Linux Standard Base distribution information
+  in_linux: 'yes'
+  in_mac: 'no'
   name: lsb-release
-- description: Common CA certificates that help in validating SSL certificates, ensuring
-    secure communication.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: Common CA certificates for SSL validation
+  in_linux: 'yes'
+  in_mac: 'no'
   name: ca-certificates
-- description: A package that provides various system utilities, such as `ps`, `top`,
-    `vmstat`, `kill`, etc., used for monitoring and managing processes.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: "System utilities: ps, top, vmstat, kill\u2026"
+  in_linux: 'yes'
+  in_mac: 'no'
   name: procps
-- description: A utility to determine the type of a file based on its content, often
-    used to identify binary and text files.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: Determine file type from content
+  in_linux: 'yes'
+  in_mac: 'no'
   name: file
-- description: library for configuring and customizing font access.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: Library for configuring and customizing font access
+  in_linux: 'yes'
+  in_mac: 'no'
   name: fontconfig
-- description: Z Shell, an extended version of the Bourne Shell with additional features
-    and improvements, often used as an interactive shell.
-  in_full: 'yes'
-  in_light: 'yes'
+- description: Z Shell
+  in_linux: 'yes'
+  in_mac: 'no'
   name: zsh

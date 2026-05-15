@@ -2,10 +2,8 @@
 
 set -e
 
-# Configuration de base
-CONFIG="full.conf.yaml"
 DOTBOT_DIR="dotbot/dotbot"
-START_TIME=$(date +%s) # Start timer
+START_TIME=$(date +%s)
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOGFILE="./install.log"
@@ -14,115 +12,113 @@ log() {
     echo "$1" | tee -a "$LOGFILE"
 }
 
-# Initialize variables to track the selected installation type
-FULL_INSTALLATION=true
-LIGHT_INSTALLATION=false
-NO_INSTALL_OPTION=true
-
-
-# Loop through all the arguments
-for arg in "$@"; do
-    case "$arg" in
-        -f|--full)
-            log Full installation will be proceed.
-            NO_INSTALL_OPTION=false 
-            ;;
-        -l|--light)
-            LIGHT_INSTALLATION=true
-            FULL_INSTALLATION=false
-            NO_INSTALL_OPTION=false
-            CONFIG="light.conf.yaml"
-            log Light installation will be proceed.
-
-            ;;
-        *)
-    esac
-done
-
-if $NO_INSTALL_OPTION; then
-    log No type of installation specified, Full installation will be proceed.
-fi
-# Check for conflicting options
-if $FULL_INSTALLATION && $LIGHT_INSTALLATION; then
-    log "Error: You cannot specify both -f|--full and -l|--light"
-    log "Usage: $0 [-f|--full] [-l|--light]"
-    exit 1
-fi
-
-
-# Démarrer le script
+OS="$(uname -s)"
 log "Starting script at $(date)"
+log "Detected OS: ${OS}"
 
 
-
-# Mettre à jour les paquets
-log "Updating package lists..."
-sudo apt-get update |& tee -a "$LOGFILE"
-sudo apt-get upgrade --yes |& tee -a "$LOGFILE"
-
-# Vérifier et installer curl si nécessaire
-log "Checking for curl..."
-if ! command -v curl &> /dev/null; then
-    log "curl n'est pas installé. Installation de curl..."
-    sudo apt-get --yes install curl apt-transport-https |& tee -a "$LOGFILE"
-else
-    log "Curl est déjà installé. Skipping..."
-fi
-
-# Vérifier et installer Python 3 si nécessaire
-log "Checking for Python 3..."
-if ! command -v python3 &> /dev/null; then
-    log "Python 3 n'est pas installé. Installation de Python 3..."
-    sudo apt-get --yes install python3 |& tee -a "$LOGFILE"
-else
-    log "Python 3 est déjà installé. Skipping..."
-fi
-
-# Vérifier et installer python3-dev si nécessaire
-log "Checking for python3-dev..."
-if ! dpkg -s python3-dev &> /dev/null; then
-    log "python3-dev n'est pas installé. Installation de python3-dev..."
-    sudo apt-get --yes install python3-dev |& tee -a "$LOGFILE"
-else
-    log "python3-dev est déjà installé. Skipping..."
-fi
-
-# Vérifier et installer git si nécessaire
-log "Checking for git..."
-if ! command -v git &> /dev/null; then
-    log "Git n'est pas installé. Installation de Git..."
-    sudo apt-get --yes install git |& tee -a "$LOGFILE"
-else
-    log "Git est déjà installé. Skipping..."
-fi
-
-# Se déplacer dans le répertoire de base
+# Move to base directory
 log "Changing to base directory: ${BASEDIR}"
 cd "${BASEDIR}"
 
-# Source le fichier de configuration si nécessaire
+# Source config profile if it exists
 log "Sourcing config/.profile if it exists..."
 if [ -f config/.profile ]; then
     source config/.profile
     log "Sourced config/.profile"
 fi
 
-# Ajouter Linuxbrew au PATH
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-
-# Synchroniser et mettre à jour les sous-modules git
+# Sync git submodules
 log "Synchronizing git submodules..."
-git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive |& tee -a "$LOGFILE"
-git submodule update --init --recursive |& tee -a "$LOGFILE"
+git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive 2>&1 | tee -a "$LOGFILE"
+git submodule update --init --recursive 2>&1 | tee -a "$LOGFILE"
 
-# Exécuter Dotbot avec les plugins et les configurations spécifiées
-log "Running Dotbot for apt..."
-sudo "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbot/dotbot-apt  --only apt -v -c "${CONFIG}" |& tee -a "$LOGFILE"
-log "Dotbot (apt) done."
+# ─── macOS ────────────────────────────────────────────────────────────────────
+if [[ "$OS" == "Darwin" ]]; then
 
-log "Running Dotbot"
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir dotbot/dotbot-apt --plugin-dir dotbot/dotbot-brew --plugin-dir dotbot/dotbot-npm --except apt -v -c "${CONFIG}" |& tee -a "$LOGFILE"
-log "Dotbot done."
+    # Ensure Xcode Command Line Tools are installed (required for git, make, etc.)
+    if ! xcode-select -p &>/dev/null; then
+        log "Xcode Command Line Tools not found. Triggering installation..."
+        xcode-select --install
+        log "Please re-run this script once Xcode CLT installation has completed."
+        exit 0
+    fi
+
+    # Add Homebrew to PATH for this session (handles both Apple Silicon and Intel)
+    if [[ -d "/opt/homebrew/bin" ]]; then
+        export PATH="/opt/homebrew/bin:$PATH"   # Apple Silicon
+    elif [[ -d "/usr/local/bin" ]]; then
+        export PATH="/usr/local/bin:$PATH"      # Intel
+    fi
+
+    # Pass 1: common config (clean, create, link, install-brew, tap, brew, shell)
+    log "Running Dotbot for common config..."
+    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
+        --plugin-dir dotbot/dotbot-brew \
+        -v -c common.conf.yaml 2>&1 | tee -a "$LOGFILE"
+    log "Dotbot (common) done."
+
+    # Pass 2: macOS-specific config (trash, gnupg, ~/Library/Fonts link)
+    log "Running Dotbot for macOS-specific config..."
+    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
+        --plugin-dir dotbot/dotbot-brew \
+        -v -c mac.conf.yaml 2>&1 | tee -a "$LOGFILE"
+    log "Dotbot (mac) done."
+
+# ─── Linux ────────────────────────────────────────────────────────────────────
+elif [[ "$OS" == "Linux" ]]; then
+
+    # Bootstrap: ensure curl, python3, python3-dev and git are present before dotbot
+    log "Updating package lists..."
+    sudo apt-get update 2>&1 | tee -a "$LOGFILE"
+    sudo apt-get upgrade --yes 2>&1 | tee -a "$LOGFILE"
+
+    for pkg in curl python3 git; do
+        if ! command -v "$pkg" &>/dev/null; then
+            log "${pkg} not found. Installing..."
+            sudo apt-get --yes install "$pkg" 2>&1 | tee -a "$LOGFILE"
+        else
+            log "${pkg} already installed. Skipping."
+        fi
+    done
+
+    if ! dpkg -s python3-dev &>/dev/null 2>&1; then
+        log "python3-dev not found. Installing..."
+        sudo apt-get --yes install python3-dev 2>&1 | tee -a "$LOGFILE"
+    else
+        log "python3-dev already installed. Skipping."
+    fi
+
+    # Add Linuxbrew to PATH for this session
+    export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+
+    # Pass 1: apt packages (requires sudo, uses linux-specific config)
+    log "Running Dotbot for apt (Linux)..."
+    sudo "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
+        --plugin-dir dotbot/dotbot-apt \
+        --only apt -v -c linux.conf.yaml 2>&1 | tee -a "$LOGFILE"
+    log "Dotbot (apt) done."
+
+    # Pass 2: common config (clean, create, link, install-brew, tap, brew, shell)
+    log "Running Dotbot for common config..."
+    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
+        --plugin-dir dotbot/dotbot-apt \
+        --plugin-dir dotbot/dotbot-brew \
+        -v -c common.conf.yaml 2>&1 | tee -a "$LOGFILE"
+    log "Dotbot (common) done."
+
+    # Pass 3: Linux-specific brew + shell (sudoers, chsh, fc-cache)
+    log "Running Dotbot for Linux-specific config (except apt)..."
+    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
+        --plugin-dir dotbot/dotbot-apt \
+        --plugin-dir dotbot/dotbot-brew \
+        --except apt -v -c linux.conf.yaml 2>&1 | tee -a "$LOGFILE"
+    log "Dotbot (linux) done."
+
+else
+    log "Unsupported OS: ${OS}"
+    exit 1
+fi
 
 # Calculer le temps écoulé
 total_time=$(( $(date +%s) - START_TIME ))

@@ -1,0 +1,40 @@
+# Linux-specific dotbot configuration
+# Called in 3 passes from the install script:
+#   1. sudo dotbot --only apt    -c linux.conf.yaml   (bootstrap system packages)
+#   2.      dotbot               -c common.conf.yaml  (links, brew, common tools)
+#   3.      dotbot --except apt  -c linux.conf.yaml   (linux-specific brew + shell)
+
+- clean:
+    ~/:
+      force: true
+      recursive: true
+
+- apt:
+    - build-essential     ###### Essential tools for building software (GCC, g++, make…)
+    - curl                ###### Command line tool for transferring data with URL syntax
+    - gnupg               ###### GNU Privacy Guard — signing and encrypting data
+    - lsb-release         ###### Linux Standard Base distribution information
+    - ca-certificates     ###### Common CA certificates for SSL validation
+    - procps              ###### System utilities: ps, top, vmstat, kill…
+    - file                ###### Determine file type from content
+    - fontconfig          ###### Library for configuring and customizing font access
+    - zsh                 ###### Z Shell
+    # - nala               ###### better than apt with history revert update etc..
+    # - vector             ###### log and metric aggregator
+
+- brew:
+    - trash-cli           ###### CLI for the freedesktop.org trashcan (Linux)
+
+- shell:
+  - description: "Add current user to sudoers without password"
+    command: |
+      USER=$(whoami)
+      SUDOERS_FILE="/etc/sudoers.d/$USER"
+      if ! sudo grep -q "$USER ALL=(ALL) NOPASSWD:ALL" "$SUDOERS_FILE" 2>/dev/null; then
+        echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "$SUDOERS_FILE" >/dev/null
+        sudo chmod 440 "$SUDOERS_FILE"
+      fi
+  - description: Set ZSH as default shell
+    command: sudo chsh -s $(which zsh) $USER
+  - description: install fonts
+    command: fc-cache -f -v

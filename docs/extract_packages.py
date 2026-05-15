@@ -6,9 +6,28 @@ def extract_packages_from_yaml(yaml_files, output_files):
     # Initialize data structures for package categorization
     package_presence = {}
 
+    # Mapping: filename keyword -> which OS columns to mark as 'yes'
+    # common -> both linux and mac
+    # linux  -> linux only
+    # mac    -> mac only
+    SOURCE_MAP = {
+        'common': ['in_linux', 'in_mac'],
+        'linux':  ['in_linux'],
+        'mac':    ['in_mac'],
+    }
+
     for yaml_file in yaml_files:
-        # Determine the source file
-        source_file = 'full' if 'full' in yaml_file else 'light'
+        # Determine which OS columns to populate based on filename
+        basename = os.path.basename(yaml_file)
+        source_key = None
+        for key in SOURCE_MAP:
+            if key in basename:
+                source_key = key
+                break
+        if source_key is None:
+            continue  # Skip unknown files
+
+        os_columns = SOURCE_MAP[source_key]
 
         # Read the YAML file
         with open(yaml_file, 'r') as file:
@@ -54,7 +73,7 @@ def extract_packages_from_yaml(yaml_files, output_files):
                 parts = re.split(r'\s*######\s*', line, maxsplit=1)
                 package_part = parts[0].strip()
                 description = parts[1].strip() if len(parts) > 1 else ''
-                
+
                 # Handle asdf plugin syntax: "plugin: name"
                 if current_section == 'asdf' and 'plugin:' in package_part:
                     package_name = package_part.split('plugin:')[1].strip()
@@ -64,36 +83,36 @@ def extract_packages_from_yaml(yaml_files, output_files):
                 # Update package presence for apt, brew, asdf sections
                 if package_name not in package_presence:
                     package_presence[package_name] = {
-                        'in_full': 'no',
-                        'in_light': 'no',
+                        'in_linux': 'no',
+                        'in_mac': 'no',
                         'description': description,
                         'section': current_section
                     }
-                package_presence[package_name][f'in_{source_file}'] = 'yes'
+                for col in os_columns:
+                    package_presence[package_name][col] = 'yes'
 
             elif current_section == 'shell':
                 # Look for asdf plugin add commands (can be indented in command blocks)
                 if 'asdf plugin add' in line and '######' in line:
-                    # Extract package name from asdf plugin add command
                     # Format: asdf plugin add <name> || true  ###### Description
                     parts = re.split(r'\s*######\s*', line, maxsplit=1)
                     command_part = parts[0].strip()
                     description = parts[1].strip() if len(parts) > 1 else ''
-                    
+
                     # Extract plugin name from command
                     match = re.search(r'asdf plugin add\s+(\S+)', command_part)
                     if match:
                         package_name = match.group(1)
-                        
-                        # Update package presence immediately
+
                         if package_name not in package_presence:
                             package_presence[package_name] = {
-                                'in_full': 'no',
-                                'in_light': 'no',
+                                'in_linux': 'no',
+                                'in_mac': 'no',
                                 'description': description,
                                 'section': 'asdf'  # Map shell section to asdf for categorization
                             }
-                        package_presence[package_name][f'in_{source_file}'] = 'yes'
+                        for col in os_columns:
+                            package_presence[package_name][col] = 'yes'
 
     # Separate packages into apt, brew and asdf lists
     apt_packages = []
@@ -104,8 +123,8 @@ def extract_packages_from_yaml(yaml_files, output_files):
         package = {
             'name': package_name,
             'description': presence['description'],
-            'in_full': presence['in_full'],
-            'in_light': presence['in_light']
+            'in_linux': presence['in_linux'],
+            'in_mac': presence['in_mac'],
         }
         # Assign to apt, brew or asdf list based on section
         if presence['section'] == 'apt':
@@ -127,9 +146,11 @@ def extract_packages_from_yaml(yaml_files, output_files):
 
 def main():
     # Define the input YAML files and output files
+    base = os.path.dirname(os.path.dirname(__file__))
     input_files = [
-        os.path.join(os.path.dirname(os.path.dirname(__file__)), 'full.conf.yaml'),
-        os.path.join(os.path.dirname(os.path.dirname(__file__)), 'light.conf.yaml')
+        os.path.join(base, 'common.conf.yaml'),
+        os.path.join(base, 'linux.conf.yaml'),
+        os.path.join(base, 'mac.conf.yaml'),
     ]
     output_files = {'apt': 'docs/apt_packages.yml', 'brew': 'docs/brew_packages.yml', 'asdf': 'docs/asdf_packages.yml'}
 

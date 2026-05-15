@@ -64,7 +64,14 @@ fi
 
 # Check if asdf is installed, then initialize asdf
 if command_exists asdf; then
-  source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
+  # Resolve asdf init script — path differs between Linuxbrew and macOS Homebrew
+  if [[ -f /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh ]]; then
+    source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
+  elif [[ -f /opt/homebrew/opt/asdf/libexec/asdf.sh ]]; then
+    source /opt/homebrew/opt/asdf/libexec/asdf.sh
+  elif [[ -f /usr/local/opt/asdf/libexec/asdf.sh ]]; then
+    source /usr/local/opt/asdf/libexec/asdf.sh
+  fi
   
   # Function to auto-install missing versions from .tool-versions
   asdf_auto_install() {

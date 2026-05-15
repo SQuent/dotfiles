@@ -1,0 +1,35 @@
+# macOS-specific dotbot configuration
+# Called in 2 passes from the install script:
+#   1. dotbot -c common.conf.yaml   (links, install-brew, tap, common tools)
+#   2. dotbot -c mac.conf.yaml      (this file — macOS-specific packages + font link)
+
+- defaults:
+    install-brew:
+      stdin: False
+      stderr: False
+      stdout: False
+      force_intel: False
+    tap:
+      stdin: False
+      stderr: False
+      stdout: False
+      force_intel: False
+    link:
+      relink: true
+      force: true
+
+- clean:
+    ~/:
+      force: true
+      recursive: false   # recursive: false avoids read-only OrbStack/Docker mounts
+
+- tap:
+    - homebrew/cask-fonts   # Required for Nerd Fonts casks
+
+- brew:
+    - trash       ###### CLI to move files to the macOS Trash (replaces Linux trash-cli)
+    - gnupg       ###### GNU Privacy Guard (installed via apt on Linux, needs brew on macOS)
+    - fontconfig  ###### Library for configuring and customizing font access (installed via apt on Linux)
+
+- cask:
+    - font-jetbrains-mono-nerd-font  ###### JetBrains Mono Nerd Font (patched with icons)

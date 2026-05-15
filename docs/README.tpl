@@ -23,43 +23,24 @@ I use [Dotbot](https://github.com/anishathalye/dotbot) to manage these dotfiles.
 ---
 
 ### Installation Modes
-- **Personal Machines:** Full setup including all configurations and packages.
-- **Servers:** Minimal setup with terminal configurations and fewer packages.
+- **Linux:** Full setup via apt bootstrap + Homebrew + common configuration.
+- **macOS:** Setup via Homebrew only — no apt, font handling via `~/Library/Fonts`.
 
 ---
 
 ## Getting Started
 
-### Personal Machine Installation:
+### Installation
 ```bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install
 ```
-[Clone the repository] and run the installation script.
+The script auto-detects the OS (`Darwin` or `Linux`) and runs the appropriate steps.
 
-
-### Server Installation:
-```bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install -l
-```
-[Clone the repository] and run the server installation script with the `-l` option.
-
-### Testing in Docker
-You can build an image for both: 
-
-**Personal Machine (Full):**
+### Testing in Docker (Linux)
 ````bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:full -f Dockerfile --progress=plain 
-docker run -it dotfiles:full
-
-````
-
-**Server (Light):**
-````bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:light -f Dockerfile.light --progress=plain 
-docker run -it dotfiles:light
-
+docker build . -t dotfiles:linux -f Dockerfile --progress=plain
+docker run -it dotfiles:linux
 ````
 
 ---
@@ -68,23 +49,26 @@ docker run -it dotfiles:light
 
 ### Installation Script
 The installation script is a wrapper around [Dotbot](https://github.com/anishathalye/dotbot) with the following features:
-- Manages both personal and server deployments.
+- Auto-detects the OS (`uname -s`) — no flags required.
 - Logs actions to `install.log`.
-- Checks and installs prerequisites (e.g., `apt update`, `python3`, `git`, `curl`).
+- Checks and installs prerequisites before running Dotbot.
 - Syncs and updates Dotbot plugins via git submodules.
-- Executes Dotbot with apt packages installation to get prerequisites for other actions.
-- Executes all Dotbot steps except apt packages installation.
+- Splits configuration across three files: `common.conf.yaml`, `linux.conf.yaml`, `mac.conf.yaml`.
 
 ---
 
 ### Dotbot Steps
-1. Clean the `~/` directory.
-2. Create necessary folders.
-3. Link configuration files with symlinks.
-4. Install APT packages.
-5. Install Homebrew and packages if not already installed.
-6. Install npm packages.
-7. Configure the shell environment.
+
+**Linux (3 passes):**
+1. Bootstrap: `apt-get update/upgrade`, install `curl`, `python3`, `git`, `python3-dev`.
+2. Pass 1 — `linux.conf.yaml` (`--only apt`): install APT packages.
+3. Pass 2 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
+4. Pass 3 — `linux.conf.yaml` (`--except apt`): Linux-specific brew (`trash-cli`), sudoers, default shell, font cache.
+
+**macOS (2 passes):**
+1. Check Xcode Command Line Tools, set Homebrew PATH.
+2. Pass 1 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
+3. Pass 2 — `mac.conf.yaml`: macOS-specific brew (`trash`, `gnupg`), `~/Library/Fonts` symlink.
 
 ---
 
@@ -256,8 +240,11 @@ My Tmux configuration, stored in [`config/.tmux.conf`](config/.tmux.conf), inclu
 
 ### Garbage Management with Trash
 
-To avoid accidentally deleting files permanently, I use [trash-cli](https://github.com/andreafrancia/trash-cli). i replace rm by this. This tool moves files to the trash, allowing for easy recovery if needed. 
-Aliases are set for trash management.
+To avoid accidentally deleting files permanently, I replace `rm` with a trash tool:
+- **Linux:** [`trash-cli`](https://github.com/andreafrancia/trash-cli) — follows the freedesktop.org trash spec.
+- **macOS:** [`trash`](https://github.com/ali-rantakari/trash) — moves files to the macOS Trash.
+
+Aliases are set for trash management in both cases.
 
 ---
 
@@ -281,32 +268,32 @@ Dotfiles for VsCode are:
 
 ## Installed Packages
 
-### APT Packages
+### APT Packages (Linux only)
 
-| Package Name      | Description                                                  | In Full | In Light |
-|-------------------|--------------------------------------------------------------|---------|----------|
+| Package Name      | Description                                                  | Linux |
+|-------------------|--------------------------------------------------------------|-------|
 {{- range (datasource "apt_packages").apt_packages }}
-| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_full "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_light "yes" }}✔️{{ else }}❌{{ end }} |
+| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_linux "yes" }}✔️{{ else }}❌{{ end }} |
 {{- end }}
 
 ---
 
 ### Brew Packages
 
-| Package Name      | Description                                                  | In Full | In Light |
-|-------------------|--------------------------------------------------------------|---------|----------|
+| Package Name      | Description                                                  | Linux | macOS |
+|-------------------|--------------------------------------------------------------|-------|-------|
 {{- range (datasource "brew_packages").brew_packages }}
-| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_full "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_light "yes" }}✔️{{ else }}❌{{ end }} |
+| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_linux "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_mac "yes" }}✔️{{ else }}❌{{ end }} |
 {{- end }}
 
 ---
 
 ### ASDF Packages
 
-| Package Name      | Description                                                  | In Full | In Light |
-|-------------------|--------------------------------------------------------------|---------|----------|
+| Package Name      | Description                                                  | Linux | macOS |
+|-------------------|--------------------------------------------------------------|-------|-------|
 {{- range (datasource "asdf_packages").asdf_packages }}
-| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_full "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_light "yes" }}✔️{{ else }}❌{{ end }} |
+| {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_linux "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_mac "yes" }}✔️{{ else }}❌{{ end }} |
 {{- end }}
 
 ---

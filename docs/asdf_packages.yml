@@ -1,70 +1,74 @@
 asdf_packages:
 - description: Python programming language
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: python
 - description: JavaScript runtime built on Chrome's V8 JavaScript engine
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: nodejs
 - description: Go programming language
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: golang
 - description: Infrastructure as code software tool
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: terraform
+- description: Open source version of Terraform
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: opentofu
 - description: Thin wrapper for Terraform that provides extra tools for working with
     multiple Terraform modules
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: terragrunt
 - description: Kubernetes command-line tool
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: kubectl
 - description: The Kubernetes package manager
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: helm
 - description: Run Kubernetes locally
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: minikube
 - description: Official Amazon AWS command-line interface
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: awscli
 - description: Tool for creating identical machine images for multiple platforms
-  in_full: 'yes'
-  in_light: 'yes'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: packer
 - description: Python dependency management and packaging made easy
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: poetry
 - description: Allow script to run on every commit
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: pre-commit
 - description: Terraform Linter
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: tflint
 - description: Build and test GitHub pipelines on local stack
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: act
 - description: CLI for GitLab
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: glab
 - description: A template renderer that can be used to generate README
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: gomplate
 - description: Secrets Manager command-line interface
-  in_full: 'yes'
-  in_light: 'no'
+  in_linux: 'yes'
+  in_mac: 'yes'
   name: bitwarden-secrets-manager

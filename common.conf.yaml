@@ -14,11 +14,6 @@
       force: true
 
 
-- clean:
-    ~/:
-      force: true
-      recursive: true
-
 - create:
     - ~/scripts
     - ${XDG_CONFIG_HOME}
@@ -58,19 +53,6 @@
     ~/git/nas/.envrc: config/direnv/file/nas
     ${XDG_CONFIG_HOME}/direnv/direnv.toml: config/direnv/direnv.toml
 
-- apt:
-    - build-essential     ###### A package that contains the essential tools for building software, including GCC, g++, make, etc.
-    - curl                ###### Command line tool for transferring data with URL syntax, supports various protocols like HTTP, HTTPS, FTP, etc.
-    - gnupg               ###### GNU Privacy Guard, a tool for secure communication and data storage, often used for signing and encrypting data.
-    - lsb-release         ###### Linux Standard Base (LSB) information, provides details about the Linux distribution.
-    - ca-certificates     ###### Common CA certificates that help in validating SSL certificates, ensuring secure communication.
-    - procps              ###### A package that provides various system utilities, such as `ps`, `top`, `vmstat`, `kill`, etc., used for monitoring and managing processes.
-    - file                ###### A utility to determine the type of a file based on its content, often used to identify binary and text files.
-    - fontconfig          ###### library for configuring and customizing font access.
-    - zsh                 ###### Z Shell, an extended version of the Bourne Shell with additional features and improvements, often used as an interactive shell.
-    # - nala               ###### better than apt with history revert update etc..
-    # - vector             ###### log and metric aggregator
-
 - install-brew: true
 
 - tap:
@@ -79,7 +61,7 @@
     - hashicorp/tap
 
 - brew:
-###### 
+######
 #
 #     CORE
 #
@@ -88,7 +70,7 @@
     - watch               ###### Execute a program periodically, showing output fullscreen
     - yq                  ###### YAML processor (like jq for YAML)
     - jq                  ###### Command-line JSON processor
-    - trash-cli           ###### Command line interface to the freedesktop.org trashcan
+    # trash-cli (Linux) / trash (macOS) are in their respective OS config files
     - btop                ###### Better than htop
     - direnv              ###### Load/unload environment variables based on $PWD
     # - xterm               ###### X terminal emulator
@@ -100,7 +82,7 @@
     - tmux                ###### Terminal multiplexer
     - fd                  ###### Simple, fast and user-friendly alternative to 'find'
     # - procs               ###### Advanced process viewer (better ps)
-###### 
+######
 #
 #     Vizu Core
 #
@@ -110,15 +92,15 @@
     - bat                 ###### Output highlighting (better cat)
     - neovim              ###### Hyperextensible Vim-based text editor
     - thefuck             ###### App which corrects your previous console command.
-    - neofetch            ###### Show system data and distro info
+    - fastfetch           ###### Show system data and distro info (replaces neofetch)
     - tree                ###### Display directories as trees
-###### 
+######
 #
 #     Dev tool
 #
 ######
     - libyaml             ###### YAML Parser
-###### 
+######
 #
 #     Containers
 #
@@ -138,7 +120,7 @@
     - docker-completion   ###### Bash, Zsh and Fish completion for Docker
     # - docker-compose-completion ###### Docker-compose completion script FAIL
     # - skaffold           ###### Local dev Kubernetes
-###### 
+######
 #
 #     Cloud
 #
@@ -146,24 +128,24 @@
     # - minio-mc            ###### MinIO Client for object storage and filesystems
     # - s3cmd               ###### CLI for S3 bucket
     # - azure-cli           ###### Official Azure CLI
-###### 
+######
 #
 #     CICD & Devops
 #
 ######
     - gitlab-ci-local      ###### Build all pipeline or specific job locally
     # - vault               ###### Tool for managing secrets
-    # - pgcli               ###### CLI for Postgres with auto-completion and syntax highlighting 
+    # - pgcli               ###### CLI for Postgres with auto-completion and syntax highlighting
     # - git-crypt           ###### Enable transparent encryption/decryption of files in a git repo
     # - ngrok               ###### Secure introspectable tunnels to localhost
-###### 
+######
 #
 #     Homelab
 #
 ######
     - k3sup               ###### Bootstrap Kubernetes with k3s over SSH < 1 min
     - argocd-autopilot    ###### Bootstrap ArgoCD Autopilot
-###### 
+######
 #
 #     Utilities
 #
@@ -181,7 +163,7 @@
     # - fzf                 ###### Command-line fuzzy finder
     # - nmap                ###### Port scanning utility for large networks
     # - tailspin            ###### Log highlighter
-###### 
+######
 #
 #     Fun
 #
@@ -195,15 +177,6 @@
 
 
 - shell:
-  - description: "Add current user to sudoers without password"
-    command: |
-      USER=$(whoami)
-      SUDOERS_FILE="/etc/sudoers.d/$USER"
-      if ! sudo grep -q "$USER ALL=(ALL) NOPASSWD:ALL" "$SUDOERS_FILE" 2>/dev/null; then
-        echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "$SUDOERS_FILE" >/dev/null
-        sudo chmod 440 "$SUDOERS_FILE"
-      fi
-
   - description: "Install asdf plugins (without versions)"
     command: |
       # Install asdf plugins only (versions managed by .tool-versions)
@@ -224,10 +197,6 @@
       asdf plugin add act || true                         ###### Build and test GitHub pipelines on local stack
       asdf plugin add glab || true                        ###### CLI for GitLab
       asdf plugin add gomplate || true                    ###### A template renderer that can be used to generate README
-      asdf plugin add bitwarden-secrets-manager || true   ######  Secrets Manager command-line interface
-  - description: Set ZSH as default shell
-    command: sudo chsh -s $(which zsh) $USER
-  - description: install fonts
-    command: fc-cache -f -v
+      asdf plugin add bitwarden-secrets-manager || true   ###### Secrets Manager command-line interface
   - description: switch dotfile repo to ssh connexion for git
     command: git remote set-url origin git@github.com:SQuent/dotfiles.git
