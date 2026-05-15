@@ -68,7 +68,7 @@ The installation script is a wrapper around [Dotbot](https://github.com/anishath
 **macOS (2 passes):**
 1. Check Xcode Command Line Tools, set Homebrew PATH.
 2. Pass 1 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
-3. Pass 2 — `mac.conf.yaml`: macOS-specific brew (`trash`, `gnupg`), `~/Library/Fonts` symlink.
+3. Pass 2 — `mac.conf.yaml`: macOS-specific brew (`trash`), `~/Library/Fonts` symlink.
 
 ---
 
