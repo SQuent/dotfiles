@@ -13,12 +13,21 @@ command_exists() {
   command -v "$1" &> /dev/null
 }
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Detect OS
+if [[ "$(uname)" == "Darwin" ]]; then
+  OS="mac"
+  BREW_PREFIX="/opt/homebrew"
+else
+  OS="linux"
+  BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+fi
+
+eval "$(${BREW_PREFIX}/bin/brew shellenv)"
 
 # Set default applications
 export EDITOR="vim"
 
-export PATH="$PATH:/home/${USER}/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -26,7 +35,8 @@ export PATH="$PATH:/home/${USER}/.local/bin"
 # Set color breeze to exa (better ls)
 export EZA_COLORS="ur=34:uw=35:ux=36:gr=34:gw=35:gx=36:tr=34:tw=35:tx=36"
 
-export DISPLAY=:0
+# X11 display — Linux only
+[[ "$OS" == "linux" ]] && export DISPLAY=:0
 
     # Import config files
 source ${ZDOTDIR}/aliases.zsh
@@ -64,14 +74,8 @@ fi
 
 # Check if asdf is installed, then initialize asdf
 if command_exists asdf; then
-  # Resolve asdf init script — path differs between Linuxbrew and macOS Homebrew
-  if [[ -f /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh ]]; then
-    source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
-  elif [[ -f /opt/homebrew/opt/asdf/libexec/asdf.sh ]]; then
-    source /opt/homebrew/opt/asdf/libexec/asdf.sh
-  elif [[ -f /usr/local/opt/asdf/libexec/asdf.sh ]]; then
-    source /usr/local/opt/asdf/libexec/asdf.sh
-  fi
+  asdf_init="${BREW_PREFIX}/opt/asdf/libexec/asdf.sh"
+  [[ -f "${asdf_init}" ]] && source "${asdf_init}"
   
   # Function to auto-install missing versions from .tool-versions
   asdf_auto_install() {
