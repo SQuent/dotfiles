@@ -32,6 +32,11 @@ export PATH="$PATH:$HOME/.local/bin"
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# Auto-start tmux: attach to existing session or create new one
+if command_exists tmux && [[ -z "$TMUX" ]]; then
+  tmux new-session -A -s main
+fi
+
 # Set color breeze to exa (better ls)
 export EZA_COLORS="ur=34:uw=35:ux=36:gr=34:gw=35:gx=36:tr=34:tw=35:tx=36"
 
@@ -96,13 +101,6 @@ fi
 
 # to restore binkey ctrl a e r 
 bindkey -e
-
-if command_exists tmux; then
-  tmux source-file ${XDG_CONFIG_HOME}/.tmux.conf
-else
-  echo "Tmux is not installed."
-fi
-
 
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward

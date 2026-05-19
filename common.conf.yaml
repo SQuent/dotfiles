@@ -17,6 +17,7 @@
 - create:
     - ~/scripts
     - ${XDG_CONFIG_HOME}
+    - ${XDG_CONFIG_HOME}/zsh
     - ~/.config/nvim
     - ~/.ssh
     - ~/.local
@@ -30,22 +31,23 @@
     - ~/.config/direnv
     - ~/.config/git
     - ~/.config/ranger
+    - ~/.config/tmux
 
 - link:
     # Utility config files
-    ~/.zprofile: config/.profile
+    ~/.zprofile: config/.zprofile
     ~/.tool-versions: config/.tool-versions
     ~/.asdfrc: config/.asdfrc
-    ${XDG_CONFIG_HOME}/.zshrc: config/zsh/.zshrc
-    ${XDG_CONFIG_HOME}/aliases.zsh: config/zsh/aliases.zsh
-    ${XDG_CONFIG_HOME}/functions.zsh: config/zsh/functions.zsh
-    ${XDG_CONFIG_HOME}/history.zsh: config/zsh/history.zsh
-    ${XDG_CONFIG_HOME}/import-plugins.zsh: config/zsh/import-plugins.zsh
-    ${XDG_CONFIG_HOME}/setup-antigen.zsh: config/zsh/setup-antigen.zsh
+    ${XDG_CONFIG_HOME}/zsh/.zshrc: config/zsh/.zshrc
+    ${XDG_CONFIG_HOME}/zsh/aliases.zsh: config/zsh/aliases.zsh
+    ${XDG_CONFIG_HOME}/zsh/functions.zsh: config/zsh/functions.zsh
+    ${XDG_CONFIG_HOME}/zsh/history.zsh: config/zsh/history.zsh
+    ${XDG_CONFIG_HOME}/zsh/import-plugins.zsh: config/zsh/import-plugins.zsh
+    ${XDG_CONFIG_HOME}/zsh/setup-antigen.zsh: config/zsh/setup-antigen.zsh
     ${XDG_CONFIG_HOME}/starship.toml: config/starship.toml
     ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_DATA_HOME}/fonts: fonts
-    ${XDG_CONFIG_HOME}/.tmux.conf: config/.tmux.conf
+    ${XDG_CONFIG_HOME}/tmux/tmux.conf: config/tmux/tmux.conf
     ~/git/work/.envrc: config/direnv/file/work
     ~/git/gitlab/.envrc: config/direnv/file/gitlab
     ~/git/github/.envrc: config/direnv/file/github
