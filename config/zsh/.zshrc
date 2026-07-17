@@ -102,8 +102,13 @@ else
   echo "Asdf is not installed."
 fi
 
-# to restore binkey ctrl a e r 
+# Emacs key bindings (restores Ctrl+A, Ctrl+E, etc.)
 bindkey -e
 
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
+# fzf — Ctrl+R (history), Ctrl+T (files), Alt+C (directories)
+# Requires fzf >= 0.48 — always satisfied via brew (macOS and Linux)
+if command_exists fzf; then
+  eval "$(fzf --zsh)"
+  export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --info=inline'
+  export FZF_CTRL_R_OPTS='--no-sort --exact --prompt="History > "'
+fi
