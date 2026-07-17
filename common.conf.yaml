@@ -30,6 +30,7 @@
     - ~/git/github
     - ~/.config/direnv
     - ~/.config/git
+    - ~/.config/mise
     - ~/.config/ranger
     - ~/.config/tmux
 
@@ -37,7 +38,7 @@
     # Utility config files
     ~/.zprofile: config/.zprofile
     ~/.tool-versions: config/.tool-versions
-    ~/.asdfrc: config/.asdfrc
+    ${XDG_CONFIG_HOME}/mise/config.toml: config/mise/config.toml
     ${XDG_CONFIG_HOME}/zsh/.zshrc: config/zsh/.zshrc
     ${XDG_CONFIG_HOME}/zsh/aliases.zsh: config/zsh/aliases.zsh
     ${XDG_CONFIG_HOME}/zsh/functions.zsh: config/zsh/functions.zsh
@@ -82,7 +83,7 @@
     - scc                 ###### For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.
     - duf                 ###### Get info on mounted disks (better df)
     - sd                  ###### RegEx find and replace (better sed)
-    - asdf                ###### Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more
+    - mise                ###### Polyglot runtime version manager (asdf-compatible)
     - tmux                ###### Terminal multiplexer
     - fd                  ###### Simple, fast and user-friendly alternative to 'find'
     # - procs               ###### Advanced process viewer (better ps)
@@ -181,26 +182,7 @@
 
 
 - shell:
-  - description: "Install asdf plugins (without versions)"
-    command: |
-      # Install asdf plugins only (versions managed by .tool-versions)
-      asdf plugin add python || true                      ###### Python programming language
-      asdf plugin add nodejs || true                      ###### JavaScript runtime built on Chrome's V8 JavaScript engine
-      asdf plugin add golang || true                      ###### Go programming language
-      asdf plugin add terraform || true                   ###### Infrastructure as code software tool
-      asdf plugin add opentofu || true                    ###### Open source version of Terraform
-      asdf plugin add terragrunt || true                  ###### Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules
-      asdf plugin add kubectl || true                     ###### Kubernetes command-line tool
-      asdf plugin add helm || true                        ###### The Kubernetes package manager
-      asdf plugin add minikube || true                    ###### Run Kubernetes locally
-      asdf plugin add awscli || true                      ###### Official Amazon AWS command-line interface
-      asdf plugin add packer || true                      ###### Tool for creating identical machine images for multiple platforms
-      asdf plugin add poetry || true                      ###### Python dependency management and packaging made easy
-      asdf plugin add pre-commit || true                  ###### Allow script to run on every commit
-      asdf plugin add tflint || true                      ###### Terraform Linter
-      asdf plugin add act || true                         ###### Build and test GitHub pipelines on local stack
-      asdf plugin add glab || true                        ###### CLI for GitLab
-      asdf plugin add gomplate || true                    ###### A template renderer that can be used to generate README
-      asdf plugin add bitwarden-secrets-manager || true   ###### Secrets Manager command-line interface
+  - description: "Install tool versions via mise"
+    command: cd $HOME && mise install --cd ~ || true
   - description: switch dotfile repo to ssh connexion for git
     command: git remote set-url origin git@github.com:SQuent/dotfiles.git

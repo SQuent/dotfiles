@@ -80,26 +80,13 @@ else
   echo "Direnv is not installed."
 fi
 
-# Check if asdf is installed, then initialize asdf
-if command_exists asdf; then
-  asdf_init="${BREW_PREFIX}/opt/asdf/libexec/asdf.sh"
-  [[ -f "${asdf_init}" ]] && source "${asdf_init}"
-  
-  # Function to auto-install missing versions from .tool-versions
-  asdf_auto_install() {
-    if [[ -f .tool-versions ]]; then
-      asdf install 2>/dev/null || true
-    fi
-  }
-  
-  # Run on shell startup
-  asdf_auto_install
-  
-  # Hook to run when changing directory
-  autoload -U add-zsh-hook
-  add-zsh-hook chpwd asdf_auto_install
+# mise — runtime version manager (reads .tool-versions and mise.toml)
+# Handles auto-install and cd hook natively
+if command_exists mise; then
+  eval "$(mise activate zsh)"
+  mise install
 else
-  echo "Asdf is not installed."
+  echo "mise is not installed."
 fi
 
 # Emacs key bindings (restores Ctrl+A, Ctrl+E, etc.)

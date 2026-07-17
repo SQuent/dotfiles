@@ -177,19 +177,20 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 ````
 ---
 
-### Version Management with ASDF
+### Version Management with mise
 
-[**ASDF**](https://asdf-vm.com/) manages multiple language runtime versions per project.
+[**mise**](https://mise.jdx.dev/) manages multiple runtime versions per project.
 
 #### Automatic Version Management
 
-- **Auto-Discovery:** Detects `.tool-versions` files in project directories
+- **Auto-Discovery:** Detects `.tool-versions` and `mise.toml` files in project directories
 - **Auto-Installation:** Installs missing versions when entering a directory
 - **Global Defaults:** Uses global `.tool-versions` for consistent defaults across projects
+- **Backward Compatible:** Reads existing asdf `.tool-versions` files natively
 
-When you `cd` into a project with a `.tool-versions` file, ASDF automatically installs and activates the specified versions.
+When you `cd` into a project with a `.tool-versions` or `mise.toml` file, mise automatically installs and activates the specified versions.
 
-ASDF is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
+mise is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
 
 ---
 
@@ -306,7 +307,7 @@ Dotfiles for VsCode are:
 | scc       | For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.                | ✔️ | ✔️ |
 | duf       | Get info on mounted disks (better df)                | ✔️ | ✔️ |
 | sd       | RegEx find and replace (better sed)                | ✔️ | ✔️ |
-| asdf       | Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more                | ✔️ | ✔️ |
+| mise       | Polyglot runtime version manager (asdf-compatible)                | ✔️ | ✔️ |
 | tmux       | Terminal multiplexer                | ✔️ | ✔️ |
 | fd       | Simple, fast and user-friendly alternative to 'find'                | ✔️ | ✔️ |
 | starship       | Minimal, blazing-fast, and infinitely customizable prompt for any shell                | ✔️ | ✔️ |
@@ -352,27 +353,26 @@ Dotfiles for VsCode are:
 
 ---
 
-### ASDF Packages
+### mise Tools
 
 | Package Name      | Description                                                  | Linux | macOS |
 |-------------------|--------------------------------------------------------------|-------|-------|
 | python       | Python programming language                | ✔️ | ✔️ |
-| nodejs       | JavaScript runtime built on Chrome's V8 JavaScript engine                | ✔️ | ✔️ |
 | golang       | Go programming language                | ✔️ | ✔️ |
 | terraform       | Infrastructure as code software tool                | ✔️ | ✔️ |
+| terragrunt       | Thin wrapper for Terraform with extra tools for multiple modules                | ✔️ | ✔️ |
 | opentofu       | Open source version of Terraform                | ✔️ | ✔️ |
-| terragrunt       | Thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules                | ✔️ | ✔️ |
 | kubectl       | Kubernetes command-line tool                | ✔️ | ✔️ |
 | helm       | The Kubernetes package manager                | ✔️ | ✔️ |
 | minikube       | Run Kubernetes locally                | ✔️ | ✔️ |
 | awscli       | Official Amazon AWS command-line interface                | ✔️ | ✔️ |
 | packer       | Tool for creating identical machine images for multiple platforms                | ✔️ | ✔️ |
 | poetry       | Python dependency management and packaging made easy                | ✔️ | ✔️ |
-| pre-commit       | Allow script to run on every commit                | ✔️ | ✔️ |
-| tflint       | Terraform Linter                | ✔️ | ✔️ |
-| act       | Build and test GitHub pipelines on local stack                | ✔️ | ✔️ |
+| pre-commit       | Framework for managing and running pre-commit hooks                | ✔️ | ✔️ |
+| tflint       | Terraform linter                | ✔️ | ✔️ |
+| act       | Run GitHub Actions locally                | ✔️ | ✔️ |
 | glab       | CLI for GitLab                | ✔️ | ✔️ |
-| gomplate       | A template renderer that can be used to generate README                | ✔️ | ✔️ |
-| bitwarden-secrets-manager       | Secrets Manager command-line interface                | ✔️ | ✔️ |
+| gomplate       | Template renderer for generating files (e.g. README)                | ✔️ | ✔️ |
+| bitwarden-secrets-manager       | Bitwarden Secrets Manager command-line interface                | ✔️ | ✔️ |
 
 ---

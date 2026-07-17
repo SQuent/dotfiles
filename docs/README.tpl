@@ -177,19 +177,20 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 ````
 ---
 
-### Version Management with ASDF
+### Version Management with mise
 
-[**ASDF**](https://asdf-vm.com/) manages multiple language runtime versions per project.
+[**mise**](https://mise.jdx.dev/) manages multiple runtime versions per project.
 
 #### Automatic Version Management
 
-- **Auto-Discovery:** Detects `.tool-versions` files in project directories
+- **Auto-Discovery:** Detects `.tool-versions` and `mise.toml` files in project directories
 - **Auto-Installation:** Installs missing versions when entering a directory
 - **Global Defaults:** Uses global `.tool-versions` for consistent defaults across projects
+- **Backward Compatible:** Reads existing asdf `.tool-versions` files natively
 
-When you `cd` into a project with a `.tool-versions` file, ASDF automatically installs and activates the specified versions.
+When you `cd` into a project with a `.tool-versions` or `mise.toml` file, mise automatically installs and activates the specified versions.
 
-ASDF is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
+mise is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
 
 ---
 
@@ -296,11 +297,11 @@ Dotfiles for VsCode are:
 
 ---
 
-### ASDF Packages
+### mise Tools
 
 | Package Name      | Description                                                  | Linux | macOS |
 |-------------------|--------------------------------------------------------------|-------|-------|
-{{- range (datasource "asdf_packages").asdf_packages }}
+{{- range (datasource "mise_packages").mise_packages }}
 | {{ .name }}       | {{ .description | default "No description" }}                | {{ if eq .in_linux "yes" }}✔️{{ else }}❌{{ end }} | {{ if eq .in_mac "yes" }}✔️{{ else }}❌{{ end }} |
 {{- end }}
 

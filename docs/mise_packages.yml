@@ -1,12 +1,8 @@
-asdf_packages:
+mise_packages:
 - description: Python programming language
   in_linux: 'yes'
   in_mac: 'yes'
   name: python
-- description: JavaScript runtime built on Chrome's V8 JavaScript engine
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: nodejs
 - description: Go programming language
   in_linux: 'yes'
   in_mac: 'yes'
@@ -15,15 +11,14 @@ asdf_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: terraform
+- description: Thin wrapper for Terraform with extra tools for multiple modules
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: terragrunt
 - description: Open source version of Terraform
   in_linux: 'yes'
   in_mac: 'yes'
   name: opentofu
-- description: Thin wrapper for Terraform that provides extra tools for working with
-    multiple Terraform modules
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: terragrunt
 - description: Kubernetes command-line tool
   in_linux: 'yes'
   in_mac: 'yes'
@@ -48,15 +43,15 @@ asdf_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: poetry
-- description: Allow script to run on every commit
+- description: Framework for managing and running pre-commit hooks
   in_linux: 'yes'
   in_mac: 'yes'
   name: pre-commit
-- description: Terraform Linter
+- description: Terraform linter
   in_linux: 'yes'
   in_mac: 'yes'
   name: tflint
-- description: Build and test GitHub pipelines on local stack
+- description: Run GitHub Actions locally
   in_linux: 'yes'
   in_mac: 'yes'
   name: act
@@ -64,11 +59,11 @@ asdf_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: glab
-- description: A template renderer that can be used to generate README
+- description: Template renderer for generating files (e.g. README)
   in_linux: 'yes'
   in_mac: 'yes'
   name: gomplate
-- description: Secrets Manager command-line interface
+- description: Bitwarden Secrets Manager command-line interface
   in_linux: 'yes'
   in_mac: 'yes'
   name: bitwarden-secrets-manager

@@ -1,20 +1,19 @@
-# ASDF Tool Versions
-python 3.13.0
-nodejs 20.10.0
-golang 1.21.5
-terraform 1.6.6
-terragrunt 0.54.8
-kubectl 1.28.4
-helm 3.13.3
-minikube 1.32.0
-awscli 2.15.0
-packer 1.9.4
-poetry 1.7.1
+# mise tool versions format: <name> <version>  # <description>
 
-pre-commit 3.6.0
-tflint 0.49.0
-act 0.2.54
-glab 1.36.0
-gomplate 3.11.6
-
-bitwarden-secrets-manager 1.0.0
+python  3.14.5            # Python programming language
+golang 1.21.5             # Go programming language
+terraform 1.6.6           # Infrastructure as code software tool
+terragrunt 0.54.8         # Thin wrapper for Terraform with extra tools for multiple modules
+opentofu latest           # Open source version of Terraform
+kubectl 1.28.4            # Kubernetes command-line tool
+helm 3.13.3               # The Kubernetes package manager
+minikube 1.32.0           # Run Kubernetes locally
+awscli 2.15.0             # Official Amazon AWS command-line interface
+packer 1.9.4              # Tool for creating identical machine images for multiple platforms
+poetry 1.7.1              # Python dependency management and packaging made easy
+pre-commit 3.6.0          # Framework for managing and running pre-commit hooks
+tflint 0.49.0             # Terraform linter
+act 0.2.54                # Run GitHub Actions locally
+glab 1.36.0               # CLI for GitLab
+gomplate 3.11.6           # Template renderer for generating files (e.g. README)
+bitwarden-secrets-manager 1.0.0  # Bitwarden Secrets Manager command-line interface

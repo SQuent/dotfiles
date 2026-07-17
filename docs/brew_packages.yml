@@ -48,11 +48,10 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: sd
-- description: Extendable version manager with support for Ruby, Node.js, Elixir,
-    Erlang & more
+- description: Polyglot runtime version manager (asdf-compatible)
   in_linux: 'yes'
   in_mac: 'yes'
-  name: asdf
+  name: mise
 - description: Terminal multiplexer
   in_linux: 'yes'
   in_mac: 'yes'
