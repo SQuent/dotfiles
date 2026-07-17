@@ -214,3 +214,12 @@ brew_packages:
   in_linux: 'no'
   in_mac: 'yes'
   name: trash
+- description: "GNU coreutils (gdate \u2192 date -I, etc.) \u2014 binaries exposed\
+    \ via gnubin"
+  in_linux: 'no'
+  in_mac: 'yes'
+  name: coreutils
+- description: 'Linux util-linux tools: setsid, flock, etc.'
+  in_linux: 'no'
+  in_mac: 'yes'
+  name: util-linux

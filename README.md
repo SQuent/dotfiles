@@ -104,6 +104,10 @@ config/zsh
 Handled in [`config/zsh/history.zsh`](config/zsh/history.zsh).  
 I bind the arrow keys to search through the history for commands that start with the current input.
 
+#### Machine-Local Config (not tracked)
+For machine-specific settings that should never be committed, create `~/.zshenv`.
+
+
 ---
 
 ### Visualization Tools
@@ -143,8 +147,6 @@ Secrets are stored in a Bitwarden note (referenced by `BW_SECRET_NOTE_ID`). Func
 
 #### SSH Keys Management
 SSH key files and ssh config file are stored in a Bitwarden folder and managed using the `load_ssh_keys` function to populate the `~/.ssh` folder.
-
-#### Kubeconfig Management
 
 ---
 
@@ -226,15 +228,21 @@ These functions are included in [`config/zsh/functions.zsh`](config/zsh/function
 
 [**Tmux**](https://github.com/tmux/tmux) is a terminal multiplexer that allows you to manage multiple terminal sessions within a single window.
 
-My Tmux configuration, stored in [`config/.tmux.conf`](config/.tmux.conf), includes:
+My Tmux configuration, stored in [`config/tmux/tmux.conf`](config/tmux/tmux.conf), includes:
 
-- **Mouse Support:** Allows window resizing with the mouse and enables a context menu with a right-click on a window.
-- **Custom Prefix Key:**
-  - The default prefix key (`C-b`) is changed to `Ctrl + Space` for easier access.
-  - `Ctrl + Space + v` for vertical splits.
-  - `Ctrl + Space + h` for horizontal splits.
-  - `Ctrl + Space + arrow keys (→, ←, ↑, ↓)` to switch between windows.
-- **Custom Screensaver:** The lock screen is configured to display a [`cbonsai`](https://github.com/neauoire/CBonsai) animation after 180 seconds of inactivity. This can be switched to [`cmatrix`](https://github.com/abishekvashok/cmatrix) or [`asciiquarium`](https://github.com/cmatsuoka/asciiquarium) for alternative screensavers.
+- **Right click for menu**
+
+- **Custom Prefix Key:** `Ctrl+b` (tmux default)
+  - `Ctrl+b and after v` — horizontal split (top/bottom)
+  - `Ctrl+b and after h` — vertical split (left/right)
+  - `Ctrl+b and after arrow keys (→, ←, ↑, ↓)` — switch between panes
+  - `Ctrl+b and after w` — interactive session/window tree
+
+- **Copy mode** (cross-platform, copies to system clipboard):
+  - Mouse drag — select & copy
+  - Double-click — select word & copy
+  - Triple-click — select line & copy
+- **Custom Screensaver:  Commented** - The lock screen is configured to display a [`cbonsai`](https://github.com/neauoire/CBonsai) animation after 180 seconds of inactivity. This can be switched to [`cmatrix`](https://github.com/abishekvashok/cmatrix) or [`asciiquarium`](https://github.com/cmatsuoka/asciiquarium) for alternative screensavers.
 
 ---
 
@@ -339,6 +347,8 @@ Dotfiles for VsCode are:
 | cbonsai       | terminal bonzai in ASCII                | ✔️ | ✔️ |
 | trash-cli       | CLI for the freedesktop.org trashcan (Linux)                | ✔️ | ❌ |
 | trash       | CLI to move files to the macOS Trash (replaces Linux trash-cli)                | ❌ | ✔️ |
+| coreutils       | GNU coreutils (gdate → date -I, etc.) — binaries exposed via gnubin                | ❌ | ✔️ |
+| util-linux       | Linux util-linux tools: setsid, flock, etc.                | ❌ | ✔️ |
 
 ---
 

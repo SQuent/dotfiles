@@ -17,6 +17,9 @@ command_exists() {
 if [[ "$(uname)" == "Darwin" ]]; then
   OS="mac"
   BREW_PREFIX="/opt/homebrew"
+  # Put GNU coreutils and util-linux binaries first so macOS uses them
+  # instead of the BSD variants (enables: date -I, setsid, flock, ...)
+  export PATH="${BREW_PREFIX}/opt/coreutils/libexec/gnubin:${BREW_PREFIX}/opt/util-linux/bin:${PATH}"
 else
   OS="linux"
   BREW_PREFIX="/home/linuxbrew/.linuxbrew"
@@ -34,7 +37,7 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # Auto-start tmux: attach to existing session or create new one
 if command_exists tmux && [[ -z "$TMUX" ]]; then
-  tmux new-session -A -s main
+  tmux new-session
 fi
 
 # Set color breeze to exa (better ls)

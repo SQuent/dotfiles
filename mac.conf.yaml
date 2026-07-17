@@ -28,6 +28,8 @@
 
 - brew:
     - trash       ###### CLI to move files to the macOS Trash (replaces Linux trash-cli)
+    - coreutils   ###### GNU coreutils (gdate → date -I, etc.) — binaries exposed via gnubin
+    - util-linux  ###### Linux util-linux tools: setsid, flock, etc.
 
 - cask:
     - font-jetbrains-mono-nerd-font  ###### JetBrains Mono Nerd Font (patched with icons)

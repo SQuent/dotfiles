@@ -242,7 +242,7 @@ My Tmux configuration, stored in [`config/tmux/tmux.conf`](config/tmux/tmux.conf
   - Mouse drag — select & copy
   - Double-click — select word & copy
   - Triple-click — select line & copy
-- **Custom Screensaver:** The lock screen is configured to display a [`cbonsai`](https://github.com/neauoire/CBonsai) animation after 180 seconds of inactivity. This can be switched to [`cmatrix`](https://github.com/abishekvashok/cmatrix) or [`asciiquarium`](https://github.com/cmatsuoka/asciiquarium) for alternative screensavers.
+- **Custom Screensaver:  Commented** - The lock screen is configured to display a [`cbonsai`](https://github.com/neauoire/CBonsai) animation after 180 seconds of inactivity. This can be switched to [`cmatrix`](https://github.com/abishekvashok/cmatrix) or [`asciiquarium`](https://github.com/cmatsuoka/asciiquarium) for alternative screensavers.
 
 ---
 

@@ -173,10 +173,6 @@ alias pc='pre-commit run --all-files'
 #                                                                    #
 ######################################################################
 
-# AWS
-alias awslogin='aws configure list-profiles | fzf --height=20 | xargs -I {} sh -c "\
-aws sso login --no-browser --profile {}; \
-aws eks update-kubeconfig --name=main --profile {}"'
 
 # Terragrunt
 alias tg='terragrunt'
