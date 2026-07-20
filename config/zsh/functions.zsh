@@ -1,11 +1,3 @@
-unlock_bw_if_locked() {
-  if [[ -z $BW_SESSION ]] ; then
-    bw login --apikey
-    >&2 echo 'bw locked - unlocking into a new session'
-    export BW_SESSION="$(bw unlock  $BW_PSSWD --raw)"
-  fi
-}
-
 load_dbx () {
     mkdir -p $HOME/.config/dbxcli
     if [ -n "$DROPBOX_PERSONAL_TOKEN" ]; then
@@ -13,54 +5,36 @@ load_dbx () {
     fi
 }
 
-# get all secrets from bitwarden and source it
-load_secret() {
-    source ~/.bw
-    unlock_bw_if_locked
-    bw sync
-    bw get notes $BW_SECRET_NOTE_ID > $HOME/.secret
-    source $HOME/.secret
-    load_dbx
-
-}
-
-# rm files with secrets
-clean_secret() {
-    rm $HOME/.secret $HOME/.config/dbxcli/auth.json $HOME/.bw
-    rmtrash $HOME/.secret $HOME/.config/dbxcli/auth.json $HOME/.bw
-
-}
-
-# get all files from bitwarden ssh folder and push into ~/.ssh folder.
 load_ssh_keys() {
-    unlock_bw_if_locked
-    bw sync
-    json_data="$(bw list items --folderid $BW_SSH_FOLDER_ID)"
-    ssh_path=$HOME/.ssh
+  local ssh_path="$HOME/.ssh"
+  local project_id="${BWS_PROJECT_ID:?'BWS_PROJECT_ID undefined in ~/.bws'}"
 
-    if [ !-d $ssh_path ]; then
-        mkdir $ssh_path
-    fi
-    if [ -n "$json_data" ]; then
-        jq -c '.[]' <<< "$json_data" | while read -r item; do
-            name="$(jq -r '.name' <<< "$item")"
-            notes="$(jq -r '.notes' <<< "$item")"
-            if [ -n "$name" ]; then
-            echo "$notes" > "$ssh_path/$name"
-              echo "Fichier $ssh_path/$name créé avec les notes : $notes"
-              chmod 600 $ssh_path/$name
-            else
-              echo "Champ 'name' manquant dans l'élément JSON : $item"
-            fi
-        done
-    else
-        echo "Tableau JSON vide ou non valide."
-    fi
-    
-    if [ -e $ssh_path/config ]; then
-        chmod 744 $ssh_path/config
-    fi
+  mkdir -p "$ssh_path"
+  echo "load ssh keys and ssh config file..."
 
+  local secrets
+  secrets=$(bws secret list "$project_id" -o json 2>/dev/null) || {
+    echo "Erreur: impossible de récupérer les secrets BWS (BWS_ACCESS_TOKEN défini ?)" >&2
+    return 1
+  }
+
+  echo "$secrets" \
+    | jq -c '.[] | select(.key | startswith("SSH_"))' \
+    | while IFS= read -r item; do
+        local bws_key filename value
+        bws_key=$(echo "$item" | jq -r '.key')
+        value=$(echo "$item"   | jq -r '.value')
+        filename="${bws_key#SSH_}"
+
+        printf '%s' "$value" > "$ssh_path/$filename"
+
+        if [[ "$filename" == "config" ]]; then
+          chmod 644 "$ssh_path/$filename"
+        else
+          chmod 600 "$ssh_path/$filename"
+        fi
+        echo "  ✓ $filename"
+      done
 }
 
 
@@ -85,7 +59,7 @@ dbxget () {
     return 1
   fi
   local fichier="$1"
-  dbxcli get tmp/fichier
+  dbxcli get "tmp/$fichier"
 }
 
 dbxclean () {
@@ -93,7 +67,6 @@ dbxclean () {
 }
 
 load_all() {
-  load_secret
   load_ssh_keys
   load_dbx
 }

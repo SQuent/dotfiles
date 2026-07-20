@@ -51,6 +51,10 @@ mise_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: tflint
+- description: Command-line fuzzy finder
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fzf
 - description: Run GitHub Actions locally
   in_linux: 'yes'
   in_mac: 'yes'
@@ -63,6 +67,10 @@ mise_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: gomplate
+- description: Local secrets manager, Fort Knox for your secrets
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fnox
 - description: Bitwarden Secrets Manager command-line interface
   in_linux: 'yes'
   in_mac: 'yes'

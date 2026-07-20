@@ -1,12 +1,5 @@
-# Git identity — Work (GitLab pro)
-# Requires trust: mise trust ~/git/work
 [env]
 GIT_SSH_COMMAND = "ssh -i ~/.ssh/work_id_rsa -F /dev/null"
-GIT_AUTHOR_NAME = "{{env.USER_GIT_PRO}}"
-GIT_AUTHOR_EMAIL = "{{env.EMAIL_GIT_PRO}}"
-GIT_COMMITTER_NAME = "{{env.USER_GIT_PRO}}"
-GIT_COMMITTER_EMAIL = "{{env.EMAIL_GIT_PRO}}"
-GITLAB_TOKEN = "{{env.GITLAB_PRO_ACCESS_TOKEN}}"
 
 [hooks]
 enter = "glab config set -h gitlab.com api_protocol https && glab config set -h gitlab.com git_protocol ssh"

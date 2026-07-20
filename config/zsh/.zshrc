@@ -55,9 +55,8 @@ source ${ZDOTDIR}/functions.zsh
 source ${ZDOTDIR}/setup-antigen.zsh
 source ${ZDOTDIR}/import-plugins.zsh
 
-if [ -f ~/.secret ]; then
-    source ~/.secret
-fi
+# Bootstrap secrets
+[[ -f ~/.bws ]] && source ~/.bws
 
 # Check if starship is installed, then initialize starship prompt
 if command_exists starship; then
@@ -75,6 +74,10 @@ fi
 
 # mise — runtime version manager (reads .tool-versions and mise.toml)
 # Handles auto-install and cd hook natively
+if command_exists fnox; then
+  eval "$(fnox activate zsh)"
+fi
+
 if command_exists mise; then
   eval "$(mise activate zsh)"
 else

@@ -1,16 +1,6 @@
-# Git identity — NAS (self-hosted GitLab)
-# Requires trust: mise trust ~/git/nas
 [env]
-GIT_SSH_COMMAND = "ssh -i ~/.ssh/id_rsa -F /dev/null"
-GIT_TOKEN = "{{env.GITLAB_NAS_ACCESS_TOKEN}}"
-GIT_USER = "{{env.USER_GIT_NAS}}"
-GITLAB_HOST = "{{env.URI_GITLAB_NAS}}"
-GIT_AUTHOR_NAME = "{{env.USER_GIT_NAS}}"
-GIT_AUTHOR_EMAIL = "{{env.EMAIL_GIT_NAS}}"
-GIT_COMMITTER_NAME = "{{env.USER_GIT_NAS}}"
-GIT_COMMITTER_EMAIL = "{{env.EMAIL_GIT_NAS}}"
-GIT_REPO_ARGOCD = "{{env.GIT_REPO_ARGOCD_NAS}}"
+GIT_SSH_COMMAND      = "ssh -i ~/.ssh/id_rsa -F /dev/null"
 GIT_LIST_PROJECTS_ID = "2 3 4 8"
 
 [hooks]
-enter = "glab config set -h $URI_GITLAB_NAS api_protocol http && glab config set -h $URI_GITLAB_NAS token $GITLAB_NAS_ACCESS_TOKEN && glab config set -h $URI_GITLAB_NAS git_protocol ssh"
+enter = "glab config set -h $GITLAB_HOST api_protocol http && glab config set -h $GITLAB_HOST token $GIT_TOKEN && glab config set -h $GITLAB_HOST git_protocol ssh"

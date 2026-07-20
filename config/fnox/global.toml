@@ -1,0 +1,14 @@
+[providers]
+bws = { type = "bitwarden-sm" }
+
+# Identité Git — GitHub (défaut global, surchargé par les configs contextuelles)
+[secrets]
+GIT_AUTHOR_NAME     = { provider = "bws", value = "USER_GIT_GITHUB" }
+GIT_AUTHOR_EMAIL    = { provider = "bws", value = "EMAIL_GIT_GITHUB" }
+GIT_COMMITTER_NAME  = { provider = "bws", value = "USER_GIT_GITHUB" }
+GIT_COMMITTER_EMAIL = { provider = "bws", value = "EMAIL_GIT_GITHUB" }
+
+# Dropbox
+DROPBOX_PERSONAL_APP_KEY    = { provider = "bws", value = "DROPBOX_PERSONAL_APP_KEY" }
+DROPBOX_PERSONAL_APP_SECRET = { provider = "bws", value = "DROPBOX_PERSONAL_APP_SECRET" }
+DROPBOX_PERSONAL_TOKEN      = { provider = "bws", value = "DROPBOX_PERSONAL_TOKEN" }

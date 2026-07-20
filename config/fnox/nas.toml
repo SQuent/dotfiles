@@ -1,0 +1,12 @@
+[providers]
+bws = { type = "bitwarden-sm" }
+
+[secrets]
+GIT_AUTHOR_NAME     = { provider = "bws", value = "USER_GIT_NAS" }
+GIT_AUTHOR_EMAIL    = { provider = "bws", value = "EMAIL_GIT_NAS" }
+GIT_COMMITTER_NAME  = { provider = "bws", value = "USER_GIT_NAS" }
+GIT_COMMITTER_EMAIL = { provider = "bws", value = "EMAIL_GIT_NAS" }
+GIT_TOKEN           = { provider = "bws", value = "GITLAB_NAS_ACCESS_TOKEN" }
+GIT_USER            = { provider = "bws", value = "USER_GIT_NAS" }
+GITLAB_HOST         = { provider = "bws", value = "URI_GITLAB_NAS" }
+GIT_REPO_ARGOCD     = { provider = "bws", value = "GIT_REPO_ARGOCD_NAS" }

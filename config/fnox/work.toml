@@ -1,0 +1,9 @@
+[providers]
+bws = { type = "bitwarden-sm" }
+
+[secrets]
+GIT_AUTHOR_NAME     = { provider = "bws", value = "USER_GIT_PRO" }
+GIT_AUTHOR_EMAIL    = { provider = "bws", value = "EMAIL_GIT_PRO" }
+GIT_COMMITTER_NAME  = { provider = "bws", value = "USER_GIT_PRO" }
+GIT_COMMITTER_EMAIL = { provider = "bws", value = "EMAIL_GIT_PRO" }
+GITLAB_TOKEN        = { provider = "bws", value = "GITLAB_PRO_ACCESS_TOKEN" }

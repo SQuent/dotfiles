@@ -129,24 +129,23 @@ For machine-specific settings that should never be committed, create `~/.zshenv`
 ---
 
 ### Sensitive Data
-Sensitive data like secrets, SSH keys, and kubeconfigs are not committed to the dotfiles repository. These are stored in [Bitwarden](https://bitwarden.com/) SAAS and managed with [`bitwarden-cli`](https://github.com/bitwarden/cli) and functions in [`config/zsh/functions.zsh`](config/zsh/functions.zsh).
+Sensitive data (secrets, SSH keys, tokens) are not committed to this repository. They are stored in [Bitwarden Secrets Manager](https://bitwarden.com/products/secrets-manager/) (BWS)
 
-First, you need to install the CLI, [create client and secret id in Bitwarden](https://bitwarden.com/help/personal-api-key/), and configure `~/.bw` as follows:
+#### Bootstrap file (`~/.bws`, not committed)
+Create `~/.bws` with your BWS credentials — this file is sourced at shell startup before fnox runs:
 ```bash
-export BW_CLIENTSECRET=
-export BW_CLIENTID=
-export BW_PSSWD=
-export BW_SECRET_NOTE_ID=
-export BW_SSH_FOLDER_ID=
+export BWS_ACCESS_TOKEN=
+export BWS_PROJECT_ID=
 ```
 
-#### Secret Management
-Secrets are stored in a Bitwarden note (referenced by `BW_SECRET_NOTE_ID`). Functions to manage these secrets include:
-- `load_secret`: Load secrets from Bitwarden and source them.
-- `clean_secret`: Remove files with secrets.
+#### Secret Management with fnox
+[**fnox**](https://fnox.jdx.dev/) reads secrets from BWS and injects them as environment variables.
 
 #### SSH Keys Management
-SSH key files and ssh config file are stored in a Bitwarden folder and managed using the `load_ssh_keys` function to populate the `~/.ssh` folder.
+SSH keys and the config are stored in BWS as secrets named `SSH_<filename>`.
+```bash
+load_ssh_keys   # fetches all SSH_* secrets from BWS → ~/.ssh/
+```
 
 ---
 
@@ -293,7 +292,6 @@ Dotfiles for VsCode are:
 | yq       | YAML processor (like jq for YAML)                | ✔️ | ✔️ |
 | jq       | Command-line JSON processor                | ✔️ | ✔️ |
 | btop       | Better than htop                | ✔️ | ✔️ |
-| bitwarden-cli       | Bitwarden command-line interface                | ✔️ | ✔️ |
 | scc       | For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.                | ✔️ | ✔️ |
 | duf       | Get info on mounted disks (better df)                | ✔️ | ✔️ |
 | sd       | RegEx find and replace (better sed)                | ✔️ | ✔️ |
@@ -310,7 +308,6 @@ Dotfiles for VsCode are:
 | libyaml       | YAML Parser                | ✔️ | ✔️ |
 | docker       | Platform to build, run, and share containerized applications                | ✔️ | ✔️ |
 | docker-compose       | Define and run multi-container applications with Docker                | ✔️ | ✔️ |
-| kubernetes-cli       | Kubernetes command-line interface                | ✔️ | ✔️ |
 | podman       | Tool for managing OCI containers and pods                | ✔️ | ✔️ |
 | kubectx       | Switch faster between clusters and namespaces in kubectl                | ✔️ | ✔️ |
 | kustomize       | Kubernetes native configuration management                | ✔️ | ✔️ |
@@ -360,9 +357,11 @@ Dotfiles for VsCode are:
 | poetry       | Python dependency management and packaging made easy                | ✔️ | ✔️ |
 | pre-commit       | Framework for managing and running pre-commit hooks                | ✔️ | ✔️ |
 | tflint       | Terraform linter                | ✔️ | ✔️ |
+| fzf       | Command-line fuzzy finder                | ✔️ | ✔️ |
 | act       | Run GitHub Actions locally                | ✔️ | ✔️ |
 | glab       | CLI for GitLab                | ✔️ | ✔️ |
 | gomplate       | Template renderer for generating files (e.g. README)                | ✔️ | ✔️ |
+| fnox       | Local secrets manager, Fort Knox for your secrets                | ✔️ | ✔️ |
 | bitwarden-secrets-manager       | Bitwarden Secrets Manager command-line interface                | ✔️ | ✔️ |
 
 ---

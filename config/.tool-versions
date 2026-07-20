@@ -13,7 +13,9 @@ packer 1.9.4              # Tool for creating identical machine images for multi
 poetry 1.7.1              # Python dependency management and packaging made easy
 pre-commit 3.6.0          # Framework for managing and running pre-commit hooks
 tflint 0.49.0             # Terraform linter
+fzf 0.74.1                # Command-line fuzzy finder
 act 0.2.54                # Run GitHub Actions locally
 glab 1.36.0               # CLI for GitLab
 gomplate 3.11.6           # Template renderer for generating files (e.g. README)
+fnox 1.31.0               # Local secrets manager, Fort Knox for your secrets
 bitwarden-secrets-manager 1.0.0  # Bitwarden Secrets Manager command-line interface

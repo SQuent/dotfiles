@@ -32,12 +32,12 @@
     - ~/.config/mise
     - ~/.config/ranger
     - ~/.config/tmux
+    - ~/.config/fnox
 
 - link:
     # Utility config files
     ~/.zprofile: config/.zprofile
     ~/.tool-versions: config/.tool-versions
-    ${XDG_CONFIG_HOME}/mise/config.toml: config/mise/config.toml
     ${XDG_CONFIG_HOME}/zsh/.zshrc: config/zsh/.zshrc
     ${XDG_CONFIG_HOME}/zsh/aliases.zsh: config/zsh/aliases.zsh
     ${XDG_CONFIG_HOME}/zsh/functions.zsh: config/zsh/functions.zsh
@@ -48,7 +48,11 @@
     ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_DATA_HOME}/fonts: fonts
     ${XDG_CONFIG_HOME}/tmux/tmux.conf: config/tmux/tmux.conf
-    # mise context per git directory
+    ${XDG_CONFIG_HOME}/fnox/config.toml: config/fnox/global.toml
+    ~/git/gitlab/fnox.toml: config/fnox/gitlab.toml
+    ~/git/work/fnox.toml: config/fnox/work.toml
+    ~/git/nas/fnox.toml: config/fnox/nas.toml
+    ${XDG_CONFIG_HOME}/mise/config.toml: config/mise/global.toml
     ~/git/gitlab/mise.toml: config/mise/gitlab.toml
     ~/git/work/mise.toml: config/mise/work.toml
     ~/git/nas/mise.toml: config/mise/nas.toml
@@ -74,8 +78,6 @@
     - jq                  ###### Command-line JSON processor
     # trash-cli (Linux) / trash (macOS) are in their respective OS config files
     - btop                ###### Better than htop
-    # - xterm               ###### X terminal emulator
-    - bitwarden-cli       ###### Bitwarden command-line interface
     - scc                 ###### For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.
     - duf                 ###### Get info on mounted disks (better df)
     - sd                  ###### RegEx find and replace (better sed)
@@ -108,7 +110,6 @@
 ######
     - docker              ###### Platform to build, run, and share containerized applications
     - docker-compose      ###### Define and run multi-container applications with Docker
-    - kubernetes-cli      ###### Kubernetes command-line interface
     - podman              ###### Tool for managing OCI containers and pods
     - kubectx             ###### Switch faster between clusters and namespaces in kubectl
     - kustomize           ###### Kubernetes native configuration management
@@ -161,7 +162,6 @@
     - librsvg             ###### To use rsvg-convert docker-compose.svg > docker-compose.png
     # - ranger              ###### Directory browser
     # - navi                ###### Interactive cheatsheet tool for the command-line.
-    # - fzf                 ###### Command-line fuzzy finder
     # - nmap                ###### Port scanning utility for large networks
     # - tailspin            ###### Log highlighter
 ######
