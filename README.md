@@ -250,7 +250,9 @@ Aliases are set for trash management in both cases.
 
 ### Neovim
 
-**[Neovim](https://neovim.io/)** is an extensible and modular text editor based on Vim. I use a pre-built version of [NvChad](https://github.com/NvChad/NvChad), a framework for Neovim that provides a ready-to-use configuration with numerous plugins and enhancements.
+**[Neovim](https://neovim.io/)** configured with [LazyVim](https://www.lazyvim.org/).
+
+- **Theme:** [`AlexvZyl/nordic.nvim`](https://github.com/AlexvZyl/nordic.nvim)
 
 ---
 
