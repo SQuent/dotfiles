@@ -73,18 +73,10 @@ else
   echo "Thefuck is not installed."
 fi
 
-# Check if direnv is installed, then hook direnv
-if command_exists direnv; then
-  eval "$(direnv hook zsh)"
-else
-  echo "Direnv is not installed."
-fi
-
 # mise — runtime version manager (reads .tool-versions and mise.toml)
 # Handles auto-install and cd hook natively
 if command_exists mise; then
   eval "$(mise activate zsh)"
-  mise install
 else
   echo "mise is not installed."
 fi

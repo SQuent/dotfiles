@@ -62,12 +62,12 @@ The installation script is a wrapper around [Dotbot](https://github.com/anishath
 **Linux (3 passes):**
 1. Bootstrap: `apt-get update/upgrade`, install `curl`, `python3`, `git`, `python3-dev`.
 2. Pass 1 — `linux.conf.yaml` (`--only apt`): install APT packages.
-3. Pass 2 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
+3. Pass 2 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, mise tool install.
 4. Pass 3 — `linux.conf.yaml` (`--except apt`): Linux-specific brew (`trash-cli`), sudoers, default shell, font cache.
 
 **macOS (2 passes):**
 1. Check Xcode Command Line Tools, set Homebrew PATH.
-2. Pass 1 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, asdf plugins.
+2. Pass 1 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, mise tool install.
 3. Pass 2 — `mac.conf.yaml`: macOS-specific brew (`trash`), `~/Library/Fonts` symlink.
 
 ---
@@ -151,32 +151,28 @@ SSH key files and ssh config file are stored in a Bitwarden folder and managed u
 ---
 
 ### Multi-Git Management
-Manage multiple Git profiles (github, gitlab, personnal instance of gitlab) with [`direnv`](https://github.com/direnv/direnv).  
-Loading environment variables in directories with specific organization repositories:
+Manage multiple Git profiles (github, gitlab, personal instance of gitlab) with [**mise**](https://mise.jdx.dev/) directory-level environment configuration.  
+Each `git/` subdirectory has a `mise.toml` symlinked from dotfiles, which sets Git identity variables when entering the directory:
 
 ````
 git
-├── github
-│   ├── helm-kuma-ingress-watcher
-│   └── kuma-ingress-watcher
+├── github          ← default identity
+│   ├── helm-kuma-ingress-watcher
+│   └── kuma-ingress-watcher
 ├── gitlab
-│   ├── dotfiles
+│   └── dotfiles
 ├── nas
-│   └── qlabv1
+│   └── qlabv1
 └── work
     └── Infrastructure
 
 ````
-And for each directory i have GIT VARS loaded from other environment VARS when i go to the dir:
-````
-export GIT_SSH_COMMAND="ssh -i ~/.ssh/gitlab_id_rsa -F /dev/null"
-export GIT_AUTHOR_NAME=$USER_GIT_GITLAB
-export GIT_AUTHOR_EMAIL=$EMAIL_GIT_GITLAB
-export GIT_COMMITTER_NAME=$USER_GIT_GITLAB
-export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
-````
----
 
+#### Pre-commit Auto-Install
+
+A global `cd` mise hook automatically runs `pre-commit install` when entering to a git repo root.
+
+---
 ### Version Management with mise
 
 [**mise**](https://mise.jdx.dev/) manages multiple runtime versions per project.
@@ -184,13 +180,6 @@ export GIT_COMMITTER_EMAIL=$EMAIL_GIT_GITLAB
 #### Automatic Version Management
 
 - **Auto-Discovery:** Detects `.tool-versions` and `mise.toml` files in project directories
-- **Auto-Installation:** Installs missing versions when entering a directory
-- **Global Defaults:** Uses global `.tool-versions` for consistent defaults across projects
-- **Backward Compatible:** Reads existing asdf `.tool-versions` files natively
-
-When you `cd` into a project with a `.tool-versions` or `mise.toml` file, mise automatically installs and activates the specified versions.
-
-mise is used specifically for development tools and languages where version compatibility matters for projects (Python, Node.js, Terraform, etc.). System utilities and CLI tools (eza, bat, starship) remain managed by Homebrew.
 
 ---
 
@@ -302,7 +291,6 @@ Dotfiles for VsCode are:
 | yq       | YAML processor (like jq for YAML)                | ✔️ | ✔️ |
 | jq       | Command-line JSON processor                | ✔️ | ✔️ |
 | btop       | Better than htop                | ✔️ | ✔️ |
-| direnv       | Load/unload environment variables based on $PWD                | ✔️ | ✔️ |
 | bitwarden-cli       | Bitwarden command-line interface                | ✔️ | ✔️ |
 | scc       | For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.                | ✔️ | ✔️ |
 | duf       | Get info on mounted disks (better df)                | ✔️ | ✔️ |

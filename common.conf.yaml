@@ -28,7 +28,6 @@
     - ~/git/gitlab
     - ~/git/nas
     - ~/git/github
-    - ~/.config/direnv
     - ~/.config/git
     - ~/.config/mise
     - ~/.config/ranger
@@ -49,12 +48,10 @@
     ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_DATA_HOME}/fonts: fonts
     ${XDG_CONFIG_HOME}/tmux/tmux.conf: config/tmux/tmux.conf
-    ~/git/work/.envrc: config/direnv/file/work
-    ~/git/gitlab/.envrc: config/direnv/file/gitlab
-    ~/git/github/.envrc: config/direnv/file/github
-    ~/.envrc: config/direnv/file/github
-    ~/git/nas/.envrc: config/direnv/file/nas
-    ${XDG_CONFIG_HOME}/direnv/direnv.toml: config/direnv/direnv.toml
+    # mise context per git directory
+    ~/git/gitlab/mise.toml: config/mise/gitlab.toml
+    ~/git/work/mise.toml: config/mise/work.toml
+    ~/git/nas/mise.toml: config/mise/nas.toml
 
 - install-brew: true
 
@@ -77,7 +74,6 @@
     - jq                  ###### Command-line JSON processor
     # trash-cli (Linux) / trash (macOS) are in their respective OS config files
     - btop                ###### Better than htop
-    - direnv              ###### Load/unload environment variables based on $PWD
     # - xterm               ###### X terminal emulator
     - bitwarden-cli       ###### Bitwarden command-line interface
     - scc                 ###### For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.
@@ -183,6 +179,6 @@
 
 - shell:
   - description: "Install tool versions via mise"
-    command: cd $HOME && mise install --cd ~ || true
+    command: mise install --cd ~ || true
   - description: switch dotfile repo to ssh connexion for git
     command: git remote set-url origin git@github.com:SQuent/dotfiles.git

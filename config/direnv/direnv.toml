@@ -1,2 +1,0 @@
-[whitelist]
-exact = [ "~/git/work/.envrc", "~/git/gitlab/.envrc", "~/git/nas/.envrc", "~/git/github/.envrc", "~/.envrc" ]

@@ -27,10 +27,6 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: btop
-- description: Load/unload environment variables based on $PWD
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: direnv
 - description: Bitwarden command-line interface
   in_linux: 'yes'
   in_mac: 'yes'
