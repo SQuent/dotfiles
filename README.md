@@ -294,25 +294,19 @@ Dotfiles for VsCode are:
 | eza       | Listing files with info (better ls)                | ✔️ | ✔️ |
 | bat       | Output highlighting (better cat)                | ✔️ | ✔️ |
 | neovim       | Hyperextensible Vim-based text editor                | ✔️ | ✔️ |
-| thefuck       | App which corrects your previous console command.                | ✔️ | ✔️ |
 | fastfetch       | Show system data and distro info (replaces neofetch)                | ✔️ | ✔️ |
 | tree       | Display directories as trees                | ✔️ | ✔️ |
 | libyaml       | YAML Parser                | ✔️ | ✔️ |
 | docker       | Platform to build, run, and share containerized applications                | ✔️ | ✔️ |
 | docker-compose       | Define and run multi-container applications with Docker                | ✔️ | ✔️ |
-| podman       | Tool for managing OCI containers and pods                | ✔️ | ✔️ |
 | kubectx       | Switch faster between clusters and namespaces in kubectl                | ✔️ | ✔️ |
-| kustomize       | Kubernetes native configuration management                | ✔️ | ✔️ |
 | kdash       | Kubernetes dashboard app                | ✔️ | ✔️ |
 | lazydocker       | Full Docker management app                | ✔️ | ✔️ |
 | helm-docs       | Autogenerate doc for Helm charts                | ✔️ | ✔️ |
-| krew       | plugin manager for kubectl command-line tool.                | ✔️ | ✔️ |
 | derailed/k9s/k9s       | Kubernetes CLI to manage your clusters in style!                | ✔️ | ✔️ |
 | ctop       | Container metrics and monitoring                | ✔️ | ✔️ |
 | docker-completion       | Bash, Zsh and Fish completion for Docker                | ✔️ | ✔️ |
 | gitlab-ci-local       | Build all pipeline or specific job locally                | ✔️ | ✔️ |
-| k3sup       | Bootstrap Kubernetes with k3s over SSH < 1 min                | ✔️ | ✔️ |
-| argocd-autopilot       | Bootstrap ArgoCD Autopilot                | ✔️ | ✔️ |
 | pwgen       | Password generator                | ✔️ | ✔️ |
 | fdupes       | Duplicate file finder                | ✔️ | ✔️ |
 | gping       | Interactive ping tool, with graph                | ✔️ | ✔️ |
@@ -356,5 +350,8 @@ Dotfiles for VsCode are:
 | fnox       | Local secrets manager, Fort Knox for your secrets                | ✔️ | ✔️ |
 | bitwarden-secrets-manager       | Bitwarden Secrets Manager command-line interface                | ✔️ | ✔️ |
 | rclone       | rsync for cloud storage                | ✔️ | ✔️ |
+| terraform-docs       | Generate documentation from Terraform modules                | ✔️ | ✔️ |
+| pipx       | Install and run Python applications in isolated environments                | ✔️ | ✔️ |
+| pipx:jrnl       | Command line journal for quick notes                | ✔️ | ✔️ |
 
 ---

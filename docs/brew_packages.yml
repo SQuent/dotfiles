@@ -68,10 +68,6 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: neovim
-- description: App which corrects your previous console command.
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: thefuck
 - description: Show system data and distro info (replaces neofetch)
   in_linux: 'yes'
   in_mac: 'yes'
@@ -92,18 +88,10 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: docker-compose
-- description: Tool for managing OCI containers and pods
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: podman
 - description: Switch faster between clusters and namespaces in kubectl
   in_linux: 'yes'
   in_mac: 'yes'
   name: kubectx
-- description: Kubernetes native configuration management
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: kustomize
 - description: Kubernetes dashboard app
   in_linux: 'yes'
   in_mac: 'yes'
@@ -116,10 +104,6 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: helm-docs
-- description: plugin manager for kubectl command-line tool.
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: krew
 - description: Kubernetes CLI to manage your clusters in style!
   in_linux: 'yes'
   in_mac: 'yes'
@@ -136,14 +120,6 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: gitlab-ci-local
-- description: Bootstrap Kubernetes with k3s over SSH < 1 min
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: k3sup
-- description: Bootstrap ArgoCD Autopilot
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: argocd-autopilot
 - description: Password generator
   in_linux: 'yes'
   in_mac: 'yes'

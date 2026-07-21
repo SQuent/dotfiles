@@ -79,3 +79,15 @@ mise_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: rclone
+- description: Generate documentation from Terraform modules
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: terraform-docs
+- description: Install and run Python applications in isolated environments
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: pipx
+- description: Command line journal for quick notes
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: pipx:jrnl

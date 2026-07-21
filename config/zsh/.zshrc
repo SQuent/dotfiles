@@ -65,13 +65,6 @@ else
   echo "Starship is not installed."
 fi
 
-# Check if thefuck is installed, then set up the alias
-if command_exists thefuck; then
-  eval "$(thefuck --alias)"
-else
-  echo "Thefuck is not installed."
-fi
-
 # mise — runtime version manager (reads .tool-versions and mise.toml)
 # Handles auto-install and cd hook natively
 if command_exists fnox; then

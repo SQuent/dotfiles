@@ -1,3 +1,7 @@
+[daemon]
+enabled = true
+idle_timeout = "8h"
+
 [providers]
 bws = { type = "bitwarden-sm" }
 

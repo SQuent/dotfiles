@@ -45,44 +45,6 @@ dbxclean() {
   rclone delete "DBX:/tmp/" --rmdirs
 }
 
-
-
-# Function to create schema from docker compose files
-dockercompose2png () {
-    if ! command_exists sketchviz ; then
-        echo "sketchviz n'est pas installé. Installation en cours..."
-        cd /tmp || exit
-        git clone https://github.com/gpotter2/sketchviz.git
-        cd sketchviz || exit
-        npm install -g
-        npm install commander
-        cd ..
-        rm -rf /tmp/sketchviz
-        echo "Installation de sketchviz terminée."
-    fi
-
-    if ! command_exists rsvg-convert ; then
-        echo "rsvg-convert n'est pas installé. Installation en cours..."
-        if command_exists brew ; then
-            brew install librsvg
-        else
-            echo "Homebrew n'est pas installé. Veuillez installer Homebrew et réessayer."
-            exit 1
-        fi
-    fi
-
-  # Exécution de la commande docker-compose-viz
-  docker run --rm -it --name dcv -v "$(pwd)":/input pmsipilot/docker-compose-viz render ./docker-compose.yaml -f -m dot --background=transparent -vvvv
-  
-  # Conversion du fichier .dot en .svg
-  sketchviz docker-compose.dot docker-compose.svg
-  
-  # Conversion du fichier .svg en .png
-  rsvg-convert --background-color=white docker-compose.svg > docker-compose.png
-
-  rm docker-compose.svg
-}
-
 function mkcd {
   mkdir -p $1
   cd $1

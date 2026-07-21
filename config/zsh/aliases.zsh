@@ -98,12 +98,7 @@ alias activate=source  ${XDG_DATA_HOME}/myenv/bin/activate
 alias dud='du -d 1 -h' # List sizes of files within directory
 alias duall='du -sh *' # List total size of current directory
 alias ff='find . -type f -name' # Find a file by name within current directory
-(( $+commands[fd] )) || alias fd='find . -type d -name' # Find direcroy by name
-
-# Command line history
-alias h-search='fc -El 0 | grep' # Searchses for a word in terminal history
-alias top-history='history 0 | awk '{print $2}' | sort | uniq -c | sort -n -r | head' 
-alias hg='history | grep' # Rip grep search recent history
+alias fd='find . -type d -name' # Find directory by name
 
 # Find + manage aliases
 alias al='alias | less' # List all aliases
@@ -112,11 +107,14 @@ alias ar='unalias' # Remove given alias
 
 # System Monitoring
 alias meminfo='free -m -l -t' # Show free and used memory
-alias memhog='ps -eo pid,ppid,cmd,%mem --sort=-%mem | head' # Processes consuming most mem
-alias cpuhog='ps -eo pid,ppid,cmd,%cpu --sort=-%cpu | head' # Processes consuming most cpu
+alias memtop='ps -eo pid,ppid,cmd,%mem --sort=-%mem | head' # Processes consuming most mem
+alias cputop='ps -eo pid,ppid,cmd,%cpu --sort=-%cpu | head' # Processes consuming most cpu
 alias cpuinfo='lscpu' # Show CPU Info
 alias distro='cat /etc/*-release' # Show OS info
 alias ports='netstat -tulanp' # Show open ports
+alias htop='btop'
+alias top='btop'
+alias df='duf' # Show disk usage
 
 # External Services
 alias myip='curl icanhazip.com'
@@ -145,7 +143,6 @@ alias gc="git commit" # Commit staged files, needs -m ""
 alias gps="git push" # Push local commits to <origin> <branch>
 alias gpl="git pull" # Pull changes with <origin> <branch>
 alias gf="git fetch" # Download branch changes, without modifying files
-alias gmultipull="find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;" 
 
 # Merging and Rebasing
 alias grb="git rebase" # Rebase the current HEAD into <branch>

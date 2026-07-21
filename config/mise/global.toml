@@ -19,6 +19,9 @@ gomplate                  = "3.11.6"
 fnox                      = "1.31.0"
 bitwarden-secrets-manager = "1.0.0"
 rclone                    = "1.74.3"
+terraform-docs            = "0.24.0"
+pipx                      = "1.16.1"
+"pipx:jrnl"               = "4.3"
 
 [_.descriptions]
 python                    = "Python programming language"
@@ -41,6 +44,9 @@ gomplate                  = "Template renderer for generating files (e.g. README
 fnox                      = "Local secrets manager, Fort Knox for your secrets"
 bitwarden-secrets-manager = "Bitwarden Secrets Manager command-line interface"
 rclone                    = "rsync for cloud storage"
+terraform-docs            = "Generate documentation from Terraform modules"
+pipx                      = "Install and run Python applications in isolated environments"
+"pipx:jrnl"               = "Command line journal for quick notes"
 
 [settings]
 not_found_auto_install = true 
@@ -52,6 +58,11 @@ RCLONE_CONFIG_DBX_TYPE = "dropbox"
 
 [hooks]
 cd = """
+if [ "$PWD" = "$HOME" ]; then
+  mise install
+  exit 0
+fi
+
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 
 if [ "$ROOT" != "$PWD" ]; then
