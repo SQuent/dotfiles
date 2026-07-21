@@ -178,7 +178,7 @@ A global `cd` mise hook automatically runs `pre-commit install` when entering to
 
 #### Automatic Version Management
 
-- **Auto-Discovery:** Detects `.tool-versions` and `mise.toml` files in project directories
+- **Auto-Discovery:** Detects `mise.toml` files in project directories (also supports `.tool-versions`)
 
 ---
 

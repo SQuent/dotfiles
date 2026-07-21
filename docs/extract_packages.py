@@ -1,29 +1,27 @@
+import tomllib
 import yaml
 import re
 import os
 
 
-def extract_mise_tools(tool_versions_file, output_file):
-    """Read config/.tool-versions and output docs/mise_packages.yml.
+def extract_mise_tools(mise_global_toml, output_file):
+    """Read config/mise/global.toml [tools] + [_.descriptions] and output docs/mise_packages.yml."""
+    with open(mise_global_toml, 'rb') as f:
+        config = tomllib.load(f)
 
-    Descriptions are parsed from inline comments: <name> <version>  # <description>
-    """
+    tools = config.get('tools', {})
+    descriptions = config.get('_', {}).get('descriptions', {})
+
     mise_packages = []
-    with open(tool_versions_file) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith('#'):
-                continue
-            # Split off inline comment: "python 3.13.0  # Python programming language"
-            tool_part, _, description = line.partition('#')
-            name = tool_part.split()[0] if tool_part.split() else None
-            if name:
-                mise_packages.append({
-                    'name': name,
-                    'description': description.strip(),
-                    'in_linux': 'yes',
-                    'in_mac': 'yes',
-                })
+    for name, version_spec in tools.items():
+        # version_spec can be a string or a dict with a "version" key
+        mise_packages.append({
+            'name': name,
+            'description': descriptions.get(name, ''),
+            'in_linux': 'yes',
+            'in_mac': 'yes',
+        })
+
     with open(output_file, 'w') as f:
         yaml.dump({'mise_packages': mise_packages}, f, default_flow_style=False)
 
@@ -141,7 +139,7 @@ def main():
     output_files = {'apt': 'docs/apt_packages.yml', 'brew': 'docs/brew_packages.yml'}
     extract_packages_from_yaml(input_files, output_files)
 
-    tool_versions_file = os.path.join(base, 'config', '.tool-versions')
+    tool_versions_file = os.path.join(base, 'config', 'mise', 'global.toml')
     extract_mise_tools(tool_versions_file, 'docs/mise_packages.yml')
 
     print("✅ Packages extracted successfully!")

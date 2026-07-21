@@ -37,7 +37,6 @@
 - link:
     # Utility config files
     ~/.zprofile: config/.zprofile
-    ~/.tool-versions: config/.tool-versions
     ${XDG_CONFIG_HOME}/zsh/.zshrc: config/zsh/.zshrc
     ${XDG_CONFIG_HOME}/zsh/aliases.zsh: config/zsh/aliases.zsh
     ${XDG_CONFIG_HOME}/zsh/functions.zsh: config/zsh/functions.zsh

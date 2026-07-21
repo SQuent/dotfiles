@@ -1,0 +1,4 @@
+[tools]
+python     = "3.14.5"
+gomplate   = "3.11.6"
+pre-commit = "3.6.0"
