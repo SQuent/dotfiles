@@ -22,7 +22,7 @@
     - ~/.ssh
     - ~/.local
     - ~/.local/share/fonts
-    - "${XDG_CACHE_HOME}/zsh/antigen"
+    - "${XDG_CACHE_HOME}/zsh/antidote"
     - ~/git
     - ~/git/work
     - ~/git/gitlab
@@ -41,8 +41,7 @@
     ${XDG_CONFIG_HOME}/zsh/aliases.zsh: config/zsh/aliases.zsh
     ${XDG_CONFIG_HOME}/zsh/functions.zsh: config/zsh/functions.zsh
     ${XDG_CONFIG_HOME}/zsh/history.zsh: config/zsh/history.zsh
-    ${XDG_CONFIG_HOME}/zsh/import-plugins.zsh: config/zsh/import-plugins.zsh
-    ${XDG_CONFIG_HOME}/zsh/setup-antigen.zsh: config/zsh/setup-antigen.zsh
+    ${XDG_CONFIG_HOME}/zsh/.zsh_plugins.txt: config/zsh/.zsh_plugins.txt
     ${XDG_CONFIG_HOME}/starship.toml: config/starship.toml
     ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_DATA_HOME}/fonts: fonts
@@ -80,6 +79,7 @@
     - scc                 ###### For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.
     - duf                 ###### Get info on mounted disks (better df)
     - sd                  ###### RegEx find and replace (better sed)
+    - antidote            ###### Zsh plugin manager (replaces Antigen)
     - mise                ###### Polyglot runtime version manager (asdf-compatible)
     - tmux                ###### Terminal multiplexer
     - fd                  ###### Simple, fast and user-friendly alternative to 'find'

@@ -6,7 +6,6 @@ export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"
 export PIP_LOG_FILE="${XDG_DATA_HOME}/pip/log"
 export CURL_HOME="${XDG_CONFIG_HOME}/curl"
 export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
-export ADOTDIR="${XDG_CACHE_HOME}/zsh/antigen"
 
 # Function to check if a command exists
 command_exists() {
@@ -50,10 +49,18 @@ export EZA_COLORS="ur=34:uw=35:ux=36:gr=34:gw=35:gx=36:tr=34:tw=35:tx=36"
 source ${ZDOTDIR}/aliases.zsh
 source ${ZDOTDIR}/history.zsh
 source ${ZDOTDIR}/functions.zsh
-  
-  # Setup Antigen, and import plugins
-source ${ZDOTDIR}/setup-antigen.zsh
-source ${ZDOTDIR}/import-plugins.zsh
+    
+  # Setup Antidote and load plugins
+  export ANTIDOTE_HOME="${XDG_CACHE_HOME}/zsh/antidote"
+  antidote_bin="${BREW_PREFIX}/opt/antidote/share/antidote/antidote.zsh"
+  if [[ -f "$antidote_bin" ]]; then
+    source "$antidote_bin"
+    # Initialize completion system before loading plugins (required for compdef)
+    autoload -Uz compinit && compinit
+    antidote load
+  else
+    echo "Antidote is not installed."
+  fi
 
 # Bootstrap secrets
 [[ -f ~/.bws ]] && source ~/.bws

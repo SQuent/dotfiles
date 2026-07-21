@@ -50,12 +50,6 @@ function mkcd {
   cd $1
 }
 
-function note {
-  mkdir -p $HOME/brouillon
-  echo "date: $(date)" >> $HOME/notes/draft.txt
-  echo "$@" >>  $HOME/notes/draft.txt
-  echo "" >> $HOME/notes/draft.txt
-}
 # Extract archives - use: extract <file>
 # Based on http://dotfiles.org/~pseup/.bashrc
 function extract() {

@@ -36,7 +36,7 @@ git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install
 ```
 The script auto-detects the OS (`Darwin` or `Linux`) and runs the appropriate steps.
 
-### Testing in Docker (Linux)
+### Testing in Docker (Linux only)
 ````bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
 docker build . -t dotfiles:linux -f Dockerfile --progress=plain
@@ -75,13 +75,13 @@ The installation script is a wrapper around [Dotbot](https://github.com/anishath
 ## Features
 
 ### XDG Directories
-Manage the location of configuration files using the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) for a clutter-free home directory. These are declared in [`config/.profile`](config/.profile).
+Manage the location of configuration files using the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) for a clutter-free home directory. These are declared in [`.zprofile`](config/.zprofile).
 
 ---
 
 ### Shell: Zsh Configuration
 
-[Zsh](http://zsh.sourceforge.net/), or the Z Shell, is a powerful and highly customizable Unix shell that extends the Bourne shell (`sh`).
+[Zsh](http://zsh.sourceforge.net/) structure:
 
 ```bash
 config/zsh
@@ -89,20 +89,18 @@ config/zsh
 ├── aliases.zsh           # Personal Aliases
 ├── functions.zsh         # Personal Functions
 ├── history.zsh           # History Management 
-├── import-plugins.zsh    # Plugins to install
-└── setup-antigen.zsh     # Zsh plugin installer
+└── zsh_plugins.txt       # Plugins to install
 ```
 
 #### Plugins
-- **Syntax Highlighting:** [`zsh-users/zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting)
-- **Extra Completions:** [`zsh-users/zsh-completions`](https://github.com/zsh-users/zsh-completions)
-- **Auto Suggestions:** [`zsh-users/zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions)
-- **Kubectl Aliases:** [`dbz/kube-aliases`](https://github.com/Dbz/kube-aliases)
-- **Alias Tips:** [`djui/alias-tips`](https://github.com/djui/alias-tips)
+- [`Syntax Highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting)
+- [`Extra Completions`](https://github.com/zsh-users/zsh-completions)
+- [`Auto Suggestions`](https://github.com/zsh-users/zsh-autosuggestions)
+- [`Kubectl Aliases`](https://github.com/Dbz/kube-aliases)
+- [`Alias Tips`](https://github.com/djui/alias-tips)
 
 #### Shell History Management
-Handled in [`config/zsh/history.zsh`](config/zsh/history.zsh).  
-I bind the arrow keys to search through the history for commands that start with the current input.
+Handled in [`config/zsh/history.zsh`](config/zsh/history.zsh). CTRL R is managed with fzf.
 
 #### Machine-Local Config (not tracked)
 For machine-specific settings that should never be committed, create `~/.zshenv`.
@@ -169,7 +167,7 @@ git
 
 #### Pre-commit Auto-Install
 
-A global `cd` mise hook automatically runs `pre-commit install` when entering to a git repo root.
+A global `cd` mise hook automatically runs `pre-commit install` when entering to a git repo root or $HOME.
 
 ---
 ### Version Management with mise
@@ -243,7 +241,7 @@ Aliases are set for trash management in both cases.
 
 **[Neovim](https://neovim.io/)** configured with [LazyVim](https://www.lazyvim.org/).
 
-- **Theme:** [`AlexvZyl/nordic.nvim`](https://github.com/AlexvZyl/nordic.nvim)
+- **Theme:** [`nordic`](https://github.com/AlexvZyl/nordic.nvim)
 
 ---
 

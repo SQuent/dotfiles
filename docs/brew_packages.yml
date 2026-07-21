@@ -40,6 +40,10 @@ brew_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: sd
+- description: Zsh plugin manager (replaces Antigen)
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: antidote
 - description: Polyglot runtime version manager (asdf-compatible)
   in_linux: 'yes'
   in_mac: 'yes'
