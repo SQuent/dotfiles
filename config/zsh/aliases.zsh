@@ -5,10 +5,6 @@
 ######################################################################
 
 
-command_exists () {
-  hash "$1" 2> /dev/null
-}
-
 alias_not_used () {
   ! alias "$1" >/dev/null && ! hash "$1" 2> /dev/null
 }

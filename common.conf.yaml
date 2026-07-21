@@ -22,6 +22,7 @@
     - ~/.ssh
     - ~/.local
     - ~/.local/share/fonts
+    - "${XDG_CACHE_HOME}/zsh"
     - "${XDG_CACHE_HOME}/zsh/antidote"
     - ~/git
     - ~/git/work

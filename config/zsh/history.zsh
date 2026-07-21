@@ -1,8 +1,7 @@
 #!/usr/bin/env zsh
 
-# History file — ensure directory exists
-HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
-mkdir -p "$(dirname "$HISTFILE")"
+# History file (directory created by dotbot)
+HISTFILE="${XDG_CACHE_HOME}/zsh/history"
 
 # Sizes — keep equal to avoid silent truncation
 HISTSIZE=100000

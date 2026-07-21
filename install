@@ -6,7 +6,7 @@ DOTBOT_DIR="dotbot/dotbot"
 START_TIME=$(date +%s)
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LOGFILE="./install.log"
+LOGFILE="${BASEDIR}/install.log"
 
 log() {
     echo "$1" | tee -a "$LOGFILE"

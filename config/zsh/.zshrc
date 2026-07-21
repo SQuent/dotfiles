@@ -1,5 +1,4 @@
 # Directory for all-things ZSH config
-utils_dir="${XDG_CONFIG_HOME}/utils"
 
 export TMUX_PLUGIN_MANAGER_PATH="${XDG_DATA_HOME}/tmux/plugins"
 export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"
@@ -50,13 +49,14 @@ source ${ZDOTDIR}/aliases.zsh
 source ${ZDOTDIR}/history.zsh
 source ${ZDOTDIR}/functions.zsh
     
+# Initialize completion system (required before antidote and compdef calls)
+autoload -Uz compinit && compinit -d "${XDG_CACHE_HOME}/zsh/zcompdump"
+
   # Setup Antidote and load plugins
   export ANTIDOTE_HOME="${XDG_CACHE_HOME}/zsh/antidote"
   antidote_bin="${BREW_PREFIX}/opt/antidote/share/antidote/antidote.zsh"
   if [[ -f "$antidote_bin" ]]; then
     source "$antidote_bin"
-    # Initialize completion system before loading plugins (required for compdef)
-    autoload -Uz compinit && compinit
     antidote load
   else
     echo "Antidote is not installed."
