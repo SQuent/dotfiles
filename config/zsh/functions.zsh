@@ -1,10 +1,3 @@
-load_dbx () {
-    mkdir -p $HOME/.config/dbxcli
-    if [ -n "$DROPBOX_PERSONAL_TOKEN" ]; then
-        echo "{\"\":{\"personal\":\"$DROPBOX_PERSONAL_TOKEN\"}}" > $HOME/.config/dbxcli/auth.json
-    fi
-}
-
 load_ssh_keys() {
   local ssh_path="$HOME/.ssh"
   local project_id="${BWS_PROJECT_ID:?'BWS_PROJECT_ID undefined in ~/.bws'}"
@@ -38,38 +31,21 @@ load_ssh_keys() {
 }
 
 
-dbxpush () {
-  if [ $# -ne 1 ]; then
-    echo "fichier manquant"
-    return 1
-  fi
-  local fichier_local="$1"
-  local dest="tmp/$(basename "$fichier_local")"
-  if [ -f "$fichier_local" ]; then
-    dbxcli put $fichier_local $dest
-  fi
-  if [ -d "$fichier_local" ]; then
-    dbxcli put $fichier_local $dest
-  fi 
+dbxpush() {
+  [[ $# -ne 1 ]] && { echo "usage: dbxpush <file-or-dir>"; return 1; }
+  rclone copy "$1" "DBX:/tmp/$(basename "$1")" --progress
 }
 
-dbxget () {
-  if [ $# -ne 1 ]; then
-    echo "fichier manquant"
-    return 1
-  fi
-  local fichier="$1"
-  dbxcli get "tmp/$fichier"
+dbxget() {
+  [[ $# -ne 1 ]] && { echo "usage: dbxget <remote-file>"; return 1; }
+  rclone copy "DBX:/tmp/$1" . --progress
 }
 
-dbxclean () {
-  dbxcli rm tmp/* --force
+dbxclean() {
+  rclone delete "DBX:/tmp/" --rmdirs
 }
 
-load_all() {
-  load_ssh_keys
-  load_dbx
-}
+
 
 # Function to create schema from docker compose files
 dockercompose2png () {

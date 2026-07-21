@@ -75,3 +75,7 @@ mise_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: bitwarden-secrets-manager
+- description: rsync for cloud storage
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: rclone

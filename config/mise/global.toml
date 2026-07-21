@@ -4,6 +4,7 @@ trusted_config_paths = ["~/git/work", "~/git/nas", "~/git/github", "~/git/gitlab
 
 [env]
 GIT_SSH_COMMAND = "ssh -i ~/.ssh/github_id_rsa -F /dev/null"
+RCLONE_CONFIG_DBX_TYPE = "dropbox"
 
 [hooks]
 cd = """

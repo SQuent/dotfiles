@@ -150,8 +150,8 @@ load_ssh_keys   # fetches all SSH_* secrets from BWS → ~/.ssh/
 ---
 
 ### Multi-Git Management
-Manage multiple Git profiles (github, gitlab, personal instance of gitlab) with [**mise**](https://mise.jdx.dev/) directory-level environment configuration.  
-Each `git/` subdirectory has a `mise.toml` symlinked from dotfiles, which sets Git identity variables when entering the directory:
+Manage multiple Git profiles (github, gitlab, personal instance of gitlab) using a combination of [**fnox**](https://fnox.jdx.dev/) and [**mise**](https://mise.jdx.dev/) directory-level configuration.  
+Each `git/` subdirectory has both a `fnox.toml` (git identity + tokens, from BWS) and a `mise.toml` (SSH key routing) symlinked from dotfiles:
 
 ````
 git
@@ -185,31 +185,23 @@ A global `cd` mise hook automatically runs `pre-commit install` when entering to
 ### Quick save file
 #### Dropbox Management
 
-Sometimes, you need to quick save some files in an external storage. I use [Dropbox](https://www.dropbox.com/). 
+Sometimes, you need to quick save some files in an external storage. I use [Dropbox](https://www.dropbox.com/) via [**rclone**](https://rclone.org/).
 
-First, ensure that you have the Dropbox CLI tool installed and configure your Dropbox access token as follows:
+Dropbox credentials are stored in BWS and injected by fnox as `RCLONE_CONFIG_DBX_*` environment variables. The OAuth2 refresh token enables automatic token renewal.
 
-```bash
-export DROPBOX_PERSONAL_TOKEN=
-```
+Dropbox functions (defined in [`config/zsh/functions.zsh`](config/zsh/functions.zsh)):
 
-Dropbox integration functions include:
-
-- **`load_dbx`**: Creates a configuration directory and sets up Dropbox CLI authentication using the `DROPBOX_PERSONAL_TOKEN`.
-
-- **`dbxpush`**: Uploads a local file or directory to /tmp directory in Dropbox. Usage example:
+- **`dbxpush`**: Uploads a local file or directory to `/tmp/` in Dropbox.
   ```bash
   dbxpush <local-file-or-directory>
   ```
 
-- **`dbxget`**: Downloads a file from /tmp directory in Dropbox to the local machine. Usage example:
+- **`dbxget`**: Downloads a file from `/tmp/` in Dropbox to the current directory.
   ```bash
   dbxget <remote-file>
   ```
 
-- **`dbxclean`**: Cleans up temporary files in Dropbox. ( including config dir with token, but not the environment var with the token)
-
-These functions are included in [`config/zsh/functions.zsh`](config/zsh/functions.zsh), which ensures efficient management of Dropbox operations within your setup.
+- **`dbxclean`**: Deletes all files under `/tmp/` in Dropbox.
 
 ---
 
@@ -363,5 +355,6 @@ Dotfiles for VsCode are:
 | gomplate       | Template renderer for generating files (e.g. README)                | ✔️ | ✔️ |
 | fnox       | Local secrets manager, Fort Knox for your secrets                | ✔️ | ✔️ |
 | bitwarden-secrets-manager       | Bitwarden Secrets Manager command-line interface                | ✔️ | ✔️ |
+| rclone       | rsync for cloud storage                | ✔️ | ✔️ |
 
 ---

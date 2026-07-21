@@ -19,3 +19,4 @@ glab 1.36.0               # CLI for GitLab
 gomplate 3.11.6           # Template renderer for generating files (e.g. README)
 fnox 1.31.0               # Local secrets manager, Fort Knox for your secrets
 bitwarden-secrets-manager 1.0.0  # Bitwarden Secrets Manager command-line interface
+rclone 1.74.3             # rsync for cloud storage
