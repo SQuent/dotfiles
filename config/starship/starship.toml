@@ -1,0 +1,77 @@
+# Colors are base16 palette slots (base00-07, blue/cyan/purple/...), filled
+# in by Stylix (home/theme/stylix.nix) — not literal hex.
+format = "[░▒▓](base00)$os$username[](bg:base01 fg:base00)$directory[](fg:base01 bg:base02)$git_branch$git_status[](fg:base02 bg:base03)$python$golang$docker_context[](fg:base03 bg:blue)$kubernetes[](fg:blue bg:cyan)$time[ ](fg:cyan)\n\n$cmd_duration$character"
+
+line_break.disabled = false
+
+[username]
+show_always = true
+style_user = "bg:base00"
+style_root = "bg:purple"
+format = "[ $user ]($style)"
+disabled = false
+
+[hostname]
+ssh_only = true
+style = "bg:base00"
+format = "[$ssh_symbol$hostname]($style)"
+disabled = false
+
+[os]
+style = "bg:purple"
+disabled = true
+
+[directory]
+style = "bg:base01"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[python]
+symbol = " "
+style = "bg:base03"
+format = "[ $symbol ($version) ]($style)"
+
+[docker_context]
+symbol = " "
+style = "bg:base02"
+format = "[ $symbol $context ]($style) $path"
+
+[git_branch]
+symbol = ""
+style = "bg:base02"
+format = "[ $symbol $branch ]($style)"
+
+[git_status]
+style = "bg:base02"
+format = "[$all_status$ahead_behind ]($style)"
+
+[golang]
+symbol = " "
+style = "bg:base02"
+format = "[ $symbol ($version) ]($style)"
+
+[kubernetes]
+disabled = false
+style = "bg:blue"
+format = "[ K8S: $context\\($namespace\\) ]($style)"
+symbol = "☸ "
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:cyan"
+format = "[  $time ]($style)"
+
+[character]
+success_symbol = "[ ➜](cyan)"
+error_symbol = "[ ➜](bold red)"
+
+[cmd_duration]
+min_time = 500
+format = " [$duration](cyan)"

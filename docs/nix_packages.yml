@@ -1,0 +1,255 @@
+nix_packages:
+- description: Zsh plugin manager made from the ground up thinking about performance
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: antidote
+- description: Enjoy the mysteries of the sea from the safety of your own terminal
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: asciiquarium
+- description: Cat(1) clone with syntax highlighting and Git integration
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: bat
+- description: Monitor of resources
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: btop
+- description: Grow bonsai trees in your terminal
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: cbonsai
+- description: Simulates the falling characters theme from The Matrix movie
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: cmatrix
+- description: GNU Core Utilities
+  in_linux: 'no'
+  in_mac: 'yes'
+  name: coreutils
+- description: Top-like interface for container metrics
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: ctop
+- description: Command line tool for transferring files with URL syntax
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: curl
+- description: Open source project to pack, ship and run any application as a lightweight
+    container
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: docker
+- description: Docker CLI plugin to define and run multi-container applications with
+    Docker
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: docker-compose
+- description: Disk Usage/Free Utility
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: duf
+- description: Run arbitrary commands when files change
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: entr
+- description: Modern, maintained replacement for ls
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: eza
+- description: Actively maintained, feature-rich and performance oriented, neofetch
+    like system information tool
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fastfetch
+- description: Simple, fast and user-friendly alternative to find
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fd
+- description: Identifies duplicate files residing within specified directories
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fdupes
+- description: Program for making large letters out of ordinary text
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: figlet
+- description: Program that shows the type of files
+  in_linux: 'yes'
+  in_mac: 'no'
+  name: file
+- description: Library for font customization and configuration
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fontconfig
+- description: Command-line fuzzy finder written in Go
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: fzf
+- description: Distributed version control system
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: git
+- description: Run gitlab pipelines locally as shell executor or docker executor
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: gitlab-ci-local
+- description: Modern release of the GNU Privacy Guard, a GPL OpenPGP implementation
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: gnupg
+- description: Ping, but with a graph
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: gping
+- description: Tool for automatically generating markdown documentation for Helm charts
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: helm-docs
+- description: ''
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: hm-switch
+- description: A user environment configurator
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: home-manager
+- description: Command line HTTP client whose goal is to make CLI human-friendly
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: httpie
+- description: Lightweight and flexible command-line JSON processor
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: jq
+- description: Command line journal application that stores your journal in a plain
+    text file
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: jrnl
+- description: Kubernetes CLI To Manage Your Clusters In Style
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: k9s
+- description: Simple and fast dashboard for Kubernetes
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: kdash
+- description: Fast way to switch between clusters and namespaces in kubectl
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: kubectx
+- description: Simple terminal UI for both docker and docker-compose
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: lazydocker
+- description: Small library to render SVG images to Cairo surfaces
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: librsvg
+- description: YAML 1.1 parser and emitter written in C
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: libyaml
+- description: Prints certain LSB (Linux Standard Base) and Distribution information
+  in_linux: 'yes'
+  in_mac: 'no'
+  name: lsb_release
+- description: Implementation of the standard Unix documentation system accessed using
+    the man command
+  in_linux: 'yes'
+  in_mac: 'no'
+  name: man-db
+- description: Front-end to your dev env
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: mise
+- description: Vim text editor fork focused on extensibility and agility
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: neovim
+- description: ZSH completions for Nix, NixOS, and NixOps
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: nix-zsh-completions
+- description: Utilities that give information about processes using the /proc filesystem
+  in_linux: 'yes'
+  in_mac: 'no'
+  name: procps
+- description: Password generator which creates passwords which can be easily memorized
+    by a human
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: pwgen
+- description: Utility that combines the usability of The Silver Searcher with the
+    raw speed of grep
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: ripgrep
+- description: Very fast accurate code counter with complexity calculations and COCOMO
+    estimates written in pure Go
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: scc
+- description: Intuitive find & replace CLI (sed alternative)
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: sd
+- description: Database of common MIME types
+  in_linux: 'yes'
+  in_mac: 'no'
+  name: shared-mime-info
+- description: Minimal, blazing fast, and extremely customizable prompt for any shell
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: starship
+- description: ''
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: theme-pick
+- description: Simplified and community-driven man pages
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: tldr
+- description: Terminal multiplexer
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: tmux
+- description: Command line interface to the freedesktop.org trashcan
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: trash-cli
+- description: Command to produce a depth indented directory listing
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: tree
+- description: Convert terminal recordings to animated gifs
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: ttygif
+- description: Set of system utilities for Linux
+  in_linux: 'no'
+  in_mac: 'yes'
+  name: util-linux
+- description: ''
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: wallpaper-pick
+- description: Tool for retrieving files using HTTP, HTTPS, and FTP
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: wget
+- description: Blazing fast terminal file manager written in Rust, based on async
+    I/O
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: yazi
+- description: Command-line YAML/XML/TOML processor - jq wrapper for YAML, XML, TOML
+    documents
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: yq
+- description: Z shell
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: zsh

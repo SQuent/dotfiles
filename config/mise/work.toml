@@ -1,5 +1,13 @@
 [env]
 GIT_SSH_COMMAND = "ssh -i ~/.ssh/work_id_rsa -F /dev/null"
+# `go get`/`go mod` on a private gitlab.com module resolves it over https or bare ssh (no `git@`
+# user) before falling back to git+ssh, and both attempts fail auth. Rewrite them to the form
+# that actually works, scoped to this tree only.
+GIT_CONFIG_COUNT = "2"
+GIT_CONFIG_KEY_0 = "url.git@gitlab.com:.insteadOf"
+GIT_CONFIG_VALUE_0 = "https://gitlab.com/"
+GIT_CONFIG_KEY_1 = "url.git@gitlab.com:.insteadOf"
+GIT_CONFIG_VALUE_1 = "ssh://gitlab.com/"
 
 [hooks]
 enter = "glab config set -h gitlab.com api_protocol https && glab config set -h gitlab.com git_protocol ssh"

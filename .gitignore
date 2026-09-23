@@ -1,3 +1,8 @@
-config/nvim/lua/custom/
-config/nvim/lazy-lock.json
 install.log
+
+# `nix build`/`home-manager build` without --no-link drop this symlink here.
+result
+
+# Local-only: corporate proxy CA testing (see Dockerfile.test), never committed.
+Dockerfile.test
+docker/

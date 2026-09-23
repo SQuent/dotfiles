@@ -1,11 +1,53 @@
+import json
+import subprocess
 import tomllib
 import yaml
-import re
 import os
+
+# Derivations that show up in `config.home.packages` but are Home Manager's
+# own internal plumbing (fontconfig cache dirs, generated manpage/session-vars
+# scripts, ...), not something the user actually asked to install. Filtered
+# out of the generated package docs.
+NOISE_PACKAGES = {
+    "home-configuration-reference-manpage",
+    "hm-session-vars.sh",
+}
+
+# system -> which doc column it maps to.
+SYSTEMS = {
+    "x86_64-linux": "in_linux",
+    "aarch64-darwin": "in_mac",
+}
+
+
+def _is_noise(name):
+    return name in NOISE_PACKAGES or name.startswith("dummy-")
+
+
+def _mise_registry_description(tool_name):
+    """Look up a tool's description from `mise registry <name> --json`. Handles
+    the `backend:package` shorthand (e.g. "pipx:jrnl") by looking up the
+    package part. Returns None if the tool isn't in the registry or has no
+    description there (e.g. "golang" is a core-plugin alias for "go" that
+    isn't listed under that name; "pipx" itself has an empty description)."""
+    lookup_name = tool_name.split(':', 1)[1] if ':' in tool_name else tool_name
+    result = subprocess.run(
+        ['mise', 'registry', lookup_name, '--json'],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+    try:
+        return json.loads(result.stdout).get('description') or None
+    except json.JSONDecodeError:
+        return None
 
 
 def extract_mise_tools(mise_global_toml, output_file):
-    """Read config/mise/global.toml [tools] + [_.descriptions] and output docs/mise_packages.yml."""
+    """Read config/mise/global.toml [tools], preferring the description from
+    `mise registry` (source of truth) and falling back to [_.descriptions]
+    for tools the registry doesn't know about or has no description for."""
     with open(mise_global_toml, 'rb') as f:
         config = tomllib.load(f)
 
@@ -15,9 +57,10 @@ def extract_mise_tools(mise_global_toml, output_file):
     mise_packages = []
     for name, version_spec in tools.items():
         # version_spec can be a string or a dict with a "version" key
+        description = _mise_registry_description(name) or descriptions.get(name, '')
         mise_packages.append({
             'name': name,
-            'description': descriptions.get(name, ''),
+            'description': description,
             'in_linux': 'yes',
             'in_mac': 'yes',
         })
@@ -26,124 +69,58 @@ def extract_mise_tools(mise_global_toml, output_file):
         yaml.dump({'mise_packages': mise_packages}, f, default_flow_style=False)
 
 
-def extract_packages_from_yaml(yaml_files, output_files):
-    # Initialize data structures for package categorization
-    package_presence = {}
+def extract_nix_packages(flake_dir, output_file):
+    """Evaluate `config.home.packages` for each target system via `nix eval`
+    (pure evaluation, no build required) and merge the results into a single
+    package list with per-OS presence flags. Requires `nix` with flakes/
+    nix-command enabled on PATH (same assumption already made by the
+    `nixfmt`/`deadnix` pre-commit hooks in this repo)."""
+    presence = {}
 
-    # Mapping: filename keyword -> which OS columns to mark as 'yes'
-    # common -> both linux and mac
-    # linux  -> linux only
-    # mac    -> mac only
-    SOURCE_MAP = {
-        'common': ['in_linux', 'in_mac'],
-        'linux':  ['in_linux'],
-        'mac':    ['in_mac'],
-    }
-
-    for yaml_file in yaml_files:
-        # Determine which OS columns to populate based on filename
-        basename = os.path.basename(yaml_file)
-        source_key = None
-        for key in SOURCE_MAP:
-            if key in basename:
-                source_key = key
-                break
-        if source_key is None:
-            continue  # Skip unknown files
-
-        os_columns = SOURCE_MAP[source_key]
-
-        # Read the YAML file
-        with open(yaml_file, 'r') as file:
-            lines = file.readlines()
-
-        current_section = None
-
-        for line in lines:
-            line = line.rstrip()  # Remove trailing newlines and spaces
-
-            # Detect the start of a new section
-            if re.match(r'^\s*-\s*apt:', line):
-                current_section = 'apt'
+    for system, os_column in SYSTEMS.items():
+        result = subprocess.run(
+            [
+                'nix', 'eval', '--impure', '--json',
+                f'.#homeConfigurations.{system}.config.home.packages',
+                '--apply',
+                'pkgs: map (p: { name = p.pname or p.name; '
+                'description = p.meta.description or ""; }) pkgs',
+            ],
+            cwd=flake_dir,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        for pkg in json.loads(result.stdout):
+            name = pkg['name']
+            if _is_noise(name):
                 continue
-            elif re.match(r'^\s*-\s*brew:', line):
-                current_section = 'brew'
-                continue
+            entry = presence.setdefault(name, {
+                'name': name,
+                'description': pkg['description'],
+                'in_linux': 'no',
+                'in_mac': 'no',
+            })
+            if not entry['description'] and pkg['description']:
+                entry['description'] = pkg['description']
+            entry[os_column] = 'yes'
 
-            elif re.match(r'^\s*-\s*shell:', line):
-                current_section = 'shell'
-                continue
+    nix_packages = sorted(presence.values(), key=lambda p: p['name'])
 
-            # Stop processing if a new section is detected with the format '- '
-            if re.match(r'^- ', line) and current_section:
-                if not (line.startswith('- apt:') or line.startswith('- brew:') or line.startswith('- shell:')):
-                    current_section = None
-                    continue
+    with open(output_file, 'w') as f:
+        yaml.dump({'nix_packages': nix_packages}, f, default_flow_style=False)
 
-            # Process lines based on the current section
-            if current_section in ['apt', 'brew']:
-                if re.match(r'^\s*#\s*-\s+', line):
-                    # Commented package - Skip it
-                    continue
-                elif re.match(r'^\s*-\s+', line):
-                    # Active package
-                    line = line.lstrip('- ').strip()
-                else:
-                    continue  # Skip non-package lines
-
-                # Extract package name and description
-                parts = re.split(r'\s*######\s*', line, maxsplit=1)
-                package_part = parts[0].strip()
-                description = parts[1].strip() if len(parts) > 1 else ''
-
-                package_name = package_part
-                if package_name not in package_presence:
-                    package_presence[package_name] = {
-                        'in_linux': 'no',
-                        'in_mac': 'no',
-                        'description': description,
-                        'section': current_section,
-                    }
-                for col in os_columns:
-                    package_presence[package_name][col] = 'yes'
-
-    apt_packages = []
-    brew_packages = []
-
-    for package_name, presence in package_presence.items():
-        package = {
-            'name': package_name,
-            'description': presence['description'],
-            'in_linux': presence['in_linux'],
-            'in_mac': presence['in_mac'],
-        }
-        if presence['section'] == 'apt':
-            apt_packages.append(package)
-        elif presence['section'] == 'brew':
-            brew_packages.append(package)
-
-    # Write to output YAML files
-    with open(output_files['apt'], 'w') as file:
-        yaml.dump({'apt_packages': apt_packages}, file, default_flow_style=False)
-
-    with open(output_files['brew'], 'w') as file:
-        yaml.dump({'brew_packages': brew_packages}, file, default_flow_style=False)
 
 def main():
     base = os.path.dirname(os.path.dirname(__file__))
-    input_files = [
-        os.path.join(base, 'common.conf.yaml'),
-        os.path.join(base, 'linux.conf.yaml'),
-        os.path.join(base, 'mac.conf.yaml'),
-    ]
-    output_files = {'apt': 'docs/apt_packages.yml', 'brew': 'docs/brew_packages.yml'}
-    extract_packages_from_yaml(input_files, output_files)
+
+    extract_nix_packages(base, 'docs/nix_packages.yml')
 
     tool_versions_file = os.path.join(base, 'config', 'mise', 'global.toml')
     extract_mise_tools(tool_versions_file, 'docs/mise_packages.yml')
 
     print("✅ Packages extracted successfully!")
-    print(f"Generated: {', '.join(list(output_files.values()) + ['docs/mise_packages.yml'])}")
+    print("Generated: docs/nix_packages.yml, docs/mise_packages.yml")
 
 if __name__ == '__main__':
     main()

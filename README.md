@@ -1,6 +1,6 @@
 # Dotfiles
 
-**Welcome to my Dotfiles repository!** This collection contains all the configurations for my personal machines and servers.
+**Welcome to my Dotfiles repository!** This collection contains all the configurations for my personal machines, managed declaratively with [Nix](https://nixos.org/) + [Home Manager](https://github.com/nix-community/home-manager).
 
 ---
 
@@ -17,14 +17,34 @@ Dotfiles are hidden configuration files (prefixed with a `.`) in Unix-like syste
 
 ---
 
-### Dotbot: The Dotfile Manager
-I use [Dotbot](https://github.com/anishathalye/dotbot) to manage these dotfiles. It not only handles symlinks but also manages package installations and scripts. Symlinks allow you to maintain all your dotfiles in a central Git directory, linking them to the appropriate locations on disk.
+### Why Nix + Home Manager?
+Nix is a package manager, but it comes with its own philosophy: declarative, and therefore reproducible, with rollback built in.
+This is the exact idea dotfiles already chase, just applied to packages instead of config files. 
+And it doesn't stop there: [**NixOS**](https://nixos.org/) turns that same philosophy into a whole operating system, while [**Home Manager**](https://github.com/nix-community/home-manager) nix community package, applies it one level down, to `$HOME`.
+I run it standalone home manager rather than switching to NixOS/nix-darwin. 
+
+With a classic dotfiles manager, adding a new tool means touching several places (install script, config symlinks, alias). With Nix, it's one declarative block. 
+And the same setup runs almost identically anywhere: macOS, Linux, even a plain Docker container.
+The trade-off is a real learning curve, since it comes with its own language. 
+But it's a smooth path to swith to NixOS one day.
+
+[**Flakes**](https://nixos.wiki/wiki/Flakes) are a experimental feature of nix which pins dependencies to exact git commit with  ([`flake.nix`](flake.nix) + [`flake.lock`](flake.lock)).
 
 ---
 
-### Installation Modes
-- **Linux:** Full setup via apt bootstrap + Homebrew + common configuration.
-- **macOS:** Setup via Homebrew only — no apt, font handling via `~/Library/Fonts`.
+### One Flake for All My Machines
+
+Most Home Manager setups are tied to specific machine. I wanted this dotfiles to works on any machine with different username.
+It support the OS/arch (`aarch64-darwin` / `x86_64-linux` / `aarch64-linux`).
+So instead of hardcoding who I am and where my home is, the flake figures it out by itself.
+It needs `--impure`: (allowed to look at the outside world instead of staying fully self-contained).
+
+---
+
+### Auto import file in home/
+
+[**import-tree**](https://github.com/vic/import-tree) scans `home/` and imports whatever it finds instead. Drop a file in, it's picked up on the next rebuild, nothing else to touch.
+Files starting with `_` are skipped on purpose.
 
 ---
 
@@ -34,95 +54,136 @@ I use [Dotbot](https://github.com/anishathalye/dotbot) to manage these dotfiles.
 ```bash
 git clone https://github.com/SQuent/dotfiles.git && cd dotfiles && ./install
 ```
-The script auto-detects the OS (`Darwin` or `Linux`) and runs the appropriate steps.
+[`./install`](install)
 
-### Testing in Docker (Linux only)
-````bash
-git clone https://github.com/SQuent/dotfiles.git && cd dotfiles
-docker build . -t dotfiles:linux -f Dockerfile --progress=plain
-docker run -it dotfiles:linux
-````
+### Updating
+
+List previous generations:
+```bash
+hmg
+```
+
+Roll back to the previous generation:
+```bash
+hmrb
+```
+
+Update the Nix packages:
+```bash
+hmu
+./install
+```
+To update a single input instead (e.g. just `nixpkgs`):
+```bash
+hmu nixpkgs
+./install
+```
+
+### Testing in Docker
+`./install` runs at build time, so there's nothing left to do: just build it and run it, and you land straight in a fully-configured shell:
+```bash
+docker build -t dotfiles .
+docker run -it dotfiles
+```
+
+### Working on this repo
+
+Nothing to set up: `git commit` or `pc` run the [pre-commit hooks](.pre-commit-config.yaml), and each hook fetches its own tool through `nix develop -c` (tools declared in [`flake.nix`](flake.nix), not installed in your profile). `pre-commit` itself comes from mise, which also installs the git hook when you `cd` into the repo.
+
+Need one of those tools by hand? `nix develop` opens a shell with all of them.
 
 ---
 
-## Dotbot in Action
+## Repository Structure
 
-### Installation Script
-The installation script is a wrapper around [Dotbot](https://github.com/anishathalye/dotbot) with the following features:
-- Auto-detects the OS (`uname -s`) — no flags required.
-- Logs actions to `install.log`.
-- Checks and installs prerequisites before running Dotbot.
-- Syncs and updates Dotbot plugins via git submodules.
-- Splits configuration across three files: `common.conf.yaml`, `linux.conf.yaml`, `mac.conf.yaml`.
-
----
-
-### Dotbot Steps
-
-**Linux (3 passes):**
-1. Bootstrap: `apt-get update/upgrade`, install `curl`, `python3`, `git`, `python3-dev`.
-2. Pass 1 — `linux.conf.yaml` (`--only apt`): install APT packages.
-3. Pass 2 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, mise tool install.
-4. Pass 3 — `linux.conf.yaml` (`--except apt`): Linux-specific brew (`trash-cli`), sudoers, default shell, font cache.
-
-**macOS (2 passes):**
-1. Check Xcode Command Line Tools, set Homebrew PATH.
-2. Pass 1 — `common.conf.yaml`: clean, create folders, symlinks, Homebrew install + packages, mise tool install.
-3. Pass 2 — `mac.conf.yaml`: macOS-specific brew (`trash`), `~/Library/Fonts` symlink.
+```
+.
+├── flake.nix          — inputs, outputs (`homeConfigurations`, `devShells`, `apps`, `formatter`)
+├── flake.lock         — pinned revisions
+├── home/              — one module per program (packages + config + aliases colocated),
+│   │                     every file auto-imported by import-tree, no list to maintain
+│   ├── default.nix    — entrypoint: username/homeDirectory + the `dotfiles.path` option
+│   ├── dirs.nix       — the few directories nothing else creates as a side effect
+│   ├── hm-switch.nix  — the `hm-switch` binary (rebuild + activate)
+│   ├── home-manager.nix — hms/hmb/hmc/... aliases for driving this flake
+│   ├── packages.nix   — all other packages with no config needed (jq, wget, tree, ...)
+│   ├── shell/          — zsh, xdg
+│   ├── cli/            — starship, eza, bat, btop, fd, ripgrep, fzf, duf, tmux, trash, yazi
+│   ├── dev/            — git, nvim, docker, kubernetes, terraform
+│   ├── env/            — fnox, mise (secrets + tool versions, in that order)
+│   └── theme/          — Stylix + theme-pick/wallpaper-pick, see Theming below
+├── wallpapers/        — images wallpaper-pick browses, versioned so the palette
+│                        Stylix derives from them is reproducible
+└── config/            — native config files sourced by a home/*.nix module
+    ├── eza/
+    ├── fnox/
+    ├── mise/
+    ├── starship/
+    └── zsh/
+```
 
 ---
 
 ## Features
 
 ### XDG Directories
-Manage the location of configuration files using the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) for a clutter-free home directory. These are declared in [`.zprofile`](config/.zprofile).
+[XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) env vars, declared in [`home/shell/xdg.nix`](home/shell/xdg.nix).
 
 ---
 
-### Shell: Zsh Configuration
+### Shell: Zsh
 
-[Zsh](http://zsh.sourceforge.net/) structure:
+- Configured in [`home/shell/zsh.nix`](home/shell/zsh.nix) (completion, history, plugins)
+— functions kept as real shell logic in [`config/zsh/functions.zsh`](config/zsh/functions.zsh).
 
-```bash
-config/zsh
-├── .zshrc
-├── aliases.zsh           # Personal Aliases
-├── functions.zsh         # Personal Functions
-├── history.zsh           # History Management 
-└── zsh_plugins.txt       # Plugins to install
-```
-
-#### Plugins
-- [`Syntax Highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting)
-- [`Extra Completions`](https://github.com/zsh-users/zsh-completions)
-- [`Auto Suggestions`](https://github.com/zsh-users/zsh-autosuggestions)
-- [`Kubectl Aliases`](https://github.com/Dbz/kube-aliases)
-- [`Alias Tips`](https://github.com/djui/alias-tips)
-
-#### Shell History Management
-Handled in [`config/zsh/history.zsh`](config/zsh/history.zsh). CTRL R is managed with fzf.
+#### Plugins:
+- [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting), [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) — native Home Manager toggles (`programs.zsh.syntaxHighlighting`/`autosuggestion.enable`).
+- [`zsh-completions`](https://github.com/zsh-users/zsh-completions)
+- [`alias-tips`](https://github.com/djui/alias-tips) — via `programs.zsh.antidote.plugins`.
+- [`kube-aliases`](https://github.com/Dbz/kube-aliases) ([`home/dev/kubernetes.nix`](home/dev/kubernetes.nix)) — fetched via `programs.zsh.plugins`.
+- [`nix-zsh-completions`](https://github.com/nix-community/nix-zsh-completions) — not configured explicitly: Home Manager adds it automatically to `home.packages` whenever `programs.zsh.enableCompletion` is set (which it is here).
 
 #### Machine-Local Config (not tracked)
 For machine-specific settings that should never be committed, create `~/.zshenv`.
 
-
 ---
 
 ### Visualization Tools
-- [**Starship:**](https://github.com/starship/starship) For a minimal, fast, and customizable prompt. Config stored in [`config/starship.toml`](config/starship.toml).
-- [**EZA:**](https://github.com/eza-community/eza) Enhanced `ls` command for better file listing. 
-  **Color:**
-  ```bash
-  export EXA_COLORS="ur=34:uw=35:ux=36:gr=34:gw=35:gx=36:tr=34:tw=35:tx=36"
-  ```
+- [**Starship**](https://github.com/starship/starship) — [`home/cli/starship.nix`](home/cli/starship.nix), settings in [`config/starship/starship.toml`](config/starship/starship.toml).
+- [**eza**](https://github.com/eza-community/eza) — [`home/cli/eza.nix`](home/cli/eza.nix), theme in [`config/eza/theme.toml`](config/eza/theme.toml).
+- [**bat**](https://github.com/sharkdp/bat) — [`home/cli/bat.nix`](home/cli/bat.nix).
+- [**yazi**](https://github.com/sxyazi/yazi) — [`home/cli/yazi.nix`](home/cli/yazi.nix).
 
-- [**Bat:**](https://github.com/sharkdp/bat) A `cat` clone with syntax highlighting.
+---
 
-  ```bash
-  if command_exists bat ; then
-    alias cat="bat -pp"
-  fi
-  ```
+### Editors
+
+#### Neovim
+[**Neovim**](https://neovim.io/) via [LazyVim](https://www.lazyvim.org/) (the [`lazyvim-nix`](https://github.com/pfassina/lazyvim-nix) flake input), configured in [`home/dev/nvim.nix`](home/dev/nvim.nix). Not Stylix-themed on purpose — keeps its own fixed colorscheme.
+
+#### Visual Studio Code
+[**Visual Studio Code**](https://code.visualstudio.com/) — `settings.json` + profile (not yet Nix-managed).
+
+---
+
+### Theming with Stylix
+
+Every tool's colors come from one place: [**Stylix**](https://stylix.danth.me/), picking a base16 palette and handing it to whichever `home/*.nix` module wants it — starship, bat, tmux, fzf, btop, k9s, yazi, all from the same source instead of each carrying its own hardcoded colors. eza follows too, wired by hand to `config.lib.stylix.colors` since it has no native Stylix target.
+
+Switching theme is one of two commands: `theme-pick` to browse and pick a named scheme, or `wallpaper-pick` to derive one from an image in [`wallpapers/`](wallpapers). Colors only actually change on the next rebuild, on purpose — no wallpaper-watching daemon, no live-reload plumbing, same experience on macOS and Linux alike.
+
+The default theme lives **in the repo**, [`home/theme/_default.nix`](home/theme/_default.nix), and applies on every machine:
+
+```nix
+{
+  kind = "scheme";   # or "wallpaper"
+  value = "nord";    # a base16-schemes name, or a file under wallpapers/
+}
+```
+
+Both pickers write a **per-machine override outside the repo**, `~/.local/state/dotfiles/theme.json` (same shape, as JSON), then run `hm-switch`. `theme-pick --reset` (or `wallpaper-pick --reset`) deletes it and falls back to the default.
+
+Keeping the override out of the checkout is the point: trying a theme never dirties the repo, so it never needs a commit and never blocks a pull on another machine. To change the theme *everywhere*, edit `_default.nix` and commit. A scheme is referenced by *name*, not by the store path it happened to have when you picked it — that path goes stale on the next `hmu` or `hmgc`.
 
 ---
 
@@ -137,10 +198,10 @@ export BWS_PROJECT_ID=
 ```
 
 #### Secret Management with fnox
-[**fnox**](https://fnox.jdx.dev/) reads secrets from BWS and injects them as environment variables.
+[**fnox**](https://fnox.jdx.dev/) reads secrets from BWS and injects them as environment variables ([`home/env/fnox.nix`](home/env/fnox.nix), [`config/fnox/`](config/fnox)).
 
 #### SSH Keys Management
-SSH keys and the config are stored in BWS as secrets named `SSH_<filename>`.
+SSH keys and config are stored in BWS as `SSH_<filename>` secrets:
 ```bash
 load_ssh_keys   # fetches all SSH_* secrets from BWS → ~/.ssh/
 ```
@@ -148,35 +209,63 @@ load_ssh_keys   # fetches all SSH_* secrets from BWS → ~/.ssh/
 ---
 
 ### Multi-Git Management
-Manage multiple Git profiles (github, gitlab, personal instance of gitlab) using a combination of [**fnox**](https://fnox.jdx.dev/) and [**mise**](https://mise.jdx.dev/) directory-level configuration.  
-Each `git/` subdirectory has both a `fnox.toml` (git identity + tokens, from BWS) and a `mise.toml` (SSH key routing) symlinked from dotfiles:
+Multiple Git identities (github, gitlab, work, nas), routed via [**fnox**](https://fnox.jdx.dev/) + [**mise**](https://mise.jdx.dev/) directory config. Each `git/<context>/` gets a `fnox.toml` + `mise.toml` from [`home/env/fnox.nix`](home/env/fnox.nix)/[`home/env/mise.nix`](home/env/mise.nix):
 
-````
+```
 git
 ├── github          ← default identity
-│   ├── helm-kuma-ingress-watcher
-│   └── kuma-ingress-watcher
 ├── gitlab
-│   └── dotfiles
 ├── nas
-│   └── qlabv1
 └── work
-    └── Infrastructure
-
-````
+```
 
 #### Pre-commit Auto-Install
-
-A global `cd` mise hook automatically runs `pre-commit install` when entering to a git repo root or $HOME.
+A global mise `cd` hook ([`config/mise/global.toml`](config/mise/global.toml)) runs `pre-commit install` when entering a git repo root or `$HOME`.
 
 ---
+
 ### Version Management with mise
 
-[**mise**](https://mise.jdx.dev/) manages multiple runtime versions per project.
+[**mise**](https://mise.jdx.dev/) manages multiple runtime versions per project, replace nix by mise for depandancies that can change per project.  Activated from [`home/env/mise.nix`](home/env/mise.nix).
 
 #### Automatic Version Management
 
-- **Auto-Discovery:** Detects `mise.toml` files in project directories (also supports `.tool-versions`)
+- **Auto-Discovery:** Detects `mise.toml` files in project directories (also supports `.tool-versions`).
+
+
+---
+
+### Multi-windows Terminal with Tmux
+
+[**Tmux**](https://github.com/tmux/tmux) is a terminal multiplexer that allows you to manage multiple terminal sessions within a single window.
+
+My Tmux configuration, stored in [`home/cli/tmux.nix`](home/cli/tmux.nix), includes:
+
+- **Right click for menu**
+
+- **Custom Prefix Key:** `Ctrl+b` (tmux default)
+  - `Ctrl+b and after v` — horizontal split (top/bottom)
+  - `Ctrl+b and after h` — vertical split (left/right)
+  - `Ctrl+b and after arrow keys (→, ←, ↑, ↓)` — switch between panes
+  - `Ctrl+b and after w` — interactive session/window tree
+
+- **Copy mode** (cross-platform, copies to system clipboard):
+  - Mouse drag — select & copy
+  - Double-click — select word & copy
+  - Triple-click — select line & copy
+- **Custom Screensaver: Commented** - The lock screen is configured to display a [`cbonsai`](https://github.com/neauoire/CBonsai) animation after 180 seconds of inactivity. This can be switched to [`cmatrix`](https://github.com/abishekvashok/cmatrix) or [`asciiquarium`](https://github.com/cmatsuoka/asciiquarium) for alternative screensavers.
+
+---
+
+### Garbage Management with Trash
+
+To avoid accidentally deleting files permanently, I replace `rm` with [`trash-cli`](https://github.com/andreafrancia/trash-cli) (Linux + macOS) — [`home/cli/trash.nix`](home/cli/trash.nix):
+
+- `rm <file>`: moves it to the trash instead of deleting it for good (`trash-put`).
+- `tl`: lists what's currently sitting in the trash (`trash-list`).
+- `rmtrash: <file>` — permanently deletes one specific file already in the trash (`trash-rm`).
+- `tempty`: empties the whole trash for good (`trash-empty`).
+- `tr`: restores a previously trashed file (`trash-restore`).
 
 ---
 
@@ -203,125 +292,73 @@ Dropbox functions (defined in [`config/zsh/functions.zsh`](config/zsh/functions.
 
 ---
 
-### Multi-windows Terminal with Tmux
-
-[**Tmux**](https://github.com/tmux/tmux) is a terminal multiplexer that allows you to manage multiple terminal sessions within a single window.
-
-My Tmux configuration, stored in [`config/tmux/tmux.conf`](config/tmux/tmux.conf), includes:
-
-- **Right click for menu**
-
-- **Custom Prefix Key:** `Ctrl+b` (tmux default)
-  - `Ctrl+b and after v` — horizontal split (top/bottom)
-  - `Ctrl+b and after h` — vertical split (left/right)
-  - `Ctrl+b and after arrow keys (→, ←, ↑, ↓)` — switch between panes
-  - `Ctrl+b and after w` — interactive session/window tree
-
-- **Copy mode** (cross-platform, copies to system clipboard):
-  - Mouse drag — select & copy
-  - Double-click — select word & copy
-  - Triple-click — select line & copy
-- **Custom Screensaver:  Commented** - The lock screen is configured to display a [`cbonsai`](https://github.com/neauoire/CBonsai) animation after 180 seconds of inactivity. This can be switched to [`cmatrix`](https://github.com/abishekvashok/cmatrix) or [`asciiquarium`](https://github.com/cmatsuoka/asciiquarium) for alternative screensavers.
-
----
-
-### Garbage Management with Trash
-
-To avoid accidentally deleting files permanently, I replace `rm` with a trash tool:
-- **Linux:** [`trash-cli`](https://github.com/andreafrancia/trash-cli) — follows the freedesktop.org trash spec.
-- **macOS:** [`trash`](https://github.com/ali-rantakari/trash) — moves files to the macOS Trash.
-
-Aliases are set for trash management in both cases.
-
----
-
-### Editors
-
-### Neovim
-
-**[Neovim](https://neovim.io/)** configured with [LazyVim](https://www.lazyvim.org/).
-
-- **Theme:** [`nordic`](https://github.com/AlexvZyl/nordic.nvim)
-
----
-
-### Visual Studio Code
-
-**[Visual Studio Code](https://code.visualstudio.com/)** is a code editor developed by Microsoft.
-
-Dotfiles for VsCode are: 
-- settings.json
-- Profile
-
----
-
 ## Installed Packages
 
-### APT Packages (Linux only)
-
-| Package Name      | Description                                                  | Linux |
-|-------------------|--------------------------------------------------------------|-------|
-| build-essential       | Essential tools for building software (GCC, g++, make…)                | ✔️ |
-| curl       | Command line tool for transferring data with URL syntax                | ✔️ |
-| lsb-release       | Linux Standard Base distribution information                | ✔️ |
-| ca-certificates       | Common CA certificates for SSL validation                | ✔️ |
-| procps       | System utilities: ps, top, vmstat, kill…                | ✔️ |
-| file       | Determine file type from content                | ✔️ |
-| zsh       | Z Shell                | ✔️ |
-
----
-
-### Brew Packages
+### Nix Packages (`home.packages`, via Home Manager)
 
 | Package Name      | Description                                                  | Linux | macOS |
 |-------------------|--------------------------------------------------------------|-------|-------|
-| gnupg       | GNU Privacy Guard                | ✔️ | ✔️ |
-| fontconfig       | Library for configuring and customizing font access                | ✔️ | ✔️ |
-| wget       | Network downloader                | ✔️ | ✔️ |
-| watch       | Execute a program periodically, showing output fullscreen                | ✔️ | ✔️ |
-| yq       | YAML processor (like jq for YAML)                | ✔️ | ✔️ |
-| jq       | Command-line JSON processor                | ✔️ | ✔️ |
-| btop       | Better than htop                | ✔️ | ✔️ |
-| scc       | For counting the lines of code, blank lines, comment lines, and physical lines of source code in many programming languages.                | ✔️ | ✔️ |
-| duf       | Get info on mounted disks (better df)                | ✔️ | ✔️ |
-| sd       | RegEx find and replace (better sed)                | ✔️ | ✔️ |
-| antidote       | Zsh plugin manager (replaces Antigen)                | ✔️ | ✔️ |
-| mise       | Polyglot runtime version manager (asdf-compatible)                | ✔️ | ✔️ |
-| tmux       | Terminal multiplexer                | ✔️ | ✔️ |
-| fd       | Simple, fast and user-friendly alternative to 'find'                | ✔️ | ✔️ |
-| starship       | Minimal, blazing-fast, and infinitely customizable prompt for any shell                | ✔️ | ✔️ |
-| eza       | Listing files with info (better ls)                | ✔️ | ✔️ |
-| bat       | Output highlighting (better cat)                | ✔️ | ✔️ |
-| neovim       | Hyperextensible Vim-based text editor                | ✔️ | ✔️ |
-| fastfetch       | Show system data and distro info (replaces neofetch)                | ✔️ | ✔️ |
-| tree       | Display directories as trees                | ✔️ | ✔️ |
-| libyaml       | YAML Parser                | ✔️ | ✔️ |
-| docker       | Platform to build, run, and share containerized applications                | ✔️ | ✔️ |
-| docker-compose       | Define and run multi-container applications with Docker                | ✔️ | ✔️ |
-| kubectx       | Switch faster between clusters and namespaces in kubectl                | ✔️ | ✔️ |
-| kdash       | Kubernetes dashboard app                | ✔️ | ✔️ |
-| lazydocker       | Full Docker management app                | ✔️ | ✔️ |
-| helm-docs       | Autogenerate doc for Helm charts                | ✔️ | ✔️ |
-| derailed/k9s/k9s       | Kubernetes CLI to manage your clusters in style!                | ✔️ | ✔️ |
-| ctop       | Container metrics and monitoring                | ✔️ | ✔️ |
-| docker-completion       | Bash, Zsh and Fish completion for Docker                | ✔️ | ✔️ |
-| gitlab-ci-local       | Build all pipeline or specific job locally                | ✔️ | ✔️ |
-| pwgen       | Password generator                | ✔️ | ✔️ |
-| fdupes       | Duplicate file finder                | ✔️ | ✔️ |
-| gping       | Interactive ping tool, with graph                | ✔️ | ✔️ |
-| httpie       | HTTP / API testing client                | ✔️ | ✔️ |
-| entr       | Run command when files change (for testing when you change code directly launch program)                | ✔️ | ✔️ |
-| ttygif       | Make gif from terminal                | ✔️ | ✔️ |
+| antidote       | Zsh plugin manager made from the ground up thinking about performance                | ✔️ | ✔️ |
+| asciiquarium       | Enjoy the mysteries of the sea from the safety of your own terminal                | ✔️ | ✔️ |
+| bat       | Cat(1) clone with syntax highlighting and Git integration                | ✔️ | ✔️ |
+| btop       | Monitor of resources                | ✔️ | ✔️ |
+| cbonsai       | Grow bonsai trees in your terminal                | ✔️ | ✔️ |
+| cmatrix       | Simulates the falling characters theme from The Matrix movie                | ✔️ | ✔️ |
+| coreutils       | GNU Core Utilities                | ❌ | ✔️ |
+| ctop       | Top-like interface for container metrics                | ✔️ | ✔️ |
+| curl       | Command line tool for transferring files with URL syntax                | ✔️ | ✔️ |
+| docker       | Open source project to pack, ship and run any application as a lightweight container                | ✔️ | ✔️ |
+| docker-compose       | Docker CLI plugin to define and run multi-container applications with Docker                | ✔️ | ✔️ |
+| duf       | Disk Usage/Free Utility                | ✔️ | ✔️ |
+| entr       | Run arbitrary commands when files change                | ✔️ | ✔️ |
+| eza       | Modern, maintained replacement for ls                | ✔️ | ✔️ |
+| fastfetch       | Actively maintained, feature-rich and performance oriented, neofetch like system information tool                | ✔️ | ✔️ |
+| fd       | Simple, fast and user-friendly alternative to find                | ✔️ | ✔️ |
+| fdupes       | Identifies duplicate files residing within specified directories                | ✔️ | ✔️ |
+| figlet       | Program for making large letters out of ordinary text                | ✔️ | ✔️ |
+| file       | Program that shows the type of files                | ✔️ | ❌ |
+| fontconfig       | Library for font customization and configuration                | ✔️ | ✔️ |
+| fzf       | Command-line fuzzy finder written in Go                | ✔️ | ✔️ |
+| git       | Distributed version control system                | ✔️ | ✔️ |
+| gitlab-ci-local       | Run gitlab pipelines locally as shell executor or docker executor                | ✔️ | ✔️ |
+| gnupg       | Modern release of the GNU Privacy Guard, a GPL OpenPGP implementation                | ✔️ | ✔️ |
+| gping       | Ping, but with a graph                | ✔️ | ✔️ |
+| helm-docs       | Tool for automatically generating markdown documentation for Helm charts                | ✔️ | ✔️ |
+| hm-switch       | No description                | ✔️ | ✔️ |
+| home-manager       | A user environment configurator                | ✔️ | ✔️ |
+| httpie       | Command line HTTP client whose goal is to make CLI human-friendly                | ✔️ | ✔️ |
+| jq       | Lightweight and flexible command-line JSON processor                | ✔️ | ✔️ |
+| jrnl       | Command line journal application that stores your journal in a plain text file                | ✔️ | ✔️ |
+| k9s       | Kubernetes CLI To Manage Your Clusters In Style                | ✔️ | ✔️ |
+| kdash       | Simple and fast dashboard for Kubernetes                | ✔️ | ✔️ |
+| kubectx       | Fast way to switch between clusters and namespaces in kubectl                | ✔️ | ✔️ |
+| lazydocker       | Simple terminal UI for both docker and docker-compose                | ✔️ | ✔️ |
+| librsvg       | Small library to render SVG images to Cairo surfaces                | ✔️ | ✔️ |
+| libyaml       | YAML 1.1 parser and emitter written in C                | ✔️ | ✔️ |
+| lsb_release       | Prints certain LSB (Linux Standard Base) and Distribution information                | ✔️ | ❌ |
+| man-db       | Implementation of the standard Unix documentation system accessed using the man command                | ✔️ | ❌ |
+| mise       | Front-end to your dev env                | ✔️ | ✔️ |
+| neovim       | Vim text editor fork focused on extensibility and agility                | ✔️ | ✔️ |
+| nix-zsh-completions       | ZSH completions for Nix, NixOS, and NixOps                | ✔️ | ✔️ |
+| procps       | Utilities that give information about processes using the /proc filesystem                | ✔️ | ❌ |
+| pwgen       | Password generator which creates passwords which can be easily memorized by a human                | ✔️ | ✔️ |
+| ripgrep       | Utility that combines the usability of The Silver Searcher with the raw speed of grep                | ✔️ | ✔️ |
+| scc       | Very fast accurate code counter with complexity calculations and COCOMO estimates written in pure Go                | ✔️ | ✔️ |
+| sd       | Intuitive find & replace CLI (sed alternative)                | ✔️ | ✔️ |
+| shared-mime-info       | Database of common MIME types                | ✔️ | ❌ |
+| starship       | Minimal, blazing fast, and extremely customizable prompt for any shell                | ✔️ | ✔️ |
+| theme-pick       | No description                | ✔️ | ✔️ |
 | tldr       | Simplified and community-driven man pages                | ✔️ | ✔️ |
-| librsvg       | To use rsvg-convert docker-compose.svg > docker-compose.png                | ✔️ | ✔️ |
-| asciiquarium       | Fish tank animation in your terminal                | ✔️ | ✔️ |
-| cmatrix       | Console Matrix                | ✔️ | ✔️ |
-| figlet       | Banner-like program prints strings as ASCII art                | ✔️ | ✔️ |
-| cbonsai       | terminal bonzai in ASCII                | ✔️ | ✔️ |
-| trash-cli       | CLI for the freedesktop.org trashcan (Linux)                | ✔️ | ❌ |
-| trash       | CLI to move files to the macOS Trash (replaces Linux trash-cli)                | ❌ | ✔️ |
-| coreutils       | GNU coreutils (gdate → date -I, etc.) — binaries exposed via gnubin                | ❌ | ✔️ |
-| util-linux       | Linux util-linux tools: setsid, flock, etc.                | ❌ | ✔️ |
+| tmux       | Terminal multiplexer                | ✔️ | ✔️ |
+| trash-cli       | Command line interface to the freedesktop.org trashcan                | ✔️ | ✔️ |
+| tree       | Command to produce a depth indented directory listing                | ✔️ | ✔️ |
+| ttygif       | Convert terminal recordings to animated gifs                | ✔️ | ✔️ |
+| util-linux       | Set of system utilities for Linux                | ❌ | ✔️ |
+| wallpaper-pick       | No description                | ✔️ | ✔️ |
+| wget       | Tool for retrieving files using HTTP, HTTPS, and FTP                | ✔️ | ✔️ |
+| yazi       | Blazing fast terminal file manager written in Rust, based on async I/O                | ✔️ | ✔️ |
+| yq       | Command-line YAML/XML/TOML processor - jq wrapper for YAML, XML, TOML documents                | ✔️ | ✔️ |
+| zsh       | Z shell                | ✔️ | ✔️ |
 
 ---
 
@@ -329,28 +366,25 @@ Dotfiles for VsCode are:
 
 | Package Name      | Description                                                  | Linux | macOS |
 |-------------------|--------------------------------------------------------------|-------|-------|
-| python       | Python programming language                | ✔️ | ✔️ |
+| python       | python language                | ✔️ | ✔️ |
 | golang       | Go programming language                | ✔️ | ✔️ |
-| terraform       | Infrastructure as code software tool                | ✔️ | ✔️ |
-| terragrunt       | Thin wrapper for Terraform with extra tools for multiple modules                | ✔️ | ✔️ |
-| opentofu       | Open source version of Terraform                | ✔️ | ✔️ |
-| kubectl       | Kubernetes command-line tool                | ✔️ | ✔️ |
-| helm       | The Kubernetes package manager                | ✔️ | ✔️ |
+| terraform       | Terraform enables you to safely and predictably create, change, and improve infrastructure. It is an open source tool that codifies APIs into declarative configuration files that can be shared amongst team members, treated as code, edited, reviewed, and versioned                | ✔️ | ✔️ |
+| terragrunt       | Terragrunt is a thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules                | ✔️ | ✔️ |
+| opentofu       | OpenTofu lets you declaratively manage your cloud infrastructure                | ✔️ | ✔️ |
+| kubectl       | kubectl cli                | ✔️ | ✔️ |
+| helm       | The Kubernetes Package Manager                | ✔️ | ✔️ |
 | minikube       | Run Kubernetes locally                | ✔️ | ✔️ |
-| awscli       | Official Amazon AWS command-line interface                | ✔️ | ✔️ |
-| packer       | Tool for creating identical machine images for multiple platforms                | ✔️ | ✔️ |
-| poetry       | Python dependency management and packaging made easy                | ✔️ | ✔️ |
-| pre-commit       | Framework for managing and running pre-commit hooks                | ✔️ | ✔️ |
-| tflint       | Terraform linter                | ✔️ | ✔️ |
-| fzf       | Command-line fuzzy finder                | ✔️ | ✔️ |
-| act       | Run GitHub Actions locally                | ✔️ | ✔️ |
-| glab       | CLI for GitLab                | ✔️ | ✔️ |
-| gomplate       | Template renderer for generating files (e.g. README)                | ✔️ | ✔️ |
-| fnox       | Local secrets manager, Fort Knox for your secrets                | ✔️ | ✔️ |
-| bitwarden-secrets-manager       | Bitwarden Secrets Manager command-line interface                | ✔️ | ✔️ |
-| rclone       | rsync for cloud storage                | ✔️ | ✔️ |
-| terraform-docs       | Generate documentation from Terraform modules                | ✔️ | ✔️ |
-| pipx       | Install and run Python applications in isolated environments                | ✔️ | ✔️ |
-| pipx:jrnl       | Command line journal for quick notes                | ✔️ | ✔️ |
+| awscli       | The AWS Command Line Interface (AWS CLI v2) is a unified tool that provides a consistent interface for interacting with all parts of Amazon Web Services                | ✔️ | ✔️ |
+| packer       | Packer is a tool for creating identical machine images for multiple platforms from a single source configuration                | ✔️ | ✔️ |
+| poetry       | Python packaging and dependency management made easy                | ✔️ | ✔️ |
+| pre-commit       | A framework for managing and maintaining multi-language pre-commit hooks                | ✔️ | ✔️ |
+| tflint       | A Pluggable Terraform Linter                | ✔️ | ✔️ |
+| act       | Run your GitHub Actions locally                | ✔️ | ✔️ |
+| glab       | gitlab cli                | ✔️ | ✔️ |
+| gomplate       | A flexible commandline tool for template rendering. Supports lots of local and remote datasources                | ✔️ | ✔️ |
+| fnox       | Fort Knox for your secrets                | ✔️ | ✔️ |
+| bitwarden-secrets-manager       | CLI for interacting with the Bitwarden Secrets Manager                | ✔️ | ✔️ |
+| rclone       | "rsync for cloud storage" - Google Drive, S3, Dropbox, Backblaze B2, One Drive, Swift, Hubic, Wasabi, Google Cloud Storage, Yandex Files                | ✔️ | ✔️ |
+| terraform-docs       | Generate documentation from Terraform modules in various output formats                | ✔️ | ✔️ |
 
 ---

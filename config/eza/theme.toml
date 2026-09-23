@@ -1,0 +1,98 @@
+# TOML as a carrier format, not eza's native theme.yml — Nix can parse TOML
+# (builtins.fromTOML) but not YAML. Values are base16 slot names, resolved
+# to real hex by home/cli/eza.nix before being handed to programs.eza.theme.
+punctuation.foreground = "base03"
+date.foreground = "base0C"
+inode.foreground = "base03"
+blocks.foreground = "base03"
+header.foreground = "base04"
+octal.foreground = "base0A"
+flags.foreground = "base0E"
+
+[filekinds]
+normal.foreground = "base05"
+directory.foreground = "base0D"
+symlink.foreground = "base0C"
+pipe.foreground = "base03"
+block_device.foreground = "base09"
+char_device.foreground = "base09"
+socket.foreground = "base0E"
+special.foreground = "base08"
+executable.foreground = "base0B"
+mount_point.foreground = "base0D"
+
+[perms]
+user_read.foreground = "base0A"
+user_write.foreground = "base0E"
+user_execute_file.foreground = "base0B"
+user_execute_other.foreground = "base0B"
+group_read.foreground = "base03"
+group_write.foreground = "base03"
+group_execute.foreground = "base03"
+other_read.foreground = "base03"
+other_write.foreground = "base03"
+other_execute.foreground = "base03"
+special_user_file.foreground = "base09"
+special_other.foreground = "base09"
+attribute.foreground = "base0C"
+
+[size]
+major.foreground = "base05"
+minor.foreground = "base05"
+number_byte.foreground = "base05"
+number_kilo.foreground = "base0A"
+number_mega.foreground = "base09"
+number_giga.foreground = "base08"
+number_huge.foreground = "base08"
+unit_byte.foreground = "base03"
+unit_kilo.foreground = "base03"
+unit_mega.foreground = "base03"
+unit_giga.foreground = "base03"
+unit_huge.foreground = "base03"
+
+[users]
+user_you.foreground = "base0B"
+user_root.foreground = "base08"
+user_other.foreground = "base03"
+group_yours.foreground = "base0B"
+group_other.foreground = "base03"
+group_root.foreground = "base08"
+
+[links]
+normal.foreground = "base0C"
+multi_link_file.foreground = "base09"
+
+[git]
+new.foreground = "base0B"
+modified.foreground = "base0A"
+deleted.foreground = "base08"
+renamed.foreground = "base0D"
+typechange.foreground = "base0E"
+ignored.foreground = "base03"
+conflicted.foreground = "base08"
+
+[git_repo]
+branch_main.foreground = "base0B"
+branch_other.foreground = "base0D"
+git_clean.foreground = "base0B"
+git_dirty.foreground = "base08"
+
+[security_context]
+colon.foreground = "base03"
+user.foreground = "base0A"
+role.foreground = "base0C"
+typ.foreground = "base0E"
+range.foreground = "base09"
+
+[file_type]
+image.foreground = "base0E"
+video.foreground = "base0E"
+music.foreground = "base0B"
+lossless.foreground = "base0B"
+crypto.foreground = "base09"
+document.foreground = "base05"
+compressed.foreground = "base09"
+temp.foreground = "base03"
+compiled.foreground = "base08"
+build.foreground = "base0A"
+source.foreground = "base0D"
