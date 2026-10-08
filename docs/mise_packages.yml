@@ -45,10 +45,15 @@ mise_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: packer
+- description: An extremely fast Python package installer and resolver, written in
+    Rust
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: uv
 - description: Python packaging and dependency management made easy
   in_linux: 'yes'
   in_mac: 'yes'
-  name: poetry
+  name: pipx:poetry
 - description: A framework for managing and maintaining multi-language pre-commit
     hooks
   in_linux: 'yes'
@@ -66,11 +71,6 @@ mise_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: glab
-- description: A flexible commandline tool for template rendering. Supports lots of
-    local and remote datasources
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: gomplate
 - description: Fort Knox for your secrets
   in_linux: 'yes'
   in_mac: 'yes'

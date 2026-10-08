@@ -113,4 +113,6 @@ in
       '';
     })
   ];
+
+  programs.zsh.shellAliases.wp = "wallpaper-pick";
 }

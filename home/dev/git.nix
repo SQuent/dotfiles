@@ -2,7 +2,28 @@
 # Git identity (name/email per github/gitlab/work/nas context) is set
 # dynamically via fnox-exported env vars.
 {
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    settings = {
+      init.defaultBranch = "main";
+      pull.rebase = true;
+      rebase = {
+        autoStash = true;
+        updateRefs = true;
+      };
+      push.autoSetupRemote = true;
+      fetch.prune = true;
+      rerere.enabled = true;
+      merge.conflictStyle = "zdiff3";
+      diff.algorithm = "histogram";
+    };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options.navigate = true;
+  };
 
   programs.zsh.shellAliases = {
     g = "git";

@@ -1,11 +1,8 @@
 { lib, config, ... }:
 let
   palette = config.lib.stylix.colors.withHashtag;
-  # eza has no native palette indirection like starship — resolve the
-  # base16 slot names from theme.toml to real hex ourselves. Anything that
-  # isn't a string (a bool, a number) is a non-color eza setting and passes
-  # through; an unknown *string* is a typo and must fail loudly rather than
-  # end up in the generated theme as a literal colour name.
+  # eza has no native palette indirection like starship. Resolve the
+  # base16 slot names from theme.toml to real hex ourselves.
   resolveColor =
     path: value:
     if !(builtins.isString value) then
@@ -20,12 +17,11 @@ let
   resolveTheme = lib.mapAttrsRecursive resolveColor;
 in
 {
-  # eza doesn't auto-detect $XDG_CONFIG_HOME/eza/theme.yml despite its docs; must be told explicitly.
   home.sessionVariables.EZA_CONFIG_DIR = "${config.xdg.configHome}/eza";
 
   programs.eza = {
     enable = true;
-    enableZshIntegration = true; # provides ls/ll/la/lt/lla with basic flags
+    enableZshIntegration = true; # provides ls/ll/la/lt/lla
     icons = "auto";
     git = true;
 
@@ -40,5 +36,7 @@ in
     lt = lib.mkForce "eza -al --tree --header --level=2 --long";
     lm = "eza -lahr --color-scale -s=modified";
     lb = "eza -lahr --color-scale -s=size";
+    tree = "eza --tree --level=3 --icons --git --group-directories-first";
+    treea = "eza --tree --icons --git --group-directories-first";
   };
 }

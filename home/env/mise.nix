@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   programs.mise.enable = true;
-  programs.mise.enableZshIntegration = false; # custom-ordered below instead
+  programs.mise.enableZshIntegration = false;
 
   xdg.configFile."mise/config.toml".source = ../../config/mise/global.toml;
   home.file."git/gitlab/mise.toml".source = ../../config/mise/gitlab.toml;

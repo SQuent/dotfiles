@@ -1,6 +1,5 @@
 { pkgs, lib, ... }:
-# Catch-all packages with no associated aliases/env vars/config. Tools that
-# do have those live in their own home/<program>.nix module instead.
+# Catch-all packages with no associated aliases/env vars/config.
 {
   home.packages =
     with pkgs;
@@ -11,10 +10,9 @@
       wget
       jq
       yq
+      ripgrep
       scc
       sd
-      fastfetch
-      tree
 
       #### Dev tool ####
       libyaml

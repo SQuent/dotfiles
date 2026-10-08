@@ -5,7 +5,7 @@
 ---
 
 ### What are Dotfiles?
-Dotfiles are hidden configuration files (prefixed with a `.`) in Unix-like systems. They store settings for shells, editors, and various tools, allowing for easy customization and consistency across different environments.
+Dotfiles are hidden configuration files (prefixed with a `.`) in Unix-like systems. They store settings for shells, editors, and various tools.
 
 ---
 
@@ -13,7 +13,6 @@ Dotfiles are hidden configuration files (prefixed with a `.`) in Unix-like syste
 - **Effortless Deployment:** Easily set up new environments.
 - **Synchronization:** Keep your settings synced across multiple devices.
 - **Rollback:** Revert changes with ease.
-- **Backup:** Ensure nothing is lost.
 
 ---
 
@@ -21,7 +20,7 @@ Dotfiles are hidden configuration files (prefixed with a `.`) in Unix-like syste
 Nix is a package manager, but it comes with its own philosophy: declarative, and therefore reproducible, with rollback built in.
 This is the exact idea dotfiles already chase, just applied to packages instead of config files. 
 And it doesn't stop there: [**NixOS**](https://nixos.org/) turns that same philosophy into a whole operating system, while [**Home Manager**](https://github.com/nix-community/home-manager) nix community package, applies it one level down, to `$HOME`.
-I run it standalone home manager rather than switching to NixOS/nix-darwin. 
+I run it standalone home manager. 
 
 With a classic dotfiles manager, adding a new tool means touching several places (install script, config symlinks, alias). With Nix, it's one declarative block. 
 And the same setup runs almost identically anywhere: macOS, Linux, even a plain Docker container.
@@ -36,15 +35,7 @@ But it's a smooth path to swith to NixOS one day.
 
 Most Home Manager setups are tied to specific machine. I wanted this dotfiles to works on any machine with different username.
 It support the OS/arch (`aarch64-darwin` / `x86_64-linux` / `aarch64-linux`).
-So instead of hardcoding who I am and where my home is, the flake figures it out by itself.
-It needs `--impure`: (allowed to look at the outside world instead of staying fully self-contained).
-
----
-
-### Auto import file in home/
-
-[**import-tree**](https://github.com/vic/import-tree) scans `home/` and imports whatever it finds instead. Drop a file in, it's picked up on the next rebuild, nothing else to touch.
-Files starting with `_` are skipped on purpose.
+So instead of hardcoding who I am and where my home is, the flake figures it out by itself (with --impure).
 
 ---
 
@@ -80,7 +71,6 @@ hmu nixpkgs
 ```
 
 ### Testing in Docker
-`./install` runs at build time, so there's nothing left to do: just build it and run it, and you land straight in a fully-configured shell:
 ```bash
 docker build -t dotfiles .
 docker run -it dotfiles
@@ -88,9 +78,7 @@ docker run -it dotfiles
 
 ### Working on this repo
 
-Nothing to set up: `git commit` or `pc` run the [pre-commit hooks](.pre-commit-config.yaml), and each hook fetches its own tool through `nix develop -c` (tools declared in [`flake.nix`](flake.nix), not installed in your profile). `pre-commit` itself comes from mise, which also installs the git hook when you `cd` into the repo.
-
-Need one of those tools by hand? `nix develop` opens a shell with all of them.
+`git commit` or `pc` run the [pre-commit hooks](.pre-commit-config.yaml).
 
 ---
 
@@ -103,23 +91,18 @@ Need one of those tools by hand? `nix develop` opens a shell with all of them.
 ├── home/              — one module per program (packages + config + aliases colocated),
 │   │                     every file auto-imported by import-tree, no list to maintain
 │   ├── default.nix    — entrypoint: username/homeDirectory + the `dotfiles.path` option
-│   ├── dirs.nix       — the few directories nothing else creates as a side effect
+│   ├── dirs.nix       — directories 
 │   ├── hm-switch.nix  — the `hm-switch` binary (rebuild + activate)
-│   ├── home-manager.nix — hms/hmb/hmc/... aliases for driving this flake
-│   ├── packages.nix   — all other packages with no config needed (jq, wget, tree, ...)
-│   ├── shell/          — zsh, xdg
-│   ├── cli/            — starship, eza, bat, btop, fd, ripgrep, fzf, duf, tmux, trash, yazi
-│   ├── dev/            — git, nvim, docker, kubernetes, terraform
-│   ├── env/            — fnox, mise (secrets + tool versions, in that order)
-│   └── theme/          — Stylix + theme-pick/wallpaper-pick, see Theming below
-├── wallpapers/        — images wallpaper-pick browses, versioned so the palette
-│                        Stylix derives from them is reproducible
+│   ├── home-manager.nix — aliases for driving this flake
+│   ├── packages.nix   — all packages with no config needed
+│   ├── shell/          
+│   ├── cli/
+│   ├── dev/
+│   ├── env/
+│   └── theme/
+├── wallpapers/ 
+│
 └── config/            — native config files sourced by a home/*.nix module
-    ├── eza/
-    ├── fnox/
-    ├── mise/
-    ├── starship/
-    └── zsh/
 ```
 
 ---
@@ -148,11 +131,21 @@ For machine-specific settings that should never be committed, create `~/.zshenv`
 
 ---
 
-### Visualization Tools
-- [**Starship**](https://github.com/starship/starship) — [`home/cli/starship.nix`](home/cli/starship.nix), settings in [`config/starship/starship.toml`](config/starship/starship.toml).
-- [**eza**](https://github.com/eza-community/eza) — [`home/cli/eza.nix`](home/cli/eza.nix), theme in [`config/eza/theme.toml`](config/eza/theme.toml).
-- [**bat**](https://github.com/sharkdp/bat) — [`home/cli/bat.nix`](home/cli/bat.nix).
-- [**yazi**](https://github.com/sxyazi/yazi) — [`home/cli/yazi.nix`](home/cli/yazi.nix).
+### Terminal Experience
+- [**Starship**](https://github.com/starship/starship) - prompt
+- [**eza**](https://github.com/eza-community/eza) - replace listing (ll, la, tree...)
+- [**zoxide**](https://github.com/ajeetdsouza/zoxide) - replace cd
+- [**bat**](https://github.com/sharkdp/bat) - replace cat
+- [**yazi**](https://github.com/sxyazi/yazi) - terminal file manager
+
+
+### Theming with Stylix
+
+Every tool's colors come from one place: [**Stylix**](https://stylix.danth.me/).
+
+Switching theme is one of two commands: `theme-pick` (alias tp) to browse and pick a named scheme, or `wallpaper-pick` (alias wp). Those two commands launch rebuild after switching and don't modify the nix config.
+
+Here default theme: [`home/theme/_default.nix`](home/theme/_default.nix).
 
 ---
 
@@ -163,27 +156,6 @@ For machine-specific settings that should never be committed, create `~/.zshenv`
 
 #### Visual Studio Code
 [**Visual Studio Code**](https://code.visualstudio.com/) — `settings.json` + profile (not yet Nix-managed).
-
----
-
-### Theming with Stylix
-
-Every tool's colors come from one place: [**Stylix**](https://stylix.danth.me/), picking a base16 palette and handing it to whichever `home/*.nix` module wants it — starship, bat, tmux, fzf, btop, k9s, yazi, all from the same source instead of each carrying its own hardcoded colors. eza follows too, wired by hand to `config.lib.stylix.colors` since it has no native Stylix target.
-
-Switching theme is one of two commands: `theme-pick` to browse and pick a named scheme, or `wallpaper-pick` to derive one from an image in [`wallpapers/`](wallpapers). Colors only actually change on the next rebuild, on purpose — no wallpaper-watching daemon, no live-reload plumbing, same experience on macOS and Linux alike.
-
-The default theme lives **in the repo**, [`home/theme/_default.nix`](home/theme/_default.nix), and applies on every machine:
-
-```nix
-{
-  kind = "scheme";   # or "wallpaper"
-  value = "nord";    # a base16-schemes name, or a file under wallpapers/
-}
-```
-
-Both pickers write a **per-machine override outside the repo**, `~/.local/state/dotfiles/theme.json` (same shape, as JSON), then run `hm-switch`. `theme-pick --reset` (or `wallpaper-pick --reset`) deletes it and falls back to the default.
-
-Keeping the override out of the checkout is the point: trying a theme never dirties the repo, so it never needs a commit and never blocks a pull on another machine. To change the theme *everywhere*, edit `_default.nix` and commit. A scheme is referenced by *name*, not by the store path it happened to have when you picked it — that path goes stale on the next `hmu` or `hmgc`.
 
 ---
 
@@ -230,7 +202,7 @@ A global mise `cd` hook ([`config/mise/global.toml`](config/mise/global.toml)) r
 
 #### Automatic Version Management
 
-- **Auto-Discovery:** Detects `mise.toml` files in project directories (also supports `.tool-versions`).
+- **Auto-Discovery:** Detects `mise.toml` files in project directories (supports `.tool-versions`).
 
 
 ---
@@ -259,13 +231,15 @@ My Tmux configuration, stored in [`home/cli/tmux.nix`](home/cli/tmux.nix), inclu
 
 ### Garbage Management with Trash
 
-To avoid accidentally deleting files permanently, I replace `rm` with [`trash-cli`](https://github.com/andreafrancia/trash-cli) (Linux + macOS) — [`home/cli/trash.nix`](home/cli/trash.nix):
+`rm` is replaced by [`gtrash`](https://github.com/umlx5h/gtrash):
 
-- `rm <file>`: moves it to the trash instead of deleting it for good (`trash-put`).
-- `tl`: lists what's currently sitting in the trash (`trash-list`).
-- `rmtrash: <file>` — permanently deletes one specific file already in the trash (`trash-rm`).
-- `tempty`: empties the whole trash for good (`trash-empty`).
-- `tr`: restores a previously trashed file (`trash-restore`).
+- `rm <file>`: move to trash
+- `tl [regex]`: list trash
+- `trs`: restore (interactive)
+- `rmtrash <regex>`: delete from trash
+- `tempty`: empty trash
+- `ts`: trash summary
+
 
 ---
 

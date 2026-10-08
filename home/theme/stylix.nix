@@ -68,6 +68,7 @@ in
       fzf.enable = true;
       btop.enable = true;
       k9s.enable = true;
+      vivid.enable = true;
       yazi.enable = true;
       neovim.enable = true;
     };

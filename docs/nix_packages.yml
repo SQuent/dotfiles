@@ -35,6 +35,10 @@ nix_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: curl
+- description: Syntax-highlighting pager for git
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: delta
 - description: Open source project to pack, ship and run any application as a lightweight
     container
   in_linux: 'yes'
@@ -45,6 +49,10 @@ nix_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: docker-compose
+- description: du, but more intuitive
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: du-dust
 - description: Disk Usage/Free Utility
   in_linux: 'yes'
   in_mac: 'yes'
@@ -102,6 +110,10 @@ nix_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: gping
+- description: Trash CLI manager written in Go
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: gtrash
 - description: Tool for automatically generating markdown documentation for Helm charts
   in_linux: 'yes'
   in_mac: 'yes'
@@ -168,10 +180,19 @@ nix_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: neovim
+- description: Yet another nix cli helper
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: nh
 - description: ZSH completions for Nix, NixOS, and NixOps
   in_linux: 'yes'
   in_mac: 'yes'
   name: nix-zsh-completions
+- description: Command-line utility for easily compressing and decompressing files
+    and directories
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: ouch
 - description: Utilities that give information about processes using the /proc filesystem
   in_linux: 'yes'
   in_mac: 'no'
@@ -215,14 +236,6 @@ nix_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: tmux
-- description: Command line interface to the freedesktop.org trashcan
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: trash-cli
-- description: Command to produce a depth indented directory listing
-  in_linux: 'yes'
-  in_mac: 'yes'
-  name: tree
 - description: Convert terminal recordings to animated gifs
   in_linux: 'yes'
   in_mac: 'yes'
@@ -231,6 +244,10 @@ nix_packages:
   in_linux: 'no'
   in_mac: 'yes'
   name: util-linux
+- description: Generator for LS_COLORS with support for multiple color themes
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: vivid
 - description: ''
   in_linux: 'yes'
   in_mac: 'yes'
@@ -249,6 +266,10 @@ nix_packages:
   in_linux: 'yes'
   in_mac: 'yes'
   name: yq
+- description: Fast cd command that learns your habits
+  in_linux: 'yes'
+  in_mac: 'yes'
+  name: zoxide
 - description: Z shell
   in_linux: 'yes'
   in_mac: 'yes'

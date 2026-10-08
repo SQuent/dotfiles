@@ -5,22 +5,19 @@ repos:
       - id: gitleaks
   - repo: local
     hooks:
-      # `nix develop -c` rather than bare commands: the toolbox is declared in
-      # flake.nix (devShells.default), so hooks need nothing installed or
-      # loaded beforehand.
       - id: python_export
         name: python export packages to doc
         entry: nix develop -c python docs/extract_packages.py
-        always_run: true
         pass_filenames: false
         language: system
+        files: '(\.nix|flake\.lock|config/mise/global\.toml|docs/README\.tpl)$'
       - id: gomplate
         name: gomplate render README.md
         entry: nix develop -c gomplate -f docs/README.tpl -d nix_packages=./docs/nix_packages.yml -d mise_packages=./docs/mise_packages.yml -o README.md
         language: system
         verbose: true
-        always_run: true
         pass_filenames: false
+        files: '(\.nix|flake\.lock|config/mise/global\.toml|docs/README\.tpl)$'
       - id: nixfmt
         name: nix fmt (nixfmt-tree / nixfmt-rfc-style)
         entry: nix fmt --

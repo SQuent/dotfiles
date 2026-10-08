@@ -1,12 +1,13 @@
 { pkgs, ... }:
 {
-  home.packages = [ pkgs.trash-cli ];
+  home.packages = [ pkgs.gtrash ];
 
   programs.zsh.shellAliases = {
-    rm = "trash-put";
-    tl = "trash-list";
-    rmtrash = "trash-rm";
-    tempty = "trash-empty";
-    tr = "trash-restore";
+    rm = "gtrash put"; # `rm -rf dir` still works
+    tl = "gtrash find";
+    trs = "gtrash restore";
+    rmtrash = "gtrash find --rm";
+    tempty = "gtrash find --rm"; # whole trash, asks for confirmation
+    ts = "gtrash summary";
   };
 }

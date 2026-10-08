@@ -1,9 +1,27 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  # macOS is known at build time; WSL vs plain Linux only at runtime.
+  copyCommand =
+    if pkgs.stdenv.isDarwin then
+      "set -s copy-command 'pbcopy'"
+    else
+      ''
+        if-shell "grep -qi microsoft /proc/version 2>/dev/null" \
+          "set -s copy-command 'clip.exe'" \
+          "set -s copy-command 'xclip -selection clipboard'"'';
+in
 {
   home.sessionVariables.TMUX_PLUGIN_MANAGER_PATH = "${config.xdg.dataHome}/tmux/plugins";
 
+  # Not over SSH: the local terminal is usually already in tmux (nested
+  # prefixes), and destroy-unattached would kill the session on disconnect.
   dotfiles.zshInit.tmux = lib.hm.dag.entryAfter [ "bindkey" ] ''
-    if command -v tmux >/dev/null 2>&1 && [[ -z "$TMUX" ]]; then
+    if command -v tmux >/dev/null 2>&1 && [[ -z "$TMUX" && -z "$SSH_CONNECTION" ]]; then
       tmux new-session
     fi
   '';
@@ -33,33 +51,17 @@
       # set vi-mode
       set-window-option -g mode-keys vi
 
-      # Clipboard integration (cross-platform)
+      # Clipboard integration: copy-command is picked per platform (copyCommand), so
+      # every copy-pipe-and-cancel binding here stays argument-free.
       set -g set-clipboard on
-      bind-key -T copy-mode-vi v send-keys -X begin-selection
-      if-shell "uname | grep -q Darwin" {
-        bind-key -T copy-mode-vi y                  send-keys -X copy-pipe-and-cancel "pbcopy"
-        bind-key -T copy-mode-vi MouseDragEnd1Pane  send-keys -X copy-pipe-and-cancel "pbcopy"
-        bind-key -T copy-mode-vi DoubleClick1Pane   send-keys -X select-word \; send-keys -X copy-pipe-and-cancel "pbcopy"
-        bind-key -T root          DoubleClick1Pane   copy-mode \; send-keys -X select-word \; send-keys -X copy-pipe-and-cancel "pbcopy"
-        bind-key -T copy-mode-vi TripleClick1Pane   send-keys -X select-line \; send-keys -X copy-pipe-and-cancel "pbcopy"
-        bind-key -T root          TripleClick1Pane   copy-mode \; send-keys -X select-line \; send-keys -X copy-pipe-and-cancel "pbcopy"
-      } {
-        if-shell "grep -qi microsoft /proc/version 2>/dev/null" {
-          bind-key -T copy-mode-vi y                  send-keys -X copy-pipe-and-cancel "clip.exe"
-          bind-key -T copy-mode-vi MouseDragEnd1Pane  send-keys -X copy-pipe-and-cancel "clip.exe"
-          bind-key -T copy-mode-vi DoubleClick1Pane   send-keys -X select-word \; send-keys -X copy-pipe-and-cancel "clip.exe"
-          bind-key -T root          DoubleClick1Pane   copy-mode \; send-keys -X select-word \; send-keys -X copy-pipe-and-cancel "clip.exe"
-          bind-key -T copy-mode-vi TripleClick1Pane   send-keys -X select-line \; send-keys -X copy-pipe-and-cancel "clip.exe"
-          bind-key -T root          TripleClick1Pane   copy-mode \; send-keys -X select-line \; send-keys -X copy-pipe-and-cancel "clip.exe"
-        } {
-          bind-key -T copy-mode-vi y                  send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
-          bind-key -T copy-mode-vi MouseDragEnd1Pane  send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
-          bind-key -T copy-mode-vi DoubleClick1Pane   send-keys -X select-word \; send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
-          bind-key -T root          DoubleClick1Pane   copy-mode \; send-keys -X select-word \; send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
-          bind-key -T copy-mode-vi TripleClick1Pane   send-keys -X select-line \; send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
-          bind-key -T root          TripleClick1Pane   copy-mode \; send-keys -X select-line \; send-keys -X copy-pipe-and-cancel "xclip -selection clipboard"
-        }
-      }
+      ${copyCommand}
+      bind-key -T copy-mode-vi v                 send-keys -X begin-selection
+      bind-key -T copy-mode-vi y                 send-keys -X copy-pipe-and-cancel
+      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel
+      bind-key -T copy-mode-vi DoubleClick1Pane  send-keys -X select-word \; send-keys -X copy-pipe-and-cancel
+      bind-key -T root         DoubleClick1Pane  copy-mode \; send-keys -X select-word \; send-keys -X copy-pipe-and-cancel
+      bind-key -T copy-mode-vi TripleClick1Pane  send-keys -X select-line \; send-keys -X copy-pipe-and-cancel
+      bind-key -T root         TripleClick1Pane  copy-mode \; send-keys -X select-line \; send-keys -X copy-pipe-and-cancel
 
       set -g status off
 

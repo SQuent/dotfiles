@@ -36,7 +36,7 @@
     programs.zsh = {
       enable = true;
 
-      # XDG-relocate ~/.zshrc etc., matching history.path/completionInit below.
+      # XDG-relocate ~/.zshrc etc..
       dotDir = "${config.xdg.configHome}/zsh";
 
       enableCompletion = true;
@@ -88,12 +88,11 @@
         v = "vim";
 
         # Getting out of directories
-        "c~" = "cd ~";
         "c." = "cd ..";
         "c.." = "cd ../../";
         "c..." = "cd ../../../";
         "c...." = "cd ../../../../";
-        "c....." = "cd ../../../../";
+        "c....." = "cd ../../../../../";
 
         sz = "source ${config.programs.zsh.dotDir}/.zshrc";
 
@@ -104,28 +103,20 @@
         serve = "python3 -m http.server";
         activate = "source ${config.xdg.dataHome}/myenv/bin/activate";
 
-        dud = "du -d 1 -h";
-        duall = "du -sh *";
-        ff = "find . -type f -name";
-        # No "fd" alias here on purpose: it used to shadow the real fd
-        # binary (home/fd.nix) with this exact find-based lookup. `fd -t d
-        # <pattern>` covers the same case natively.
-
         al = "alias | less";
         as = "alias | grep";
         ar = "unalias";
 
-        meminfo = "free -m -l -t";
-        memtop = "ps -eo pid,ppid,cmd,%mem --sort=-%mem | head";
-        cputop = "ps -eo pid,ppid,cmd,%cpu --sort=-%cpu | head";
-        cpuinfo = "lscpu";
-        distro = "cat /etc/*-release";
-        ports = "netstat -tulanp";
+        ports =
+          if pkgs.stdenv.isDarwin then
+            "lsof -i -P -n | grep LISTEN | awk '{print $1, $2, $3, $9, $10}' | column -t"
+          else
+            "netstat -tulanp";
 
         myip = "curl icanhazip.com";
         cheat = "curl cheat.sh/";
 
-        dotfiles = "${config.dotfiles.path}/install -v";
+        dotfiles = "${config.dotfiles.path}/install";
         dots = "dotfiles";
       };
 

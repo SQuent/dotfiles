@@ -81,7 +81,6 @@
           packages = [
             (pkgs.python3.withPackages (ps: [ ps.pyyaml ]))
             pkgs.gomplate
-            pkgs.pre-commit
             # docs/extract_packages.py shells out to `mise registry`.
             pkgs.mise
             pkgs.deadnix

@@ -90,4 +90,6 @@ in
       '';
     })
   ];
+
+  programs.zsh.shellAliases.tp = "theme-pick";
 }

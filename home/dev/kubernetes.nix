@@ -1,6 +1,5 @@
 { pkgs, ... }:
-# kubectl itself comes from mise (config/mise/global.toml), not Nix.
-# k9s goes through programs.k9s (not home.packages): Stylix's k9s target.
+# kubectl itself comes from mise.
 {
   home.packages = with pkgs; [
     kubectx

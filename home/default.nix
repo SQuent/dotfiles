@@ -1,7 +1,7 @@
 { lib, config, ... }:
 
 let
-  # Impure by design: resolved at activation time (needs --impure) so this
+  # Impure by design: resolved at activation time so this
   # flake works unmodified for any user/machine.
   envOr =
     name: fallback:
